@@ -1,0 +1,17 @@
+:host { display: block; min-height: 100dvh; background: var(--color-bg-subtle); }
+.page-shell { display: grid; gap: var(--space-6); width: min(100% - 2rem, var(--max-width-form)); margin: auto; padding: var(--space-8) 0; }
+.step-label { color: var(--color-primary); font-weight: 700; text-transform: uppercase; }
+.checklist { display: grid; gap: var(--space-3); padding: 0; border: 0; }
+.checklist legend, .text-field label { margin-bottom: var(--space-3); font-weight: 700; }
+.checklist label { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg); }
+.text-field { display: grid; }
+textarea { width: 100%; padding: var(--space-3); border: 1px solid var(--color-border-strong); border-radius: var(--radius-md); font: inherit; resize: vertical; }
+[data-testid='contador-relato'] { color: var(--color-text-secondary); text-align: right; }
+.audio-section { padding: var(--space-5); border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-bg); }
+button { padding: var(--space-2) var(--space-4); border: 2px solid var(--color-primary); border-radius: var(--radius-md); color: var(--color-primary-dark); background: var(--color-bg); font-weight: 700; }
+.primary-action { justify-self: end; color: var(--color-text-inverse); background: var(--color-primary); }
+.primary-action:disabled { border-color: var(--color-border-strong); color: var(--color-text-secondary); background: var(--color-bg-muted); }
+.dialog-backdrop { position: fixed; inset: 0; display: grid; place-items: center; padding: var(--space-4); background: rgb(0 0 0 / 0.65); z-index: 10; }
+.dialog-card { max-width: 32rem; padding: var(--space-6); border-radius: var(--radius-lg); background: var(--color-bg); }
+.dialog-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+@media (max-width: 30rem) { .primary-action { width: 100%; } }

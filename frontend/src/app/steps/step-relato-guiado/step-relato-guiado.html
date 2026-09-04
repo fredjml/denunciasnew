@@ -1,0 +1,88 @@
+<main class="page-shell" id="conteudo-principal">
+  <header>
+    <p class="step-label">Relato guiado</p>
+    <h1>Conte o que aconteceu</h1>
+    <p>Marque as situações relacionadas e descreva os fatos do seu jeito.</p>
+  </header>
+
+  <fieldset class="checklist">
+    <legend>Quais situações estão relacionadas?</legend>
+    @for (item of taxonomia; track item.codigo) {
+      <label>
+        <input
+          type="checkbox"
+          name="irregularidade"
+          [checked]="state.irregularidades().includes(item.codigo)"
+          (change)="toggle(item.codigo)"
+        />
+        <span aria-hidden="true">●</span>
+        <span>{{ item.rotulo }}</span>
+      </label>
+    }
+  </fieldset>
+
+  <div class="text-field">
+    <label for="relato">Descreva os fatos do seu jeito</label>
+    <textarea
+      id="relato"
+      rows="8"
+      [ngModel]="state.relato()"
+      (ngModelChange)="setRelato($event)"
+      aria-describedby="contador-relato"
+    ></textarea>
+    <p id="contador-relato" data-testid="contador-relato">{{ state.relato().length }} caracteres</p>
+  </div>
+
+  <section class="audio-section" aria-labelledby="audio-title">
+    <h2 id="audio-title">Prefere contar por áudio?</h2>
+    <p>O uso do microfone é opcional. Você pode concluir todo o relato por texto.</p>
+    <button type="button" data-testid="usar-audio" (click)="requestAudio()">Usar áudio</button>
+
+    @if (consentDialog()) {
+      <div class="dialog-backdrop" role="dialog" aria-modal="true" aria-labelledby="consent-title">
+        <div class="dialog-card">
+          <h3 id="consent-title">Consentimento para uso do microfone</h3>
+          <p>Ao continuar, o navegador solicitará acesso ao microfone. No MVP, o processamento é simulado localmente.</p>
+          <div class="dialog-actions">
+            <button type="button" (click)="declineAudio()">Continuar por texto</button>
+            <button type="button" (click)="acceptAudio()">Concordar e habilitar áudio</button>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (audioEnabled()) {
+      <app-audio-recorder
+        (recorded)="transcribe($event)"
+        (microphoneDenied)="markMicrophoneUnavailable()"
+      />
+    }
+    @if (microphoneUnavailable()) {
+      <p role="status">O microfone não foi autorizado. O campo de texto continua disponível.</p>
+    }
+  </section>
+
+  @if (state.transcricaoStatus() !== 'NAO_INICIADA') {
+    <section aria-labelledby="transcricao-title">
+      <h2 id="transcricao-title">Revise a transcrição antes de continuar</h2>
+      @if (state.transcricaoStatus() === 'CONCLUIDA' || state.transcricaoStatus() === 'EDITADA_MANUALMENTE') {
+        <label for="transcricao">Transcrição editável</label>
+        <textarea
+          id="transcricao"
+          rows="6"
+          [ngModel]="state.transcricao()"
+          (ngModelChange)="state.editTranscricao($event)"
+        ></textarea>
+      } @else {
+        <p role="alert">Não foi possível transcrever o áudio. Continue pelo campo de texto.</p>
+      }
+    </section>
+  }
+
+  <button
+    class="primary-action"
+    type="button"
+    data-testid="avancar-relato"
+    [disabled]="state.irregularidades().length === 0"
+  >Avançar</button>
+</main>

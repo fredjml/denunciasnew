@@ -1,0 +1,5 @@
+[
+  { "codigo": "FALTA_EPI", "rotulo": "Falta de equipamento de proteção", "icone": "capacete" },
+  { "codigo": "ASSEDIO", "rotulo": "Assédio no trabalho", "icone": "dialogo" },
+  { "codigo": "ATRASO_SALARIAL", "rotulo": "Atraso de salários", "icone": "calendario" }
+]

@@ -225,15 +225,15 @@ Cada task = 1 fatia `FATIA-DN-*` de [11-IMPLEMENTATION-PLAN.delta-denunciasnew.m
 
 ### Ciclo 2 — CP-2 (Relato Guiado)
 
-- [ ] **T-CP2-01** `FATIA-DN-CP2-01` — `ChecklistIrregularidades` com taxonomia mock.
-- [ ] **T-CP2-02** `FATIA-DN-CP2-02` — Textarea com contador.
-- [ ] **T-CP2-03** `FATIA-DN-CP2-03` — `AudioRecorderService` (MediaRecorder API).
-- [ ] **T-CP2-04** `FATIA-DN-CP2-04` — Componente gravador in-app.
-- [ ] **T-CP2-05** `FATIA-DN-CP2-05` — Fallback texto quando mic negado.
-- [ ] **T-CP2-06** `FATIA-DN-CP2-06` — `SttProxy` mock com `msw`.
-- [ ] **T-CP2-07** `FATIA-DN-CP2-07` — Preview de transcrição editável.
-- [ ] **T-CP2-08** `FATIA-DN-CP2-08` — Fixture TTS (`espeak-ng`).
-- [ ] **T-CP2-09** `FATIA-DN-CP2-09` — Consentimento explícito para áudio.
+- [x] **T-CP2-01** `FATIA-DN-CP2-01` — `ChecklistIrregularidades` com taxonomia mock. Implementada; unit aprovado.
+- [x] **T-CP2-02** `FATIA-DN-CP2-02` — Textarea com contador. Implementada; contador e sanitização de caracteres de controle testados.
+- [x] **T-CP2-03** `FATIA-DN-CP2-03` — `AudioRecorderService` (MediaRecorder API). Implementada; adaptador sobre `MediaRecorder` nativo, unit aprovado.
+- [x] **T-CP2-04** `FATIA-DN-CP2-04` — Componente gravador in-app. Implementada; unit aprovado (start/stop emite Blob). Evidência e2e com dispositivo de mídia falso (SH-DN-04) pendente.
+- [x] **T-CP2-05** `FATIA-DN-CP2-05` — Fallback texto quando mic negado. Implementada; unit aprovado (`microphoneDenied` + alerta).
+- [x] **T-CP2-06** `FATIA-DN-CP2-06` — `SttProxy` mock com `msw`. Implementada; 3 cenários (CONCLUIDA/FALHA/TIMEOUT) testados.
+- [x] **T-CP2-07** `FATIA-DN-CP2-07` — Preview de transcrição editável. Implementada; `EDITADA_MANUALMENTE` testado.
+- [x] **T-CP2-08** `FATIA-DN-CP2-08` — Fixture de áudio sintética + script reprodutível. Implementada como ruído branco via Node puro (`espeak-ng`/`edge-tts` indisponíveis; ver nota em `DEC-DN-P-F5-4`).
+- [x] **T-CP2-09** `FATIA-DN-CP2-09` — Consentimento explícito para áudio. Implementada; unit aprovado (modal antes de habilitar o gravador).
 
 ### Ciclo 3 — CP-3 (Detalhamento + Evidências)
 

@@ -11,4 +11,17 @@ export const handlers = [
 
     return HttpResponse.json(syntheticMunicipalities);
   }),
+  http.post('*/api/stt', ({ request }) => {
+    const scenario = request.headers.get('x-synthetic-stt-scenario');
+    if (scenario === 'FALHA') {
+      return HttpResponse.json({ status: 'FALHA', texto: '' }, { status: 503 });
+    }
+    if (scenario === 'TIMEOUT') {
+      return HttpResponse.json({ status: 'TIMEOUT', texto: '' });
+    }
+    return HttpResponse.json({
+      status: 'CONCLUIDA',
+      texto: 'SYN-TRANSCRICAO: relato de teste gerado artificialmente.',
+    });
+  }),
 ];

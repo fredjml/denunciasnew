@@ -1,1 +1,5 @@
-<app-step-acolhimento />
+@if (currentStep() === 'ACOLHIMENTO') {
+  <app-step-acolhimento (advance)="startReport($event)" />
+} @else {
+  <app-step-relato-guiado />
+}

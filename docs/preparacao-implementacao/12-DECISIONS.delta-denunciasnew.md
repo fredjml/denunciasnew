@@ -75,6 +75,14 @@
   - Nenhuma dependência de banco de vozes externo.
 - **Owner:** Backend + QA.
 - **Status:** **FECHADA** (aceita limitação).
+- **Nota de implementação (CP-2, 2026-09-04):** `espeak-ng` e `edge-tts` não estavam disponíveis
+  no ambiente de execução do CP-2 e instalação exige autorização just-in-time (`AGENTS.md` §6).
+  Owner autorizou (via pergunta no plano de execução) usar como **substituto interino**
+  `frontend/scripts/generate-audio-fixtures.mjs`, que gera ruído branco WAV determinístico em
+  Node puro — sem TTS, sem dependência nova. A decisão original (Opção A, TTS local) permanece
+  vigente para quando `espeak-ng`/`edge-tts` forem instalados sob autorização; até lá, a fixture
+  de ruído branco cobre apenas a validação estrutural do fluxo (`T-CP2-08`), não a qualidade de
+  transcrição real. Reabrir esta nota antes de qualquer evidência que dependa de fala inteligível.
 
 ### DEC-DN-P-F5-5 — Ambiente `live-BFF`
 
