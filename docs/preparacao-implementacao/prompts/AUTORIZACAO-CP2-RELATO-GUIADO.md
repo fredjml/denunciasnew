@@ -68,12 +68,25 @@ Atualize plano e playbook apenas com evidência concluída. Emita gate CP-2 e pa
 ## Gate CP-2 — emitido
 
 - **Data:** 2026-09-04.
-- **Estado:** `T-CP2-01..09` implementadas com evidência unit-front (24/24 testes Vitest aprovados).
-- **Validações executadas:** `npx eslint .` (0 erros), `npx ng test --watch=false` (24 passed),
-  `npx ng build` (sem erros), `npx playwright test` (4 passed), `git diff --check` (sem avisos).
+- **Estado:** `T-CP2-01..09` implementadas com evidência unit-front + e2e-mock (31 testes unitários,
+  6 e2e, 100% aprovados).
+- **Validações executadas:** `npm run lint` (frontend + backend-mock, 0 erros), `npm test`
+  (24 Vitest frontend + 7 Vitest backend-mock), `npm run build`, `npx playwright test` (6 e2e,
+  incluindo `SH-DN-04` com `--use-fake-device-for-media-stream`), `git diff --check` (sem avisos).
 - **Desvio registrado:** `T-CP2-08` usa ruído branco sintético via Node puro em vez de TTS
   (`espeak-ng`/`edge-tts` indisponíveis no ambiente) — ver nota de implementação em
   `12-DECISIONS.delta-denunciasnew.md` (`DEC-DN-P-F5-4`).
-- **Pendência não bloqueante:** evidência e2e-mock com `--use-fake-device-for-media-stream`
-  (`SH-DN-04`) não foi capturada nesta rodada; cobertura atual é unit-front.
+- **Correções adicionais fora do escopo de código de produto, necessárias para o CP-2 funcionar
+  de ponta a ponta na aplicação real (não apenas em teste unitário):**
+  - `backend-mock/src/routes/stt.js` — rota `/api/stt` inexistia; o MSW mockava só a camada de
+    teste, então a transcrição sempre falhava ao testar manualmente. Rota nova replica os mesmos
+    3 cenários (`CONCLUIDA`/`FALHA`/`TIMEOUT`), com teste `integ-sim` (`test/stt.spec.mjs`).
+  - `frontend/proxy.conf.json` + `angular.json` (`serve.options.proxyConfig`) — `ng serve` nunca
+    encaminhava `/api/*` para o `backend-mock`; sem isso, nenhuma chamada de API funcionava fora
+    dos testes.
+  - `package.json` (raiz) — script `dev` agora fixa `--host 127.0.0.1 --port 4200` para evitar
+    ambiguidade IPv4/IPv6 local.
+  - `backend-mock/eslint.config.mjs` — globals Node (`Buffer` etc.) ausentes para `test/**/*.mjs`.
+- **Pendência não bloqueante:** nenhuma remanescente para `T-CP2-*`. Gaps futuros ficam registrados
+  no relatório de verificação da sessão.
 - **Próximo passo:** aguardar autorização do owner para `CP-3`. Nenhum avanço realizado.

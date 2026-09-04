@@ -5,7 +5,7 @@
   "description": "MVP standalone do Canal de Denúncias MPT — Angular 22 (frontend) + Express (backend-mock)",
   "workspaces": [],
   "scripts": {
-    "dev": "concurrently -n back,front -c blue,magenta \"npm --prefix backend-mock run dev\" \"npm --prefix frontend start\"",
+    "dev": "concurrently -n back,front -c blue,magenta \"npm --prefix backend-mock run dev\" \"npm --prefix frontend start -- --host 127.0.0.1 --port 4200\"",
     "start": "npm run dev",
     "install:all": "npm install && npm --prefix frontend install && npm --prefix backend-mock install",
     "build": "npm --prefix frontend run build",

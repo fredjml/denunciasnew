@@ -6,6 +6,7 @@ const logger = require('./logger');
 const correlation = require('./middleware/correlation');
 const denunciasRouter = require('./routes/denuncias');
 const municipiosRouter = require('./routes/municipios');
+const sttRouter = require('./routes/stt');
 const healthRouter = require('./routes/health');
 
 function createApp() {
@@ -24,6 +25,7 @@ function createApp() {
   app.use('/health', healthRouter);
   app.use('/api/denuncias', denunciasRouter);
   app.use('/api/municipios', municipiosRouter);
+  app.use('/api/stt', sttRouter);
 
   // 404 sem originalUrl em log (R-SEC-01)
   app.use((req, res) => {
@@ -48,6 +50,7 @@ if (require.main === module) {
     console.log(`\n  backend-mock ▶  http://localhost:${port}`);
     console.log('  GET  /health');
     console.log('  POST /api/denuncias');
-    console.log('  GET  /api/municipios?uf=SP\n');
+    console.log('  GET  /api/municipios?uf=SP');
+    console.log('  POST /api/stt\n');
   });
 }

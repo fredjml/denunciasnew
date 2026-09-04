@@ -228,7 +228,7 @@ Cada task = 1 fatia `FATIA-DN-*` de [11-IMPLEMENTATION-PLAN.delta-denunciasnew.m
 - [x] **T-CP2-01** `FATIA-DN-CP2-01` — `ChecklistIrregularidades` com taxonomia mock. Implementada; unit aprovado.
 - [x] **T-CP2-02** `FATIA-DN-CP2-02` — Textarea com contador. Implementada; contador e sanitização de caracteres de controle testados.
 - [x] **T-CP2-03** `FATIA-DN-CP2-03` — `AudioRecorderService` (MediaRecorder API). Implementada; adaptador sobre `MediaRecorder` nativo, unit aprovado.
-- [x] **T-CP2-04** `FATIA-DN-CP2-04` — Componente gravador in-app. Implementada; unit aprovado (start/stop emite Blob). Evidência e2e com dispositivo de mídia falso (SH-DN-04) pendente.
+- [x] **T-CP2-04** `FATIA-DN-CP2-04` — Componente gravador in-app. Implementada; unit e e2e aprovados (start/stop emite Blob; `--use-fake-device-for-media-stream`, SH-DN-04).
 - [x] **T-CP2-05** `FATIA-DN-CP2-05` — Fallback texto quando mic negado. Implementada; unit aprovado (`microphoneDenied` + alerta).
 - [x] **T-CP2-06** `FATIA-DN-CP2-06` — `SttProxy` mock com `msw`. Implementada; 3 cenários (CONCLUIDA/FALHA/TIMEOUT) testados.
 - [x] **T-CP2-07** `FATIA-DN-CP2-07` — Preview de transcrição editável. Implementada; `EDITADA_MANUALMENTE` testado.
