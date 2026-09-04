@@ -1,0 +1,33 @@
+{
+  "name": "denunciasnew",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MVP standalone do Canal de Denúncias MPT — Angular 22 + Express mock",
+  "workspaces": [],
+  "scripts": {
+    "dev": "concurrently -n mock,app -c blue,magenta \"npm --prefix mock-api run dev\" \"npm --prefix app start\"",
+    "start": "npm run dev",
+    "install:all": "npm install && npm --prefix app install && npm --prefix mock-api install",
+    "build": "npm --prefix app run build",
+    "test": "npm --prefix app test -- --watch=false --browsers=ChromeHeadless && npm --prefix mock-api test",
+    "test:unit:app": "npm --prefix app test -- --watch=false --browsers=ChromeHeadless",
+    "test:unit:mock": "npm --prefix mock-api test",
+    "lint": "echo 'lint aggregate: rode npm run lint dentro de app/ e mock-api/'",
+    "contract:validate": "npx --yes @redocly/cli lint contract/openapi.yaml",
+    "contract:types": "npx --yes openapi-typescript contract/openapi.yaml --output app/src/app/api/generated.ts",
+    "check:health": "curl.exe http://localhost:3001/health"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  },
+  "author": "denunciasnew MVP",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fredjml/denunciasnew.git"
+  }
+}
