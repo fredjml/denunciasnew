@@ -1,0 +1,128 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+  background: var(--color-bg-subtle);
+}
+
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-6);
+  padding: var(--space-4) max(var(--space-4), calc((100% - var(--max-width-content)) / 2));
+  color: var(--color-text-inverse);
+  background: var(--color-primary);
+}
+
+.brand,
+.service-name {
+  font-weight: 700;
+}
+
+.page-shell {
+  display: grid;
+  gap: var(--space-8);
+  width: min(100% - 2rem, var(--max-width-form));
+  margin: 0 auto;
+  padding: var(--space-8) 0 var(--space-12);
+}
+
+.step-label {
+  margin-bottom: var(--space-2);
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.lead {
+  max-width: 38rem;
+  margin-bottom: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-lg);
+}
+
+.choice-group {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.choice-card {
+  display: grid;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-5);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-primary);
+  text-align: left;
+  background: var(--color-bg);
+  box-shadow: var(--shadow-sm);
+}
+
+.choice-card:hover {
+  border-color: var(--color-primary-light);
+}
+
+.choice-card--selected {
+  border-color: var(--color-primary);
+  background: #eaf5fb;
+  box-shadow: 0 0 0 1px var(--color-primary);
+}
+
+.choice-title {
+  color: var(--color-primary-dark);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+}
+
+.choice-description {
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-base);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.primary-action {
+  padding: var(--space-3) var(--space-8);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  color: var(--color-text-inverse);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  background: var(--color-primary);
+}
+
+.primary-action:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+}
+
+.primary-action:disabled {
+  border-color: var(--color-border-strong);
+  color: var(--color-text-secondary);
+  background: var(--color-bg-muted);
+  cursor: not-allowed;
+}
+
+@media (max-width: 30rem) {
+  .site-header {
+    flex-direction: column;
+  }
+
+  .page-shell {
+    gap: var(--space-6);
+    padding-top: var(--space-6);
+  }
+
+  .primary-action {
+    width: 100%;
+  }
+}

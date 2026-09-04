@@ -217,10 +217,10 @@ Cada task = 1 fatia `FATIA-DN-*` de [11-IMPLEMENTATION-PLAN.delta-denunciasnew.m
 - [x] **T-CP0-06** `FATIA-DN-CP0-06` — `pino-noir` para redaction. Implementada no `backend-mock`; 4/4 testes aprovados.
 
 **CP-1:**
-- [ ] **T-CP1-01** `FATIA-DN-CP1-01` — `StepAcolhimento` com 3 CTAs.
-- [ ] **T-CP1-02** `FATIA-DN-CP1-02` — Registro da escolha em sessão.
+- [x] **T-CP1-01** `FATIA-DN-CP1-01` — `StepAcolhimento` com 3 CTAs. Implementada; unit e E2E aprovados.
+- [x] **T-CP1-02** `FATIA-DN-CP1-02` — Registro da escolha em sessão. Implementada; restauração e valor inválido testados.
 - [ ] **T-CP1-03** `FATIA-DN-CP1-03` — Redirect Ouvidoria *(bloqueada — precisa URL)*.
-- [ ] **T-CP1-04** `FATIA-DN-CP1-04` — Player vídeo institucional acessível.
+- [x] **T-CP1-04** `FATIA-DN-CP1-04` — Player vídeo institucional acessível. Implementada com placeholder sintético, captions e transcrição.
 - [ ] **T-CP1-05** `FATIA-DN-CP1-05` — Vídeo self-hosted sem cookies *(bloqueada — T-DN-20)*.
 
 ### Ciclo 2 — CP-2 (Relato Guiado)

@@ -65,10 +65,10 @@ Todas as fatias respeitam `R-INC-01` (menor mudança coerente) e `R-SCOPE-01` (s
 
 | ID | Requisito | Arquivos permitidos | Teste focal | Ameaça | Evidência | Rollback | Depend. | Owner | Estado |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| FATIA-DN-CP1-01 | Componente `StepAcolhimento` | `frontend/src/app/steps/step-acolhimento/*` | unit-front: renderiza 3 CTAs + botão Avançar desabilitado sem escolha | DN-RF-001 | SH-DN-01, SH-DN-02 | reverter arquivos | CP0-01, CP0-03 | Frontend + Produto | PRONTA-P/-AUTORIZAÇÃO |
-| FATIA-DN-CP1-02 | Registro da escolha como metadado da sessão | `complaint.service.ts` | unit-front: `complaint.origem_acolhimento` persiste em `sessionStorage` | DN-RF-001 | log Vitest | reverter serviço | CP1-01 | Frontend | PRONTA-P/-AUTORIZAÇÃO |
+| FATIA-DN-CP1-01 | Componente `StepAcolhimento` | `frontend/src/app/steps/step-acolhimento/*` | unit-front: renderiza 3 CTAs + botão Avançar desabilitado sem escolha | DN-RF-001 | SH-DN-01, SH-DN-02 | reverter arquivos | CP0-01, CP0-03 | Frontend + Produto | IMPLEMENTADA — unit + E2E aprovados |
+| FATIA-DN-CP1-02 | Registro da escolha como metadado da sessão | `frontend/src/app/services/acolhimento-state.service.ts` | unit-front: `origem_acolhimento` persiste em `sessionStorage` | DN-RF-001 | log Vitest | reverter serviço | CP1-01 | Frontend | IMPLEMENTADA — persistência/restauração aprovadas |
 | FATIA-DN-CP1-03 | Redirect para Ouvidoria | `step-acolhimento` | e2e-mock: clique em "Fale com a Ouvidoria" chama `window.open` (mockado) para URL a definir | DN-RF-001 | trace Playwright | reverter componente | CP1-01, DEC-DN-19 (URL Ouvidoria) | Frontend + Produto | BLOQUEADA — URL da Ouvidoria não definida |
-| FATIA-DN-CP1-04 | Componente vídeo institucional | `step-acolhimento` (subcomponente) | unit-front: player sem autoplay-com-som; captions ativas; transcrição visível | DN-RF-002, T-DN-20 | SH-DN-01 | reverter subcomp | CP1-01 | Frontend + A11y | PRONTA-P/-AUTORIZAÇÃO |
+| FATIA-DN-CP1-04 | Componente vídeo institucional | `frontend/src/app/steps/step-acolhimento/video-institucional.*` | unit-front: player sem autoplay-com-som; captions ativas; transcrição visível | DN-RF-002, T-DN-20 | SH-DN-01 | reverter subcomp | CP1-01 | Frontend + A11y | IMPLEMENTADA — placeholder sintético; unit + E2E + axe aprovados |
 | FATIA-DN-CP1-05 | Provider do vídeo sem cookies de terceiros | `angular.json`, `styles.css`, `index.html` | e2e-mock: inspeção de cookies confirma set-cookie externo = 0 | T-DN-20 | log Playwright | reverter config | CP1-04, DEC-DN-25 (hosting decision) | Frontend + DPO | BLOQUEADA — hosting do vídeo pendente |
 
 ## 4. CP-2 — Relato Guiado (DN-RF-003, DN-RF-004, DN-RS-002 mock)
