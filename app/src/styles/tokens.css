@@ -1,0 +1,122 @@
+/*
+ * Tokens de design — denunciasnew MVP
+ * Base: Legal Design + Visual Law + WCAG 2.2 AA
+ * Referência: docs/preparacao-implementacao/06-REQUIREMENTS.delta-denunciasnew.md
+ */
+
+:root {
+  /* Paleta institucional (contraste WCAG AA/AAA) */
+  --color-primary: #003a5d;       /* azul MPT institucional */
+  --color-primary-dark: #002841;
+  --color-primary-light: #0064a0;
+  --color-accent: #d97706;         /* alerta/ação secundária */
+  --color-success: #166534;
+  --color-warning: #a16207;
+  --color-danger: #991b1b;
+
+  /* Cinzas neutros */
+  --color-text-primary: #17212b;
+  --color-text-secondary: #4b5563;
+  --color-text-muted: #6b7280;
+  --color-text-inverse: #ffffff;
+  --color-bg: #ffffff;
+  --color-bg-subtle: #f8fafc;
+  --color-bg-muted: #f1f5f9;
+  --color-border: #cbd5e1;
+  --color-border-strong: #64748b;
+
+  /* Contrastes AAA para avisos críticos (Sigilo / LGPD) */
+  --color-critical-text: #17212b;
+  --color-critical-bg: #fef3c7;
+  --color-critical-border: #a16207;
+
+  /* Tipografia — escala mobile-first */
+  --font-family-base:
+    system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    "Noto Sans", sans-serif;
+  --font-family-mono:
+    ui-monospace, SFMono-Regular, "Cascadia Code", Consolas, "Roboto Mono",
+    monospace;
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-lg: 1.125rem;   /* 18px */
+  --font-size-xl: 1.25rem;    /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-3xl: 1.875rem;  /* 30px */
+  --line-height-tight: 1.25;
+  --line-height-base: 1.5;
+  --line-height-loose: 1.75;
+
+  /* Espaçamento base 4px */
+  --space-0: 0;
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+
+  /* Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-full: 9999px;
+
+  /* Sombra */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.06);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.06);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+
+  /* Alvo de toque WCAG 2.5.8 — target size mínimo */
+  --touch-target-min: 44px;
+
+  /* Foco visível (WCAG 2.4.7) */
+  --focus-ring-color: #005fcc;
+  --focus-ring-width: 3px;
+  --focus-ring-offset: 2px;
+
+  /* Motion — respeita prefers-reduced-motion no consumo */
+  --transition-fast: 120ms;
+  --transition-base: 200ms;
+  --transition-slow: 320ms;
+  --easing-base: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Layout */
+  --max-width-form: 42rem;       /* ~672px — leitura confortável em mobile e desktop */
+  --max-width-content: 65rem;
+  --header-height: 4rem;
+}
+
+/* Foco visível global */
+*:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-sm);
+}
+
+/* Áreas de toque mínimas para controles */
+button,
+[role="button"],
+a,
+input[type="checkbox"],
+input[type="radio"] {
+  min-height: var(--touch-target-min);
+  min-width: var(--touch-target-min);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
