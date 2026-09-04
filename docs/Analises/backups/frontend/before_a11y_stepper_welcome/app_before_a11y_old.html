@@ -1,0 +1,90 @@
+<div class="page-wrapper">
+
+  <!-- Sidebar institucional (visível apenas em desktop 1024px+) -->
+  <aside class="sidebar-institucional" aria-label="Informações institucionais" role="complementary">
+    <div>
+      <div class="sidebar-logo">
+        <img src="logo-mpt.png" alt="MPT" style="height:40px; width:auto">
+      </div>
+
+      <h2 class="sidebar-title">Canal de Denúncias</h2>
+      <p class="sidebar-desc">
+        Denuncie irregularidades trabalhistas de forma segura e sigilosa ao
+        Ministério Público do Trabalho.
+      </p>
+
+      <ul class="sidebar-features">
+        <li><i class="bi bi-shield-check"></i> Seus dados são protegidos</li>
+        <li><i class="bi bi-incognito"></i> Opção de anonimato total</li>
+        <li><i class="bi bi-lightning-charge"></i> Processo simples e guiado</li>
+        <li><i class="bi bi-file-earmark-check"></i> Receba número de protocolo</li>
+      </ul>
+    </div>
+
+    <div class="sidebar-footer">
+      <p>Ministério Público do Trabalho &copy; {{ currentYear }}</p>
+      <p>MPT - Cidadania</p>
+    </div>
+  </aside>
+
+  <!-- Área principal (formulário) -->
+  <div class="main-area">
+    <div class="app-container">
+
+      <!-- Header MPT (visível em mobile e tablet; oculto no desktop que usa a sidebar) -->
+      <header class="header-mpt header-desktop-hidden" role="banner">
+        <div class="logo">
+          <img src="logo-mpt.png" alt="MPT" style="height:32px; width:auto;">
+        </div>
+        <button class="header-action" id="btn-accessibility" aria-label="Acessibilidade">
+          <i class="bi bi-universal-access"></i>
+        </button>
+      </header>
+
+      <!-- Tab Navigation -->
+      <nav class="tab-nav" role="navigation" aria-label="Seções do formulário">
+        <button [class.active]="activeTab === 'acolhimento'" [disabled]="!isTabEnabled('acolhimento')"
+          (click)="goToTab('acolhimento')" id="tab-acolhimento">Acolhimento</button>
+        <button [class.active]="activeTab === 'relato'" [disabled]="!isTabEnabled('relato')"
+          (click)="goToTab('relato')" id="tab-relato">Relato</button>
+        <button [class.active]="activeTab === 'empresa'" [disabled]="!isTabEnabled('empresa')"
+          (click)="goToTab('empresa')" id="tab-empresa">Empresa</button>
+        <button [class.active]="activeTab === 'revisao'" [disabled]="!isTabEnabled('revisao')"
+          (click)="goToTab('revisao')" id="tab-revisao">Revisão</button>
+      </nav>
+
+      <!-- Stepper progress bar (visível durante os steps 1–6) -->
+      @if (svc.currentStep() > 0 && !svc.isSubmitted()) {
+      <div class="stepper-bar" role="progressbar" [attr.aria-valuenow]="svc.progress()" aria-valuemin="0"
+        aria-valuemax="100">
+        @for (i of [1,2,3,4,5,6]; track $index) {
+        <div class="stepper-dot" [class.active]="svc.currentStep() === i" [class.completed]="svc.currentStep() > i" (click)="svc.goToStep(i)">
+        </div>
+        @if ($index < 5) { <div class="stepper-line" [class.completed]="svc.currentStep() > i">
+      </div>
+      }
+      }
+    </div>
+    }
+
+    <!-- Conteúdo principal -->
+    <main class="flex-grow-1 d-flex flex-column align-items-stretch w-100" role="main" style="width: 100%;">
+      @if (svc.isSubmitted()) {
+      <app-confirmation class="w-100 d-block" />
+      } @else {
+      @switch (svc.currentStep()) {
+      @case (0) { <app-acolhimento class="w-100 d-block" /> }
+      @case (1) { <app-step-irregularidades class="w-100 d-block" /> }
+      @case (2) { <app-step-ocorrencias class="w-100 d-block" /> }
+      @case (3) { <app-step-evidencias class="w-100 d-block" /> }
+      @case (4) { <app-step-identificacao class="w-100 d-block" /> }
+      @case (5) { <app-step-local class="w-100 d-block" /> }
+      @case (6) { <app-step-revisao class="w-100 d-block" /> }
+      }
+      }
+    </main>
+
+  </div>
+</div>
+
+</div>

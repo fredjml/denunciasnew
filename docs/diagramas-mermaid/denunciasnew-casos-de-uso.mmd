@@ -1,0 +1,96 @@
+flowchart LR
+    accTitle: Casos de uso do Canal de Denúncias MPT — novo leiaute (denunciasnew)
+    accDescr: Atores primários e secundários, casos de uso com «include» e «extend», generalização entre canais e integrações com sistemas externos. Marcadores «NOVO» são propostas do PDF (F2); «PART» dependem de decisão (DEC-DN-07..22).
+    cidadao(["«actor · primário»<br/>Cidadão comum"])
+    servidor(["«actor · primário»<br/>Servidor / agente público"])
+    identificado(["«actor · especialização»<br/>Denunciante identificado"])
+    anonimo(["«actor · especialização»<br/>Denunciante anônimo"])
+    operacao(["«actor · secundário»<br/>Equipe de operação · DPO"])
+    ouvidoria(["«actor · sistema»<br/>Ouvidoria do MPT"])
+    mpt(["«actor · sistema»<br/>API interna MPT"])
+    ibge(["«actor · sistema»<br/>API IBGE"])
+    clamav(["«actor · sistema»<br/>ClamAV daemon"])
+    whatsapp(["«actor · sistema · NOVO · PART»<br/>WhatsApp Business API"])
+    stt(["«actor · sistema · NOVO · PART»<br/>Provedor STT"])
+    classificador(["«actor · sistema · NOVO · PART»<br/>Classificador"])
+    alertas(["«actor · sistema · NOVO · PART»<br/>Motor de alertas"])
+    subgraph sistema["🏛️ Canal de Denúncias MPT · novo leiaute"]
+        direction TB
+        registrarWeb(("Registrar denúncia<br/>via web (mobile-first)"))
+        registrarBot(("«NOVO · PART»<br/>Registrar denúncia<br/>via WhatsApp"))
+        acolher(("«NOVO»<br/>Acolher e filtrar<br/>(3 caminhos)"))
+        assistirVideo(("«NOVO»<br/>Assistir vídeo<br/>institucional (opcional)"))
+        redirecionarOuv(("Redirecionar à<br/>Ouvidoria"))
+        selecionarIrreg(("«NOVO»<br/>Selecionar irregularidades<br/>(checklist visual)"))
+        descreverTexto(("Descrever fato<br/>por texto"))
+        descreverAudio(("«NOVO»<br/>Descrever fato<br/>por áudio"))
+        transcreverAudio(("«NOVO · PART»<br/>Transcrever áudio"))
+        editarTranscricao(("«NOVO»<br/>Editar transcrição<br/>antes do envio"))
+        detalharOcorr(("«NOVO»<br/>Detalhar ocorrência<br/>(nº · modalidade · vulneráveis)"))
+        anexarEvid(("Anexar evidências<br/>(fotos · áudios · vídeos · docs)"))
+        declararTest(("«NOVO»<br/>Declarar testemunhas"))
+        escolherSigilo(("«NOVO»<br/>Escolher sigilo<br/>ou anonimato"))
+        informarLocal(("Informar local<br/>(UF/município obrigatório)"))
+        revisar(("Revisar e editar"))
+        confirmar(("Confirmar envio"))
+        classificar(("«NOVO · PART»<br/>Classificar denúncia<br/>(categoria + prioridade)"))
+        despacharAlerta(("«NOVO · PART»<br/>Despachar alerta<br/>se pauta urgente"))
+        inspecionarAnexos(("Inspecionar<br/>anexos"))
+        encaminharMpt(("Encaminhar<br/>ao MPT"))
+        receberProtocolo(("Receber protocolo<br/>+ infográfico do fluxo"))
+        consultarMunicipios(("Consultar<br/>municípios"))
+        disponibilidade(("Verificar disponibilidade<br/>e docs (/health · /docs)"))
+        revisaoHumana(("«NOVO · PART»<br/>Revisão humana de<br/>decisão automatizada<br/>(LGPD art. 20)"))
+    end
+    identificado -.->|"«generalização»"| cidadao
+    anonimo -.->|"«generalização»"| cidadao
+    cidadao --> registrarWeb
+    cidadao -.->|"«extend» · alternativa"| registrarBot
+    servidor --> registrarWeb
+    registrarWeb -. "«include»" .-> acolher
+    registrarBot -. "«include»" .-> acolher
+    acolher -. "«extend» · opcional" .-> assistirVideo
+    acolher -. "«extend» · desvio" .-> redirecionarOuv
+    redirecionarOuv --> ouvidoria
+    registrarWeb -. "«include»" .-> selecionarIrreg
+    registrarWeb -. "«include»" .-> detalharOcorr
+    registrarWeb -. "«include»" .-> anexarEvid
+    registrarWeb -. "«include»" .-> escolherSigilo
+    registrarWeb -. "«include»" .-> informarLocal
+    registrarWeb -. "«include»" .-> revisar
+    registrarWeb -. "«include»" .-> confirmar
+    selecionarIrreg -. "«extend»" .-> descreverTexto
+    selecionarIrreg -. "«extend»" .-> descreverAudio
+    descreverAudio -. "«include» · NOVO" .-> transcreverAudio
+    transcreverAudio -. "«extend» · NOVO" .-> editarTranscricao
+    anexarEvid -. "«extend»" .-> declararTest
+    anexarEvid -. "«extend»" .-> inspecionarAnexos
+    informarLocal -. "«extend»" .-> consultarMunicipios
+    revisar -. "«extend»" .-> revisar
+    confirmar -. "«include»" .-> classificar
+    classificar -. "«extend» · NOVO" .-> despacharAlerta
+    confirmar -. "«include»" .-> encaminharMpt
+    confirmar -. "«include»" .-> receberProtocolo
+    despacharAlerta -. "«extend» · LGPD" .-> revisaoHumana
+    classificar -. "«extend» · LGPD" .-> revisaoHumana
+    consultarMunicipios --> ibge
+    inspecionarAnexos --> clamav
+    encaminharMpt --> mpt
+    transcreverAudio --> stt
+    classificar --> classificador
+    despacharAlerta --> alertas
+    registrarBot --> whatsapp
+    operacao --> disponibilidade
+    operacao --> revisaoHumana
+    classDef primary fill:#dbe4ee,stroke:#17324d,color:#17212b,stroke-width:2px
+    classDef neutral fill:#f7f8fa,stroke:#65717d,color:#17212b
+    classDef actor fill:#ffffff,stroke:#17324d,color:#17212b
+    classDef spec fill:#fdf6e3,stroke:#7d6608,color:#7d6608
+    classDef novo fill:#eaf7ea,stroke:#1e6b1e,color:#0f3d0f,stroke-dasharray: 4 3
+    class registrarWeb,confirmar,receberProtocolo primary
+    class descreverTexto,anexarEvid,informarLocal,revisar,consultarMunicipios,inspecionarAnexos,encaminharMpt,disponibilidade neutral
+    class cidadao,servidor,operacao,mpt,ibge,clamav actor
+    class ouvidoria neutral
+    class identificado,anonimo spec
+    class registrarBot,acolher,assistirVideo,redirecionarOuv,selecionarIrreg,descreverAudio,transcreverAudio,editarTranscricao,detalharOcorr,declararTest,escolherSigilo,classificar,despacharAlerta,revisaoHumana novo
+    class whatsapp,stt,classificador,alertas novo

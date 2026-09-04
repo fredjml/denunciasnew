@@ -1,0 +1,151 @@
+<mxfile host="Electron" modified="2026-08-31T15:50:00.000Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.4.6 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="SUDcolorV2NoArrows" version="24.4.6" type="device">
+  <diagram name="Arquitetura Geral SUD (sem setas)" id="PrDMDMvRUGizoHFpNXtL2">
+    <mxGraphModel dx="2758" dy="2093" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="TITLE" value="SUD &#8212; SISTEMA &#218;NICO DE DEN&#218;NCIAS&#xa;Arquitetura Geral (leitura por numera&#231;&#227;o de fluxo &#8212; sem setas)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1;fontColor=#C0392B;" vertex="1" parent="1">
+          <mxGeometry x="900" y="70" width="1560" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="SUD_BOUNDARY" value="SUD &#8212; Sistema &#218;nico de Den&#250;ncias (fronteira do sistema)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#1F5AA6;strokeWidth=4;verticalAlign=top;fontSize=15;fontStyle=1;fontColor=#1F5AA6;arcSize=3;" vertex="1" parent="1">
+          <mxGeometry x="950" y="340" width="1470" height="880" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-1" value="Servi&#231;os externos (fora do SUD)" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#7D6608;fillColor=none;strokeWidth=2;verticalAlign=top;dashed=1;dashPattern=6 4;fontSize=13;fontStyle=1;fontColor=#7D6608;" vertex="1" parent="1">
+          <mxGeometry x="1410" y="220" width="590" height="107" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-2" value="&lt;b&gt;[&#9314;]&lt;/b&gt; API p&#250;blica do IBGE&#xa;(munic&#237;pios por UF)" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#B7950B;fillColor=#FCF3CF;strokeWidth=2;fontSize=11;fontStyle=1;fontColor=#7D6608;" vertex="1" parent="1">
+          <mxGeometry x="1800" y="248" width="155" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-3" value="&lt;b&gt;[&#9319;]&lt;/b&gt; API interna do MPT&#xa;&#171;MPT Digital&#187;" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#D35400;fillColor=#FDEBD0;strokeWidth=3;fontSize=12;fontStyle=1;fontColor=#7B3F00;" vertex="1" parent="1">
+          <mxGeometry x="1420" y="248" width="192" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-4" value="Depend&#234;ncias privadas (infraestrutura interna do SUD)" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#8E44AD;fillColor=#F5EEF8;strokeWidth=2;verticalAlign=top;dashed=1;dashPattern=6 4;fontSize=13;fontStyle=1;fontColor=#6C3483;" vertex="1" parent="1">
+          <mxGeometry x="960" y="1090" width="1430" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-5" value="&lt;b&gt;[&#9315;]&lt;/b&gt; Redis&#xa;contadores e TTL" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=10;strokeWidth=2;whiteSpace=wrap;html=1;strokeColor=#8E44AD;fillColor=#EBDEF0;fontSize=11;fontStyle=1;fontColor=#4A235A;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="1110.5" width="139" height="89" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-6" value="&lt;b&gt;[&#9316;]&lt;/b&gt; Diret&#243;rio tempor&#225;rio&#xa;(anexos)" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=10;strokeWidth=2;whiteSpace=wrap;html=1;strokeColor=#8E44AD;fillColor=#EBDEF0;fontSize=11;fontStyle=1;fontColor=#4A235A;" vertex="1" parent="1">
+          <mxGeometry x="1419" y="1129.5" width="163" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-7" value="&lt;b&gt;[&#9318;]&lt;/b&gt; ClamAV daemon" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#8E44AD;fillColor=#EBDEF0;strokeWidth=2;fontSize=11;fontStyle=1;fontColor=#4A235A;" vertex="1" parent="1">
+          <mxGeometry x="2213" y="1129.5" width="130" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-8" value="&lt;b&gt;[cfg]&lt;/b&gt; Vari&#225;veis e segredos&#xa;somente no servidor" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#8E44AD;fillColor=#EBDEF0;strokeWidth=2;fontSize=11;fontStyle=1;fontColor=#4A235A;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="1120" width="161" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-9" value="BACK-END &#8212; BFF Node.js + Express (zona de aplica&#231;&#227;o)" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#1F5AA6;fillColor=#EEF3FB;strokeWidth=2;verticalAlign=top;fontSize=13;fontStyle=1;fontColor=#1F5AA6;" vertex="1" parent="1">
+          <mxGeometry x="1070" y="350" width="1320" height="486" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-10" value="&lt;b&gt;[&#9315;]&lt;/b&gt; Helmet, CORS e parsers&#xa;(seguran&#231;a de borda)" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#1F5AA6;fillColor=#FFFFFF;strokeWidth=2;fontSize=11;fontStyle=1;fontColor=#17324D;" vertex="1" parent="1">
+          <mxGeometry x="1887" y="660" width="185" height="111" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-11" value="&lt;b&gt;[&#9315;]&lt;/b&gt; Rate limit" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#1F5AA6;fillColor=#FFFFFF;strokeWidth=2;fontSize=11;fontStyle=1;fontColor=#17324D;" vertex="1" parent="1">
+          <mxGeometry x="1290" y="740" width="86" height="51" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-12" value="&lt;b&gt;[&#9315;]&lt;/b&gt; POST /api/denuncias" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#1F5AA6;fillColor=#FFFFFF;strokeWidth=2;fontSize=11;fontStyle=1;fontColor=#17324D;" vertex="1" parent="1">
+          <mxGeometry x="1090" y="551" width="186" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-13" value="&lt;b&gt;[&#9316;]&lt;/b&gt; Multer diskStorage&#xa;tipo, 20 MB e 10 arquivos" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#1F5AA6;fillColor=#FFFFFF;strokeWidth=2;fontSize=11;fontStyle=1;fontColor=#17324D;" vertex="1" parent="1">
+          <mxGeometry x="1310" y="550" width="216" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-14" value="&lt;b&gt;[&#9317;]&lt;/b&gt; ComplaintController&#xa;parse e orquestra&#231;&#227;o" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#1F5AA6;fillColor=#DBE4F5;strokeWidth=2;fontSize=11;fontStyle=1;fontColor=#17324D;" vertex="1" parent="1">
+          <mxGeometry x="1930" y="470" width="186" height="97" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-15" value="&lt;b&gt;[&#9317;]&lt;/b&gt; ComplaintService&#xa;valida&#231;&#227;o, protocolo e payload" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#1F5AA6;fillColor=#DBE4F5;strokeWidth=2;fontSize=11;fontStyle=1;fontColor=#17324D;" vertex="1" parent="1">
+          <mxGeometry x="1980" y="370" width="257" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-16" value="&lt;b&gt;[&#9318;]&lt;/b&gt; Cliente ClamAV&#xa;INSTREAM" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#1F5AA6;fillColor=#FFFFFF;strokeWidth=2;fontSize=11;fontStyle=1;fontColor=#17324D;" vertex="1" parent="1">
+          <mxGeometry x="2189" y="574" width="135" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-17" value="&lt;b&gt;[&#9319;]&lt;/b&gt; MPT API Client&#xa;multipart, Bearer e timeout" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#1F5AA6;fillColor=#FFFFFF;strokeWidth=2;fontSize=11;fontStyle=1;fontColor=#17324D;" vertex="1" parent="1">
+          <mxGeometry x="1540" y="460" width="236" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-18" value="&lt;b&gt;[&#9321;]&lt;/b&gt; Limpeza de tempor&#225;rios&#xa;bloco finally (sempre executa)" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#1F5AA6;fillColor=#FFFFFF;strokeWidth=2;fontSize=11;fontStyle=1;fontColor=#17324D;" vertex="1" parent="1">
+          <mxGeometry x="2150" y="490" width="208" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-19" value="&lt;b&gt;[aux]&lt;/b&gt; Health e Swagger" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#1F5AA6;fillColor=#FFFFFF;strokeWidth=2;fontSize=11;fontStyle=1;fontColor=#17324D;" vertex="1" parent="1">
+          <mxGeometry x="1241" y="612" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-20" value="FRONT-END &#8212; Navegador (zona p&#250;blica) &#183; Angular SPA" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#1F5AA6;fillColor=#DBE4F5;strokeWidth=2;verticalAlign=top;fontSize=13;fontStyle=1;fontColor=#1F5AA6;" vertex="1" parent="1">
+          <mxGeometry x="1470" y="856" width="912" height="207" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-21" value="&lt;b&gt;[&#9313;]&lt;/b&gt; Angular SPA standalone" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#1F5AA6;fillColor=#FFFFFF;strokeWidth=2;fontSize=11;fontStyle=1;fontColor=#17324D;" vertex="1" parent="1">
+          <mxGeometry x="1500" y="1016" width="201" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-22" value="&lt;b&gt;[&#9313;]&lt;/b&gt; Wizard de den&#250;ncia&#xa;7 telas" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#1F5AA6;fillColor=#FFFFFF;strokeWidth=2;fontSize=11;fontStyle=1;fontColor=#17324D;" vertex="1" parent="1">
+          <mxGeometry x="1725" y="1000" width="167" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-23" value="&lt;b&gt;[&#9313;]&lt;/b&gt; ComplaintService&#xa;signals e navega&#231;&#227;o" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#1F5AA6;fillColor=#FFFFFF;strokeWidth=2;fontSize=11;fontStyle=1;fontColor=#17324D;" vertex="1" parent="1">
+          <mxGeometry x="1943" y="900" width="166" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-24" value="&lt;b&gt;[&#9313;]&lt;/b&gt; ComplaintApiClient&#xa;FormData e fetch" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#1F5AA6;fillColor=#FFFFFF;strokeWidth=2;fontSize=11;fontStyle=1;fontColor=#17324D;" vertex="1" parent="1">
+          <mxGeometry x="2179" y="982" width="164" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-25" value="&lt;b&gt;[&#9314;]&lt;/b&gt; municipios-ibge.json&#xa;fallback local" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#B7950B;fillColor=#FCF3CF;strokeWidth=2;dashed=1;dashPattern=4 3;fontSize=11;fontStyle=1;fontColor=#7D6608;" vertex="1" parent="1">
+          <mxGeometry x="1620" y="870" width="173" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="9l7ZWyM2FDOhcq2ofP8C-26" value="&#171;actor&#187;&#xa;&lt;b&gt;[&#9312;]&lt;/b&gt; Cidad&#227; ou&#xa;cidad&#227;o" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;strokeColor=#17324D;fillColor=#F4F6F8;strokeWidth=2;fontSize=11;fontStyle=1;fontColor=#17324D;" vertex="1" parent="1">
+          <mxGeometry x="1260" y="920" width="121" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="RESPONSE_NOTE" value="&lt;b&gt;[&#9320;]&lt;/b&gt; Resposta 201 + protocolo&#xa;(ou erro expl&#237;cito)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;fillColor=#EAFAF1;strokeColor=#27AE60;strokeWidth=2;fontSize=11;fontStyle=1;fontColor=#1E8449;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="830" width="220" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="LEGEND_PANEL" value="LEGENDA &amp; NARRATIVA NUMERADA" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FDFEFE;strokeColor=#34495E;strokeWidth=2;verticalAlign=top;fontSize=15;fontStyle=1;fontColor=#17324D;" vertex="1" parent="1">
+          <mxGeometry x="2470" y="220" width="380" height="1000" as="geometry" />
+        </mxCell>
+        <mxCell id="LEG_SEC1" value="Zonas do diagrama (cores dos cont&#234;ineres)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#17324D;" vertex="1" parent="1">
+          <mxGeometry x="2485" y="255" width="350" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="LEG_SUD_BOX" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DBE4F5;strokeColor=#1F5AA6;strokeWidth=3;" vertex="1" parent="1">
+          <mxGeometry x="2485" y="285" width="34" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="LEG_SUD_TXT" value="&lt;b&gt;SUD&lt;/b&gt; &#8212; Sistema &#218;nico de Den&#250;ncias&#xa;(Front-end Angular + BFF Node.js/Express)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;fontColor=#17324D;" vertex="1" parent="1">
+          <mxGeometry x="2528" y="278" width="315" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="LEG_MPT_BOX" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FDEBD0;strokeColor=#D35400;strokeWidth=3;" vertex="1" parent="1">
+          <mxGeometry x="2485" y="330" width="34" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="LEG_MPT_TXT" value="&lt;b&gt;MPT Digital&lt;/b&gt; &#8212; recebimento institucional&#xa;da den&#250;ncia (API interna do MPT)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;fontColor=#7B3F00;" vertex="1" parent="1">
+          <mxGeometry x="2528" y="323" width="315" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="LEG_IBGE_BOX" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FCF3CF;strokeColor=#B7950B;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2485" y="375" width="34" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="LEG_IBGE_TXT" value="&lt;b&gt;Servi&#231;o externo p&#250;blico&lt;/b&gt;&#xa;(IBGE &#8212; consulta de munic&#237;pios)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;fontColor=#7D6608;" vertex="1" parent="1">
+          <mxGeometry x="2528" y="368" width="315" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="LEG_INFRA_BOX" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#EBDEF0;strokeColor=#8E44AD;strokeWidth=2;dashed=1;dashPattern=6 4;" vertex="1" parent="1">
+          <mxGeometry x="2485" y="420" width="34" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="LEG_INFRA_TXT" value="&lt;b&gt;Depend&#234;ncias privadas&lt;/b&gt; do SUD&#xa;(Redis, dir. tempor&#225;rio, ClamAV, segredos)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;fontColor=#6C3483;" vertex="1" parent="1">
+          <mxGeometry x="2528" y="413" width="315" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="LEG_ACTOR_BOX" value="&#171;actor&#187;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#F4F6F8;strokeColor=#17324D;strokeWidth=2;fontSize=9;fontStyle=1;fontColor=#17324D;" vertex="1" parent="1">
+          <mxGeometry x="2485" y="465" width="34" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="LEG_ACTOR_TXT" value="&lt;b&gt;Ator UML&lt;/b&gt; &#8212; Cidad&#227; ou cidad&#227;o&#xa;(usu&#225;rio final que registra a den&#250;ncia)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;fontColor=#17324D;" vertex="1" parent="1">
+          <mxGeometry x="2528" y="458" width="315" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="LEG_RESP_BOX" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;fillColor=#EAFAF1;strokeColor=#27AE60;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2485" y="508" width="34" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="LEG_RESP_TXT" value="&lt;b&gt;Canal de resposta&lt;/b&gt; &#8212; 201 + protocolo&#xa;(ou erro expl&#237;cito) devolvido ao SPA" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;fontColor=#1E8449;" vertex="1" parent="1">
+          <mxGeometry x="2528" y="501" width="315" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="LEG_SEC2" value="Como ler (fluxo por numera&#231;&#227;o &#8212; sem setas)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#17324D;" vertex="1" parent="1">
+          <mxGeometry x="2485" y="555" width="350" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="LEG_STEPS" value="&lt;b&gt;[&#9312;]&lt;/b&gt; Cidad&#227;o acessa o SPA por HTTPS.&#xa;&lt;b&gt;[&#9313;]&lt;/b&gt; Front-end Angular (SPA + Wizard 7 telas + ComplaintService + ApiClient) captura, valida e monta a submiss&#227;o.&#xa;&lt;b&gt;[&#9314;]&lt;/b&gt; Wizard consulta UF/munic&#237;pios no IBGE, com fallback local em municipios-ibge.json.&#xa;&lt;b&gt;[&#9315;]&lt;/b&gt; Entrada segura no BFF: Helmet/CORS + Rate limit (contadores no Redis) + POST /api/denuncias.&#xa;&lt;b&gt;[&#9316;]&lt;/b&gt; Multer diskStorage grava anexos no diret&#243;rio tempor&#225;rio (20 MB &#183; 10 arq.).&#xa;&lt;b&gt;[&#9317;]&lt;/b&gt; Camada de aplica&#231;&#227;o: ComplaintController orquestra e ComplaintService valida, gera protocolo e monta payload.&#xa;&lt;b&gt;[&#9318;]&lt;/b&gt; Verifica&#231;&#227;o antimalware: Cliente ClamAV envia anexos por INSTREAM ao ClamAV daemon.&#xa;&lt;b&gt;[&#9319;]&lt;/b&gt; &lt;font color=&quot;#1E8449&quot;&gt;&lt;b&gt;INTEGRA&#199;&#195;O SUD &#8594; MPT Digital&lt;/b&gt;&lt;/font&gt;: MPT API Client encaminha (Bearer/timeout) &#224; API interna do MPT.&#xa;&lt;b&gt;[&#9320;]&lt;/b&gt; Resposta 201 + protocolo (ou erro expl&#237;cito) devolvida ao SPA.&#xa;&lt;b&gt;[&#9321;]&lt;/b&gt; Limpeza de tempor&#225;rios no bloco finally (sempre executada).&#xa;&#xa;&lt;b&gt;[aux]&lt;/b&gt; Health e Swagger &#8212; rotas auxiliares de observabilidade.&#xa;&lt;b&gt;[cfg]&lt;/b&gt; Vari&#225;veis e segredos &#8212; configura&#231;&#227;o de runtime (Rate limit, MPT client)." style="text;html=1;strokeColor=none;fillColor=#FBFCFD;align=left;verticalAlign=top;fontSize=10;fontColor=#17324D;spacingLeft=6;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="2485" y="580" width="360" height="335" as="geometry" />
+        </mxCell>
+        <mxCell id="LEG_SEC3" value="Refer&#234;ncias (fontes desta vista)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#17324D;" vertex="1" parent="1">
+          <mxGeometry x="2485" y="925" width="350" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="LEG_REFS" value="&#8226; 01-arquitetura-geralB.drawio (vers&#227;o com setas)&#xa;&#8226; 01-arquitetura-geral.mmd (C4 n&#237;vel 2)&#xa;&#8226; 07-componentes.mmd (C4 n&#237;vel 3)&#xa;&#8226; 09-implantacao-seguranca.mmd&#xa;&#8226; 10-fluxo-dados.mmd&#xa;&#8226; desenho_arq (1).png (paleta institucional)" style="text;html=1;strokeColor=none;fillColor=#FBFCFD;align=left;verticalAlign=top;fontSize=10;fontColor=#17324D;spacingLeft=6;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="2485" y="950" width="360" height="120" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

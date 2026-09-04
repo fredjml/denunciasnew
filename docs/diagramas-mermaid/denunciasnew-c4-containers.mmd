@@ -1,0 +1,55 @@
+flowchart LR
+    accTitle: C4 nível 2 — contêineres do Canal de Denúncias MPT (novo leiaute — denunciasnew)
+    accDescr: Contêineres, portas expostas, protocolos, cardinalidades e trust boundaries do novo leiaute. Elementos «NOVO» são propostas do PDF (F2). Elementos «PART» dependem de decisão do owner (DEC-DN-07..22).
+    cidadao(["«actor · person»<br/><b>Cidadão comum</b>"])
+    servidor(["«actor · person»<br/><b>Servidor / agente público</b>"])
+    operacao(["«actor · person»<br/><b>Equipe de operação</b>"])
+    subgraph canal["«system» Canal de Denúncias MPT · novo leiaute"]
+        direction LR
+        web["«container»<br/><b>Aplicação web mobile-first</b><br/><i>Angular · TypeScript · standalone</i><br/>Wizard 8 telas com Progressive Disclosure<br/>WCAG 2.1 (ou 2.2 AA · DEC-DN-07)<br/>─────────────<br/>◆ provê: UI do denunciante<br/>◆ requer: /api/denuncias · IBGE"]
+        bff["«container»<br/><b>API de entrada (BFF)</b><br/><i>Node.js · Express</i><br/>Segurança de borda, orquestração e<br/>coordenação dos novos serviços<br/>─────────────<br/>◆ provê: POST /api/denuncias · /health · /docs<br/>◆ requer: Redis · ClamAV · MPT · STT · Classificador · Alertas"]
+        botAdapter["«container · NOVO · PART»<br/><b>WhatsApp Bot Adapter</b><br/><i>Node.js ou serviço externo</i><br/>Converte conversa em envelope<br/>compatível com o web<br/>(DN-RS-001 · DEC-DN-09)"]
+        web ==>|"1..1 · POST multipart/form-data"| bff
+        bff ==>|"1..1 · 201 + protocolo · 4xx/5xx + erro"| web
+        botAdapter -.->|"1..1 · envelope estruturado"| bff
+    end
+    ibge[["«external system»<br/><b>API pública de localidades</b><br/><i>IBGE · HTTPS/JSON</i><br/>(herdado)"]]
+    redis[("«datastore · rate-limit»<br/><b>Redis</b><br/><i>protocolo RESP</i><br/>(herdado)")]
+    clamav[["«external system»<br/><b>Antimalware</b><br/><i>ClamAV · TCP 3310 · INSTREAM</i><br/>(herdado)"]]
+    mpt[["«external system»<br/><b>Recebimento institucional</b><br/><i>API interna MPT · HTTPS</i><br/>(herdado)"]]
+    ouvidoria[["«external system»<br/><b>Ouvidoria do MPT</b><br/><i>Canal auxiliar</i><br/>(redirecionamento)"]]
+    stt[["«external system · NOVO · PART»<br/><b>Provedor STT</b><br/><i>Transcrição de áudio</i><br/>(DEC-DN-11)"]]
+    classificador[["«external system · NOVO · PART»<br/><b>Classificador</b><br/><i>Categoria + prioridade</i><br/>(DEC-DN-12)"]]
+    alertas[["«external system · NOVO · PART»<br/><b>Motor de alertas</b><br/><i>Pautas urgentes</i><br/>(DEC-DN-22)"]]
+    whatsapp[["«external system · NOVO · PART»<br/><b>WhatsApp Business API</b><br/><i>Canal do provedor</i>"]]
+    secrets[/"«artifact · secret»<br/>Variáveis e segredos<br/><i>server-side only</i>"/]
+    cidadao ==>|"1 · registra denúncia · HTTPS"| web
+    servidor -.->|"«extend» caminho servidor"| web
+    web -.->|"redireciona quando escolhido<br/>‘Fale com a Ouvidoria’"| ouvidoria
+    web -->|"0..* · consulta municípios · HTTPS/JSON"| ibge
+    bff -->|"1..* · INCR / EXPIRE contadores"| redis
+    bff -->|"0..N · stream INSTREAM por anexo"| clamav
+    bff ==>|"1 · encaminha envelope + anexos"| mpt
+    bff -.->|"«NOVO» 0..1 · áudio → texto"| stt
+    bff -.->|"«NOVO» 1 · relato → categoria + prioridade"| classificador
+    bff -.->|"«NOVO» 0..1 · pauta urgente"| alertas
+    cidadao -.->|"«NOVO · alternativa» conversa"| whatsapp
+    whatsapp -.->|"webhook + payload"| botAdapter
+    secrets -.->|"«use» · runtime config"| bff
+    secrets -.->|"«use» · credenciais de canal"| botAdapter
+    operacao -->|"health, docs, revisão humana<br/>(DN-RS-003 · LGPD art. 20)"| bff
+    alertas -.->|"despacho ao canal responsável"| operacao
+    legenda["«legend»<br/><b>Notação C4 + UML</b><br/>«system» sistema em foco (azul)<br/>«container» unidade implantável<br/>«external system» / «datastore» (cinza)<br/>«actor» pessoa ou sistema externo<br/>«NOVO» proposta do PDF (verde tracejado)<br/>«PART» dependente de decisão<br/>═► fluxo síncrono principal<br/>─► integração auxiliar<br/>-.-> proposta / configuração<br/>Rótulos incluem cardinalidade"]
+    classDef primary fill:#dbe4ee,stroke:#17324d,color:#17212b,stroke-width:2px
+    classDef neutral fill:#f7f8fa,stroke:#65717d,color:#17212b
+    classDef actor fill:#ffffff,stroke:#17324d,color:#17212b
+    classDef ds fill:#f5eef8,stroke:#6c3483,color:#17212b
+    classDef external fill:#fdebd0,stroke:#7b3f00,color:#17212b
+    classDef novo fill:#eaf7ea,stroke:#1e6b1e,color:#0f3d0f,stroke-dasharray: 4 3
+    class web,bff primary
+    class redis ds
+    class ibge,clamav,mpt external
+    class cidadao,servidor,operacao actor
+    class ouvidoria neutral
+    class botAdapter,stt,classificador,alertas,whatsapp novo
+    class legenda,secrets neutral

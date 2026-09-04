@@ -1,0 +1,248 @@
+classDiagram
+    direction LR
+    class Complaint {
+      <<entity>>
+      +origem: OrigemDenuncia
+      +irregularidades: Irregularidade[]
+      +relato_texto: string
+      +relato_audio: Blob
+      +relato_audio_transcricao: string
+      +relato_audio_transcricao_status: TranscricaoStatus
+      +numero_prejudicados: FaixaTrabalhadores
+      +modalidade_trabalho: ModalidadeTrabalho
+      +grupos_vulneraveis: GrupoVulneravel[]
+      +tipo_identificacao: TipoIdentificacao
+      +nome_completo: string
+      +email: string
+      +telefone: string
+      +uf: string
+      +municipio: string
+      +municipio_ibge: string
+      +nome_empresa: string
+      +endereco_empresa: string
+      +anexos: FileAttachment[]
+      +testemunhas: Testemunha[]
+      +classificacao: Classificacao
+    }
+    class OrigemDenuncia {
+      <<enumeration>>
+      WEB
+      WHATSAPP_BOT
+    }
+    class TipoIdentificacao {
+      <<enumeration>>
+      ANONIMO
+      IDENTIFICADO
+    }
+    class TranscricaoStatus {
+      <<enumeration · NOVO>>
+      NAO_APLICAVEL
+      PENDENTE
+      CONCLUIDA
+      FALHA
+      EDITADA_MANUALMENTE
+    }
+    class FaixaTrabalhadores {
+      <<enumeration · NOVO · PART>>
+      UM
+      DOIS_A_CINCO
+      SEIS_A_VINTE
+      VINTE_UM_A_CEM
+      MAIS_DE_CEM
+    }
+    class ModalidadeTrabalho {
+      <<enumeration · NOVO · PART>>
+      PRESENCIAL
+      REMOTO
+      HIBRIDO
+      INFORMAL
+      TERCEIRIZADO
+      OUTRA
+    }
+    class GrupoVulneravel {
+      <<enumeration · NOVO>>
+      IDOSO
+      CRIANCA
+      PESSOA_COM_DEFICIENCIA
+      OUTRO
+    }
+    class Irregularidade {
+      <<entity · NOVO · PART>>
+      +codigo: string
+      +rotulo: string
+      +icone: string
+      +categoria: string
+    }
+    class Testemunha {
+      <<entity · NOVO · PART>>
+      +tem_testemunhas: boolean
+      +nome_referencial: string
+      +contato_opcional: string
+    }
+    class Classificacao {
+      <<value object · NOVO · PART>>
+      +categoria: string
+      +subcategoria: string
+      +prioridade: Prioridade
+      +metodo: MetodoClassificacao
+      +versao_classificador: string
+      +revisada_por_humano: boolean
+    }
+    class Prioridade {
+      <<enumeration · NOVO · PART>>
+      BAIXA
+      MEDIA
+      ALTA
+      URGENTE
+    }
+    class MetodoClassificacao {
+      <<enumeration · NOVO · PART>>
+      REGRA_DETERMINISTICA
+      MODELO_ML
+    }
+    class FileAttachment {
+      <<entity · anexo>>
+      +file: File
+      +preview: string
+      +type: string
+      +transcricao_disponivel: boolean
+    }
+    class WizardStep {
+      <<enumeration · REDESENHADO>>
+      ACOLHIMENTO
+      RELATO_GUIADO
+      DETALHAMENTO
+      EVIDENCIAS
+      SIGILO_ANONIMATO
+      LOCAL_EMPRESA
+      REVISAO
+      CONFIRMACAO
+    }
+    class ComplaintService {
+      <<service · Angular · signals>>
+      -complaint: Signal~Complaint~
+      -currentStep: Signal~WizardStep~
+      -highestStep: Signal~WizardStep~
+      -isSubmitting: Signal~boolean~
+      -isSubmitted: Signal~boolean~
+      -protocol: Signal~string~
+      -submissionError: Signal~Error~
+      +updateComplaint(partial: Partial~Complaint~) void
+      +nextStep() void
+      +prevStep() void
+      +goToStep(step: WizardStep) void
+      +submitComplaint() Promise~void~
+      +reset() void
+    }
+    class AudioRecorderService {
+      <<service · Angular · NOVO>>
+      +startRecording() Promise~void~
+      +stopRecording() Promise~Blob~
+      +previewTranscription(blob: Blob) Promise~string~
+    }
+    class ComplaintApiClient {
+      <<boundary · gateway>>
+      -endpoint: string
+      +submitComplaint(complaint: Complaint) Promise~string~
+      -buildFormData(complaint: Complaint) FormData
+    }
+    class ComplaintController {
+      <<controller · Express>>
+      +receberDenuncia(req, res, next) Promise~void~
+    }
+    class ComplaintDomainService {
+      <<service · domínio>>
+      +validateComplaint(complaint: Complaint) string[]
+      +generateProtocol() string
+      +buildComplaintPayload(complaint: Complaint, protocol: string, timestamp: Date) MptEnvelope
+      +applyAnonimizationRules(complaint: Complaint) Complaint
+    }
+    class MptEnvelope {
+      <<value object · payload>>
+      +protocolo: string
+      +timestamp: string
+      +fonte: string
+      +versao: string
+      +sigilo: string
+      +origem: OrigemDenuncia
+      +classificacao: Classificacao
+      +denuncia: object
+    }
+    class UploadMiddleware {
+      <<middleware · Multer>>
+      +upload() RequestHandler
+      +cleanupUploadedFiles(files: File[]) Promise~void~
+    }
+    class ClamAvClient {
+      <<gateway · TCP>>
+      +scanUploadedFiles(files: File[]) Promise~ScanResult[]~
+    }
+    class ScanResult {
+      <<value object>>
+      +clean: boolean
+      +threat: string
+      +available: boolean
+    }
+    class MptApiClient {
+      <<gateway · HTTPS>>
+      +sendComplaint(payload: MptEnvelope, files: File[]) Promise~Response~
+    }
+    class SttClient {
+      <<gateway · HTTPS · NOVO · PART>>
+      -provider: string
+      +transcribe(audio: Blob) Promise~TranscribeResult~
+    }
+    class TranscribeResult {
+      <<value object · NOVO · PART>>
+      +texto: string
+      +confianca: number
+      +duracao_ms: number
+      +status: TranscricaoStatus
+    }
+    class ClassifierClient {
+      <<gateway · HTTPS · NOVO · PART>>
+      +classify(payload: MptEnvelope) Promise~Classificacao~
+    }
+    class AlertService {
+      <<service · NOVO · PART>>
+      +despacharSePauta(complaint: Complaint, classificacao: Classificacao) Promise~void~
+    }
+    class BotIngressController {
+      <<controller · Express · NOVO · PART>>
+      +receberEnvelopeBot(req, res, next) Promise~void~
+    }
+    class RateLimiter {
+      <<middleware · Redis>>
+      +consume(ip: string) Promise~boolean~
+    }
+    Complaint "1" *-- "0..10" FileAttachment : anexos
+    Complaint "1" *-- "0..*" Testemunha : testemunhas
+    Complaint "1" *-- "0..*" Irregularidade : irregularidades
+    Complaint "1" o-- "1" TipoIdentificacao : usa
+    Complaint "1" o-- "1" OrigemDenuncia : usa
+    Complaint "1" o-- "1" Classificacao : recebe
+    Classificacao "1" o-- "1" Prioridade : nível
+    Classificacao "1" o-- "1" MetodoClassificacao : origem
+    ComplaintService "1" *-- "1" Complaint : mantém
+    ComplaintService "1" ..> WizardStep : usa
+    ComplaintService "1" ..> ComplaintApiClient : envia
+    ComplaintService "1" ..> AudioRecorderService : usa
+    ComplaintController "1" ..> ComplaintDomainService : «use»
+    ComplaintController "1" ..> UploadMiddleware : «use»
+    ComplaintController "1" ..> ClamAvClient : «use»
+    ComplaintController "1" ..> MptApiClient : «use»
+    ComplaintController "1" ..> RateLimiter : «use»
+    ComplaintController "1" ..> SttClient : «use · NOVO»
+    ComplaintController "1" ..> ClassifierClient : «use · NOVO»
+    ComplaintController "1" ..> AlertService : «use · NOVO»
+    BotIngressController "1" ..> ComplaintController : «forward · NOVO»
+    ComplaintDomainService "1" ..> MptEnvelope : «create»
+    ClamAvClient ..> ScanResult : produz
+    MptApiClient ..> MptEnvelope : consome
+    SttClient ..> TranscribeResult : produz
+    ClassifierClient ..> Classificacao : produz
+    note for ComplaintService "Camada de estado do front-end.\nSignals reativos. Novo wizard\nde 8 telas mobile-first."
+    note for ComplaintController "Ponto de entrada HTTP no BFF.\nOrquestra pipeline sem persistir\ndenúncia (D-04 herdado)."
+    note for MptEnvelope "Payload institucional enviado ao MPT.\nCampos origem e classificacao são\nnovos e dependem de DEC-DN-09..12."
+    note for BotIngressController "Adaptador de entrada para o chatbot\nWhatsApp. Reaproveita o pipeline\ndo controller web."
+    note for AudioRecorderService "MediaRecorder API. Preview de\ntranscrição opcional antes do envio,\nsujeito ao provedor STT (DEC-DN-11)."

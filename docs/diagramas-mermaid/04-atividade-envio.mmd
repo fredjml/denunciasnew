@@ -1,0 +1,76 @@
+flowchart TD
+    accTitle: Atividade de envio de uma denúncia (com swimlanes por ator UML)
+    accDescr: Fluxo principal com raias por ator (Pessoa, SPA, BFF, Erros), decisões, guardas e exceções.
+    inicio(("●"))
+    fim((("●")))
+    subgraph l_pessoa["🧑 Ator · Pessoa demandante"]
+        preencher[["Preencher etapas do wizard<br/>(7 telas)"]]
+        revisar[["Revisar dados"]]
+        corrigir{"Corrigir<br/>informações?"}
+        confirmar[["Confirmar envio"]]
+    end
+    subgraph l_spa["💻 Contêiner · Angular SPA"]
+        montar[["Montar FormData<br/>(campos + anexos)"]]
+        aguardar[["Aguardar resposta"]]
+        exibirOk[["Exibir protocolo"]]
+        exibirErro[["Exibir erro contextualizado"]]
+    end
+    subgraph l_bff["🛡️ Contêiner · BFF Express"]
+        limite{"Rate-limit<br/>por IP OK?"}
+        upload[["Multer diskStorage<br/>tipo + 20 MB + 10 arq."]]
+        entrada[["JSON.parse + validateComplaint"]]
+        valido{"Entrada<br/>válida?"}
+        scan[["Cliente ClamAV<br/>INSTREAM por anexo"]]
+        seguro{"Resultado<br/>seguro?"}
+        protocolo[["generateProtocol()<br/>buildComplaintPayload()"]]
+        encaminhar[["POST multipart → MPT API<br/>Bearer opcional · timeout"]]
+        aceito{"MPT aceita?"}
+        finally[["cleanupUploadedFiles()<br/>(bloco finally)"]]
+    end
+    subgraph l_erros["⚠️ Respostas de erro (HTTP)"]
+        e429[/"429 · Too Many Requests"/]
+        e4xx[/"400 · 413 · 422<br/>dados inválidos"/]
+        e422[/"422 · anexo com ameaça"/]
+        e503[/"503 · dependência indisponível"/]
+        e5xx[/"502 · 503 · MPT indisponível"/]
+    end
+    inicio --> preencher
+    preencher --> revisar
+    revisar --> corrigir
+    corrigir -->|"[sim]"| preencher
+    corrigir -->|"[não]"| confirmar
+    confirmar --> montar
+    montar --> limite
+    limite -->|"[não]"| e429
+    e429 --> aguardar
+    limite -->|"[sim]"| upload
+    upload --> entrada
+    entrada --> valido
+    valido -->|"[inválida]"| e4xx
+    e4xx --> aguardar
+    valido -->|"[válida]"| scan
+    scan --> seguro
+    seguro -->|"[ameaça]"| e422
+    e422 --> finally
+    seguro -->|"[indisp. em produção]"| e503
+    e503 --> finally
+    seguro -->|"[limpo ou indisp. em dev]"| protocolo
+    protocolo --> encaminhar
+    encaminhar --> aceito
+    aceito -->|"[não]"| e5xx
+    e5xx --> finally
+    aceito -->|"[sim · 201]"| finally
+    finally --> aguardar
+    aguardar -->|"[201 + protocolo]"| exibirOk
+    exibirOk --> fim
+    aguardar -->|"[erro]"| exibirErro
+    exibirErro --> revisar
+    classDef primary fill:#dbe4ee,stroke:#17324d,color:#17212b
+    classDef neutral fill:#f7f8fa,stroke:#65717d,color:#17212b
+    classDef decision fill:#ffffff,stroke:#17324d,color:#17212b
+    classDef error fill:#fdecea,stroke:#c0392b,color:#7b241c
+    classDef terminal fill:#17324d,stroke:#17324d,color:#ffffff
+    class preencher,revisar,confirmar,montar,aguardar,exibirOk,upload,entrada,scan,protocolo,encaminhar,finally primary
+    class corrigir,limite,valido,seguro,aceito decision
+    class e429,e4xx,e422,e503,e5xx,exibirErro error
+    class inicio,fim terminal

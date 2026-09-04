@@ -1,0 +1,53 @@
+flowchart TB
+    accTitle: C4 nível 1 — contexto do Canal de Denúncias MPT (novo leiaute proposto — denunciasnew)
+    accDescr: Sistema como caixa preta com o novo leiaute Legal Design/Visual Law, atores humanos, sistemas externos, chatbot WhatsApp, transcrição de áudio, classificador, alertas inteligentes e trust boundaries. Elementos marcados «NOVO» são propostas do PDF; «PART» dependem de decisão do owner (DEC-DN-07..22).
+    cidadao(["«actor · person»<br/><b>Cidadão comum</b><br/><i>Denunciante · baixo letramento<br/>digital/jurídico</i>"])
+    servidor(["«actor · person»<br/><b>Servidor / agente público</b><br/><i>Órgão público que denuncia</i>"])
+    operacao(["«actor · person»<br/><b>Equipe de operação</b><br/><i>SRE · plantão · DPO</i>"])
+    subgraph boundary["«system boundary» Canal de Denúncias MPT · novo leiaute (denunciasnew)"]
+        sistema["«system in focus»<br/><b>Canal de Denúncias MPT</b><br/><i>Sistema de software · Legal Design + Visual Law</i><br/>Wizard mobile-first · Progressive Disclosure<br/>─────────────<br/>Coleta guiada, sigilo/anonimato,<br/>relato multimodal e infográfico<br/>de acompanhamento"]
+    end
+    ibge[["«external system»<br/><b>Serviço de localidades</b><br/><i>IBGE · HTTPS/JSON</i><br/>(herdado)"]]
+    mpt[["«external system»<br/><b>API interna do MPT</b><br/><i>Recebimento institucional</i><br/>(herdado)"]]
+    antimalware[["«external system»<br/><b>Antimalware</b><br/><i>ClamAV · TCP INSTREAM</i><br/>(herdado)"]]
+    rateStore[("«datastore · external»<br/><b>Rate-limit store</b><br/><i>Redis</i><br/>(herdado)")]
+    ouvidoria[["«external system»<br/><b>Ouvidoria do MPT</b><br/><i>Canal auxiliar</i><br/>redirecionamento da tela<br/>de acolhimento (DN-RF-001)"]]
+    whatsapp[["«external system · NOVO · PART»<br/><b>Chatbot WhatsApp</b><br/><i>WhatsApp Business API</i><br/>Porta de entrada alternativa<br/>(DN-RS-001 · DEC-DN-09)"]]
+    stt[["«external system · NOVO · PART»<br/><b>Transcrição de áudio</b><br/><i>Provedor STT a definir</i><br/>(DN-RS-002 · DEC-DN-11)"]]
+    classificador[["«external system · NOVO · PART»<br/><b>Classificador de denúncias</b><br/><i>Determinístico ou ML</i><br/>Categoria + prioridade<br/>(DN-RS-003 · DEC-DN-12)"]]
+    alertas[["«external system · NOVO · PART»<br/><b>Motor de alertas</b><br/><i>Pautas urgentes</i><br/>Canal ops · SLA a definir<br/>(DN-RS-004 · DEC-DN-22)"]]
+    cidadao ==>|"1 · registra relato multimodal<br/>(texto ou áudio) + evidências"| sistema
+    sistema ==>|"1 · protocolo + infográfico<br/>do fluxo interno (DN-RF-014)"| cidadao
+    servidor -->|"«extend» · caminho servidor<br/>(DN-RF-001)"| sistema
+    sistema -.->|"redireciona quando escolhido<br/>‘Fale com a Ouvidoria’"| ouvidoria
+    sistema -->|"0..* · municípios por UF"| ibge
+    ibge -->|"nomes e códigos IBGE"| sistema
+    sistema ==>|"1 · encaminha denúncia + anexos"| mpt
+    mpt -->|"aceite HTTP ou erro"| sistema
+    sistema -->|"0..N · inspeciona anexos"| antimalware
+    antimalware -->|"limpo · ameaça · indisponível"| sistema
+    sistema -->|"1..* · contadores por IP"| rateStore
+    rateStore -->|"disponível ou excedido"| sistema
+    sistema -.->|"«NOVO» 0..1 · áudio submetido"| stt
+    stt -.->|"transcrição textual"| sistema
+    sistema -.->|"«NOVO» 1 · relato classificado"| classificador
+    classificador -.->|"categoria + prioridade"| sistema
+    sistema -.->|"«NOVO» 0..1 · pauta urgente"| alertas
+    alertas -.->|"despacho ao canal responsável"| operacao
+    cidadao -.->|"«NOVO · alternativa»<br/>conversa"| whatsapp
+    whatsapp -.->|"envia estrutura de denúncia<br/>compatível com o web"| sistema
+    operacao -->|"health, docs, contrato,<br/>revisão humana de decisões auto"| sistema
+    legenda["«legend»<br/><b>Notação C4 + UML</b><br/>Azul: sistema em foco<br/>Cinza: dependência herdada<br/>Tracejado + rótulo «NOVO»: proposta do PDF<br/>«PART»: dependente de decisão do owner<br/>═► fluxo primário síncrono<br/>─► integração auxiliar<br/>-.-> proposta / configuração<br/>Rótulos com cardinalidade"]
+    classDef primary fill:#dbe4ee,stroke:#17324d,color:#17212b,stroke-width:2px
+    classDef neutral fill:#f7f8fa,stroke:#65717d,color:#17212b
+    classDef actor fill:#ffffff,stroke:#17324d,color:#17212b
+    classDef external fill:#fdebd0,stroke:#7b3f00,color:#17212b
+    classDef novo fill:#eaf7ea,stroke:#1e6b1e,color:#0f3d0f,stroke-dasharray: 4 3
+    classDef ds fill:#f5eef8,stroke:#6c3483,color:#17212b
+    class sistema primary
+    class ibge,mpt,antimalware external
+    class rateStore ds
+    class cidadao,servidor,operacao actor
+    class ouvidoria neutral
+    class whatsapp,stt,classificador,alertas novo
+    class legenda neutral

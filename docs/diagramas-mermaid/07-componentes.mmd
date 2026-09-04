@@ -1,0 +1,58 @@
+flowchart LR
+    accTitle: C4 nível 3 — componentes do frontend e do BFF (com portas e interfaces UML)
+    accDescr: Componentes internos, interfaces providas (●) e requeridas (○) e dependências entre contêineres.
+    subgraph frontend["«container» Angular SPA"]
+        direction TB
+        shell["«component»<br/><b>App</b><br/><i>Angular root</i><br/>Shell + stepper + rotas"]
+        steps["«component»<br/><b>Wizard Steps</b><br/><i>7 standalone components</i>"]
+        state["«component»<br/><b>ComplaintService</b><br/><i>signals</i><br/>Estado + navegação"]
+        client["«component»<br/><b>ComplaintApiClient</b><br/><i>fetch + FormData</i>"]
+        model["«component · type»<br/><b>Complaint / FileAttachment</b>"]
+        fallback["«artifact»<br/><b>municipios-ibge.json</b><br/>fallback local"]
+        shell --> steps
+        steps --> state
+        state --> model
+        state --> client
+        fallback -.->|"«use» quando IBGE falha"| steps
+    end
+    subgraph bff["«container» Express BFF"]
+        direction TB
+        edge["«component»<br/><b>Bootstrap HTTP</b><br/>helmet · cors · morgan"]
+        rate["«component»<br/><b>RateLimiter</b><br/>rate-limit-redis"]
+        router["«component»<br/><b>Complaint Router</b><br/>POST /api/denuncias"]
+        upload["«component»<br/><b>UploadMiddleware</b><br/>Multer diskStorage"]
+        controller["«component»<br/><b>ComplaintController</b>"]
+        domain["«component»<br/><b>ComplaintDomainService</b>"]
+        av["«component»<br/><b>ClamAvClient</b><br/>TCP INSTREAM"]
+        mptClient["«component»<br/><b>MptApiClient</b><br/>axios + FormData"]
+        swagger["«component»<br/><b>OpenAPI/Swagger</b><br/>/docs"]
+        health["«component»<br/><b>Health</b><br/>/health"]
+        edge --> rate
+        rate --> router
+        router --> upload
+        upload --> controller
+        controller --> domain
+        controller --> av
+        controller --> mptClient
+        edge --> swagger
+        edge --> health
+    end
+    ifIBGE(("○<br/>IBGE Localidades<br/>HTTPS/JSON"))
+    ifDenuncia(("●<br/>ISubmitComplaint<br/>POST multipart"))
+    ifRateStore(("○<br/>Redis RESP"))
+    ifClamAv(("○<br/>ClamAV INSTREAM"))
+    ifMpt(("○<br/>MPT Complaint API"))
+    steps -->|"«requires»"| ifIBGE
+    client -->|"«requires»"| ifDenuncia
+    edge -->|"«provides»"| ifDenuncia
+    rate -->|"«requires»"| ifRateStore
+    av -->|"«requires»"| ifClamAv
+    mptClient -->|"«requires»"| ifMpt
+    legenda["«legend»<br/><b>Notação</b><br/>● interface provida<br/>○ interface requerida<br/>«requires» / «provides»: dependência<br/>Azul: componente principal<br/>Cinza: componente de apoio<br/>Roxo: porta / interface"]
+    classDef primary fill:#dbe4ee,stroke:#17324d,color:#17212b
+    classDef neutral fill:#f7f8fa,stroke:#65717d,color:#17212b
+    classDef iface fill:#ffffff,stroke:#8e44ad,color:#4a235a
+    class shell,state,client,edge,controller primary
+    class steps,model,fallback,rate,router,upload,domain,av,mptClient,swagger,health neutral
+    class ifIBGE,ifDenuncia,ifRateStore,ifClamAv,ifMpt iface
+    class legenda neutral

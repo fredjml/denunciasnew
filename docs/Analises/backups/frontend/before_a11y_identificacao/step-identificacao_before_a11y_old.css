@@ -1,0 +1,35 @@
+.contato-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+.identified-fields {
+  animation: fadeInUp 0.3s ease;
+}
+
+/* ============ Botões de ação — paleta navy #1A2744 ============ */
+:host .btn-mpt-primary {
+  background: #1A2744;
+  border-color: #1A2744;
+}
+
+:host .btn-mpt-primary:hover {
+  background: #111B30;
+  box-shadow: 0 4px 12px rgba(26, 39, 68, 0.35);
+}
+
+:host .btn-mpt-primary:active {
+  background: #0D1525;
+}
+
+:host .btn-mpt-outline {
+  color: #1A2744;
+  border-color: #1A2744;
+}
+
+:host .btn-mpt-outline:hover {
+  background: #EEF0F3;
+  border-color: #111B30;
+  color: #111B30;
+}

@@ -1,0 +1,48 @@
+flowchart LR
+    accTitle: Fluxo de dados da denúncia (com classificação de dados sensíveis)
+    accDescr: Transformação e classificação dos dados entre navegador, BFF e integrações — sem persistência da denúncia.
+    pessoa(["«actor»<br/>Pessoa demandante"])
+    subgraph browser["💻 Navegador (memória volátil)"]
+        campos["«data · PII opcional»<br/><b>Campos do wizard</b>"]
+        anexos["«data · potencial confidencial»<br/><b>FileAttachment[]</b><br/>até 10 · até 20 MB cada"]
+        memoria["«data · in-memory»<br/><b>Complaint (Signal)</b>"]
+        serializa["«transform»<br/><b>ComplaintApiClient</b><br/>FormData"]
+        campos --> memoria
+        anexos --> memoria
+        memoria --> serializa
+    end
+    subgraph bff["🛡️ BFF Express (sem persistência da denúncia)"]
+        multipartIn["«data · em trânsito»<br/><b>multipart/form-data</b><br/>denuncia (JSON) + arquivo_N"]
+        temp[("«datastore · efêmero»<br/><b>Arquivos temporários</b><br/>UUID · removido no finally")]
+        valida["«transform»<br/><b>JSON.parse + validateComplaint</b>"]
+        envelope["«transform · value object»<br/><b>MptEnvelope</b><br/>protocolo · timestamp · fonte<br/>versão · sigilo · denuncia"]
+        multipartOut["«data · em trânsito»<br/><b>multipart/form-data</b><br/>envelope + arquivos"]
+        multipartIn --> valida
+        valida --> envelope
+        envelope --> multipartOut
+        multipartIn --> temp
+        temp --> multipartOut
+    end
+    ibge[["«external system»<br/><b>API IBGE</b>"]]
+    clamav[["«external system»<br/><b>ClamAV</b>"]]
+    mpt[["«external system»<br/><b>API MPT</b>"]]
+    pessoa ==>|"insere dados"| campos
+    campos -->|"UF + termo · HTTPS"| ibge
+    ibge -->|"nomes + códigos · JSON"| campos
+    serializa ==>|"HTTPS multipart"| multipartIn
+    temp -->|"stream INSTREAM"| clamav
+    clamav -->|"limpo · ameaça · indisponível"| temp
+    multipartOut ==>|"HTTPS · Bearer opcional"| mpt
+    mpt -->|"aceite HTTP"| envelope
+    envelope ==>|"201 + protocolo"| pessoa
+    temp -.->|"«purge» remoção no finally"| temp
+    legenda["«legend»<br/><b>Classificações</b><br/>«data · PII»: dados pessoais<br/>«data · confidencial»: relato/anexos<br/>«data · em trânsito»: apenas rede<br/>«datastore · efêmero»: sem persistência<br/><b>Sem banco de dados no BFF</b>"]
+    classDef primary fill:#dbe4ee,stroke:#17324d,color:#17212b
+    classDef neutral fill:#f7f8fa,stroke:#65717d,color:#17212b
+    classDef pii fill:#fdebd0,stroke:#7b3f00,color:#7b3f00
+    classDef external fill:#f5eef8,stroke:#6c3483,color:#4a235a
+    class memoria,serializa,valida,envelope primary
+    class multipartIn,temp,multipartOut neutral
+    class campos,anexos pii
+    class ibge,clamav,mpt external
+    class pessoa,legenda neutral

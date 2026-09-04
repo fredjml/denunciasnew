@@ -1,0 +1,42 @@
+flowchart LR
+    accTitle: Diagrama de implantação e fronteiras de segurança (com estereótipos UML)
+    accDescr: Topologia lógica com dispositivos, ambientes de execução, artefatos e trust boundaries.
+    subgraph publica["🌐 Zona pública (untrusted)"]
+        browser["«device · user agent»<br/><b>Navegador</b><br/><i>HTTPS</i>"]
+        ibgeDev["«device · external»<br/><b>Servidores IBGE</b>"]
+    end
+    subgraph aplicacao["🏢 Zona de aplicação (trusted)"]
+        proxy["«execution environment»<br/><b>Terminação TLS / proxy</b><br/><i>não definido no repositório<br/>(nginx, Cloud LB, etc.)</i>"]
+        cdnStatic["«artifact · dist»<br/><b>Angular build</b><br/>index.html + JS bundles"]
+        node["«execution environment»<br/><b>Node.js 20 · Express</b><br/>porta 3000"]
+        artifact["«artifact»<br/><b>bff.js + dependências</b>"]
+        temp[("«datastore · efêmero»<br/><b>Filesystem tmp</b><br/>anexos UUID")]
+        node --> artifact
+    end
+    subgraph privada["🔒 Zona privada (restricted)"]
+        redis[("«device · datastore»<br/><b>Redis</b><br/><i>obrigatório em produção</i>")]
+        clamav["«device · service»<br/><b>ClamAV daemon</b><br/><i>TCP 3310</i>"]
+        secrets[/"«artifact · secret»<br/><b>Variáveis / secret store</b><br/>URLs · token · limites"/]
+        mpt["«device · external service»<br/><b>API interna MPT</b>"]
+    end
+    browser ==>|"HTTPS"| proxy
+    proxy --> cdnStatic
+    proxy -->|"/api"| node
+    browser -.->|"HTTPS · consulta IBGE"| ibgeDev
+    node ==>|"INCR / EXPIRE"| redis
+    node ==>|"grava · lê · remove"| temp
+    node ==>|"INSTREAM (TCP 3310)"| clamav
+    secrets -.->|"configuração runtime"| node
+    node ==>|"HTTPS multipart · Bearer"| mpt
+    legenda["«legend»<br/><b>Trust boundaries</b><br/>Pública: pode ser hostil<br/>Aplicação: código nosso<br/>Privada: segredos e integrações<br/>═► fluxo primário<br/>-.-> configuração / uso<br/><b>Estereótipos UML</b><br/>«device» · «execution environment»<br/>«artifact» · «datastore»"]
+    classDef primary fill:#dbe4ee,stroke:#17324d,color:#17212b,stroke-width:2px
+    classDef neutral fill:#f7f8fa,stroke:#65717d,color:#17212b
+    classDef assumed fill:#ffffff,stroke:#65717d,color:#4d5965,stroke-dasharray:5 4
+    classDef restricted fill:#f5eef8,stroke:#6c3483,color:#17212b
+    classDef untrusted fill:#fdecea,stroke:#c0392b,color:#17212b
+    class node,cdnStatic,artifact primary
+    class temp neutral
+    class browser,ibgeDev untrusted
+    class redis,clamav,secrets,mpt restricted
+    class proxy assumed
+    class legenda neutral

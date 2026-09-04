@@ -1,0 +1,53 @@
+{
+  "name": "cidadania-canal-denuncias",
+  "version": "0.0.0",
+  "scripts": {
+    "//start": "O argumento --host 0.0.0.0 permite o acesso à aplicação através de outros dispositivos na mesma rede",
+    "ng": "ng",
+    "start": "ng serve --port 4201",
+    "start:proxy": "ng serve --port 4201 --host 0.0.0.0 --proxy-config proxy.conf.json",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test --watch=false",
+    "server": "cd server && node index.js",
+    "server:dev": "cd server && npx nodemon index.js"
+  },
+  "private": true,
+  "packageManager": "npm@11.11.0",
+  "engines": {
+    "node": ">=22.22.3 <23",
+    "npm": ">=11.11.0 <12"
+  },
+  "volta": {
+    "node": "22.22.3",
+    "npm": "11.11.0"
+  },
+  "dependencies": {
+    "@angular/common": "^22.0.5",
+    "@angular/compiler": "^22.0.5",
+    "@angular/core": "^22.0.5",
+    "@angular/forms": "^22.0.5",
+    "@angular/platform-browser": "^22.0.5",
+    "@angular/router": "^22.0.5",
+    "@ng-bootstrap/ng-bootstrap": "^21.0.0",
+    "bootstrap": "^5.3.8",
+    "bootstrap-icons": "^1.13.1",
+    "multer": "^2.2.0",
+    "opencode-ai": "^1.15.7",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^22.0.5",
+    "@angular/cli": "^22.0.5",
+    "@angular/compiler-cli": "^22.0.5",
+    "jsdom": "^29.1.1",
+    "prettier": "^3.8.1",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.9"
+  },
+  "overrides": {
+    "@babel/core": "^7.29.7",
+    "esbuild": "^0.28.1"
+  }
+}

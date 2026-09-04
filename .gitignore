@@ -1,0 +1,63 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.npmrc.local
+
+# Angular
+/app/dist/
+/app/.angular/
+/app/coverage/
+/app/tmp/
+/app/out-tsc/
+/app/*.launch
+/app/.sass-cache/
+
+# Testes / cobertura
+coverage/
+.nyc_output/
+/mock-api/coverage/
+/app/coverage/
+playwright-report/
+test-results/
+blob-report/
+
+# Build / bundlers
+dist/
+build/
+.vite/
+.next/
+.turbo/
+
+# Environment (nunca versionar segredos)
+.env
+.env.*
+!.env.template
+
+# Editores / IDE
+.idea/
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.template.json
+*.sublime-*
+.history/
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.log
+
+# Vercel
+.vercel/
+
+# Caches diversos
+.eslintcache
+.stylelintcache
+.parcel-cache/
+.rollup.cache/
+
+# Artefatos de análise gerados
+docs/Analises/__pycache__/
+docs/Analises/scratch/__pycache__/

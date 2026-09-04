@@ -1,0 +1,59 @@
+flowchart LR
+    accTitle: Casos de uso do Canal de Denúncias MPT (com «include», «extend» e generalização)
+    accDescr: Atores primários e secundários, relações UML entre casos de uso e sistemas.
+    pessoa(["«actor · primário»<br/>Pessoa demandante"])
+    identificado(["«actor · especialização»<br/>Cidadão identificado"])
+    anonimo(["«actor · especialização»<br/>Cidadão anônimo"])
+    operacao(["«actor · secundário»<br/>Equipe de operação"])
+    mpt(["«actor · sistema»<br/>API interna MPT"])
+    ibge(["«actor · sistema»<br/>API IBGE"])
+    clamav(["«actor · sistema»<br/>ClamAV daemon"])
+    subgraph sistema["🏛️ Canal de Denúncias MPT"]
+        direction TB
+        registrar(("Registrar<br/>denúncia"))
+        escolherIdent(("Escolher tipo de<br/>identificação"))
+        preencherIrreg(("Selecionar<br/>irregularidades"))
+        descreverOcorr(("Descrever<br/>ocorrência"))
+        anexarEvid(("Anexar<br/>evidências"))
+        informarEmpresa(("Informar<br/>empresa e local"))
+        revisar(("Revisar e<br/>corrigir"))
+        confirmar(("Confirmar<br/>envio"))
+        receberProtocolo(("Receber<br/>protocolo"))
+        consultarMunicipios(("Consultar<br/>municípios"))
+        inspecionarAnexos(("Inspecionar<br/>anexos"))
+        encaminharMpt(("Encaminhar ao MPT"))
+        disponibilidade(("Verificar disponibilidade<br/>e docs (/health, /docs)"))
+        editarRelato(("Editar campo<br/>na revisão"))
+    end
+    identificado -.->|"«generalização»"| pessoa
+    anonimo -.->|"«generalização»"| pessoa
+    pessoa --> registrar
+    pessoa --> escolherIdent
+    pessoa --> anexarEvid
+    pessoa --> revisar
+    pessoa --> receberProtocolo
+    registrar -. "«include»" .-> escolherIdent
+    registrar -. "«include»" .-> preencherIrreg
+    registrar -. "«include»" .-> descreverOcorr
+    registrar -. "«include»" .-> informarEmpresa
+    registrar -. "«include»" .-> revisar
+    registrar -. "«include»" .-> confirmar
+    confirmar -. "«include»" .-> inspecionarAnexos
+    confirmar -. "«include»" .-> encaminharMpt
+    confirmar -. "«include»" .-> receberProtocolo
+    revisar -. "«extend»" .-> editarRelato
+    preencherIrreg -. "«extend»" .-> consultarMunicipios
+    informarEmpresa -. "«extend»" .-> consultarMunicipios
+    anexarEvid -. "«extend»" .-> inspecionarAnexos
+    consultarMunicipios --> ibge
+    inspecionarAnexos --> clamav
+    encaminharMpt --> mpt
+    operacao --> disponibilidade
+    classDef primary fill:#dbe4ee,stroke:#17324d,color:#17212b,stroke-width:2px
+    classDef neutral fill:#f7f8fa,stroke:#65717d,color:#17212b
+    classDef actor fill:#ffffff,stroke:#17324d,color:#17212b
+    classDef spec fill:#fdf6e3,stroke:#7d6608,color:#7d6608
+    class registrar,confirmar,receberProtocolo primary
+    class escolherIdent,preencherIrreg,descreverOcorr,anexarEvid,informarEmpresa,revisar,consultarMunicipios,inspecionarAnexos,encaminharMpt,disponibilidade,editarRelato neutral
+    class pessoa,operacao,mpt,ibge,clamav actor
+    class identificado,anonimo spec

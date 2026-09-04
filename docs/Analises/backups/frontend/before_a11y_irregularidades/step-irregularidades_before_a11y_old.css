@@ -1,0 +1,151 @@
+/* Textarea com áudio inline */
+.textarea-audio-wrapper {
+  position: relative;
+}
+
+.textarea-relato {
+  padding-right: 60px !important;
+  min-height: 120px;
+  resize: vertical;
+}
+
+.audio-btn-inline {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--mpt-primary);
+  background: var(--mpt-white);
+  color: var(--mpt-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: var(--transition-fast);
+}
+
+.audio-btn-inline:hover {
+  background: #fef2f2;
+}
+
+.audio-btn-inline.recording {
+  background: var(--mpt-primary);
+  color: var(--mpt-white);
+  animation: pulse 1.5s infinite;
+}
+
+.audio-recorded-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.85rem;
+  color: var(--mpt-complementary);
+  font-weight: 500;
+}
+
+/* Checklist cards - matching mockup */
+.checklist-item-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-lg) var(--space-md);
+  border: 1.5px solid var(--mpt-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  background: var(--mpt-white);
+  min-height: 100px;
+}
+
+.checklist-item-card:hover {
+  border-color: var(--mpt-primary-light);
+  background: #fef7f7;
+}
+
+.checklist-item-card.selected {
+  border-color: var(--mpt-primary);
+  background: #fef2f2;
+}
+
+.check-box-corner {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 1rem;
+  color: var(--mpt-border);
+}
+
+.checklist-item-card.selected .check-box-corner {
+  color: var(--mpt-primary);
+}
+
+.check-icon-center {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: var(--mpt-primary);
+}
+
+.check-label-bottom {
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: center;
+  color: var(--mpt-text);
+}
+
+/* Pagination dots */
+.pagination-dots {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-sm);
+}
+
+.pagination-dots .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--mpt-border);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.pagination-dots .dot.active {
+  background: var(--mpt-primary);
+  width: 20px;
+  border-radius: 4px;
+}
+
+/* ============ Botões de ação — paleta navy #1A2744 ============ */
+:host .btn-mpt-primary {
+  background: #1A2744;
+  border-color: #1A2744;
+}
+
+:host .btn-mpt-primary:hover {
+  background: #111B30;
+  box-shadow: 0 4px 12px rgba(26, 39, 68, 0.35);
+}
+
+:host .btn-mpt-primary:active {
+  background: #0D1525;
+}
+
+:host .btn-mpt-outline {
+  color: #1A2744;
+  border-color: #1A2744;
+}
+
+:host .btn-mpt-outline:hover {
+  background: #EEF0F3;
+  border-color: #111B30;
+  color: #111B30;
+}

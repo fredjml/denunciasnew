@@ -1,0 +1,35 @@
+flowchart LR
+    accTitle: C4 nível 2 — contêineres do Canal de Denúncias MPT (enriquecido com estereótipos UML)
+    accDescr: Contêineres, portas expostas, protocolos, cardinalidades e trust boundaries do canal de denúncias.
+    pessoa(["«actor · person»<br/><b>Pessoa demandante</b><br/><i>Cidadã ou cidadão</i>"])
+    operacao(["«actor · person»<br/><b>Equipe de operação</b><br/><i>SRE / suporte</i>"])
+    subgraph canal["«system» Canal de Denúncias MPT"]
+        direction LR
+        web["«container»<br/><b>Aplicação web</b><br/><i>Angular · TypeScript · standalone</i><br/>Wizard de 7 telas · estado em signals<br/>─────────────<br/>◆ provê: UI de denúncia<br/>◆ requer: /api/denuncias · HTTPS IBGE"]
+        bff["«container»<br/><b>API de entrada (BFF)</b><br/><i>Node.js 20 · Express</i><br/>Segurança de borda + orquestração<br/>─────────────<br/>◆ provê: POST /api/denuncias · /health · /docs<br/>◆ requer: Redis · ClamAV · MPT API · segredos"]
+        web ==>|"1..1 · POST multipart/form-data"| bff
+        bff ==>|"1..1 · 201 + protocolo · 4xx/5xx + erro"| web
+    end
+    ibge[["«external system»<br/><b>API pública de localidades</b><br/><i>IBGE · HTTPS/JSON</i>"]]
+    redis[("«datastore · rate-limit»<br/><b>Redis</b><br/><i>protocolo RESP</i>")]
+    clamav[["«external system»<br/><b>Inspeção antimalware</b><br/><i>ClamAV · TCP 3310 · INSTREAM</i>"]]
+    mpt[["«external system»<br/><b>Recebimento institucional</b><br/><i>API interna MPT · HTTPS</i>"]]
+    secrets[/"«artifact · secret»<br/>Variáveis e segredos<br/><i>server-side only</i>"/]
+    pessoa ==>|"1 · registra denúncia · HTTPS"| web
+    web -->|"0..* · consulta municípios · HTTPS/JSON"| ibge
+    bff -->|"1..* · INCR / EXPIRE contadores"| redis
+    bff -->|"0..10 · stream INSTREAM por anexo"| clamav
+    bff ==>|"1 · encaminha envelope + anexos · HTTPS multipart"| mpt
+    secrets -.->|"«use» · runtime config"| bff
+    operacao -->|"health e docs · HTTPS"| bff
+    legenda["«legend»<br/><b>Notação C4 + UML</b><br/>«system» sistema em foco (azul)<br/>«container» unidade implantável<br/>«external system» / «datastore» (cinza)<br/>«actor» pessoa ou sistema externo<br/>═► fluxo síncrono principal<br/>─► integração auxiliar<br/>-.-> configuração / uso<br/>Rótulos incluem cardinalidade"]
+    classDef primary fill:#dbe4ee,stroke:#17324d,color:#17212b,stroke-width:2px
+    classDef neutral fill:#f7f8fa,stroke:#65717d,color:#17212b
+    classDef actor fill:#ffffff,stroke:#17324d,color:#17212b
+    classDef ds fill:#f5eef8,stroke:#6c3483,color:#17212b
+    classDef external fill:#fdebd0,stroke:#7b3f00,color:#17212b
+    class web,bff primary
+    class redis ds
+    class ibge,clamav,mpt external
+    class pessoa,operacao actor
+    class legenda,secrets neutral

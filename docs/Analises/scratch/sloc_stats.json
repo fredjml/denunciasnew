@@ -1,0 +1,51 @@
+{
+  "JSON": {
+    "files": 7,
+    "total_lines": 302,
+    "source_lines": 302,
+    "comment_lines": 0,
+    "blank_lines": 0
+  },
+  "JavaScript": {
+    "files": 11,
+    "total_lines": 825,
+    "source_lines": 630,
+    "comment_lines": 88,
+    "blank_lines": 107
+  },
+  "TypeScript": {
+    "files": 20,
+    "total_lines": 1450,
+    "source_lines": 1245,
+    "comment_lines": 28,
+    "blank_lines": 177
+  },
+  "JavaScript (ESM)": {
+    "files": 8,
+    "total_lines": 661,
+    "source_lines": 566,
+    "comment_lines": 0,
+    "blank_lines": 95
+  },
+  "SCSS": {
+    "files": 1,
+    "total_lines": 25,
+    "source_lines": 21,
+    "comment_lines": 2,
+    "blank_lines": 2
+  },
+  "HTML": {
+    "files": 10,
+    "total_lines": 782,
+    "source_lines": 697,
+    "comment_lines": 27,
+    "blank_lines": 58
+  },
+  "CSS": {
+    "files": 10,
+    "total_lines": 1835,
+    "source_lines": 1456,
+    "comment_lines": 104,
+    "blank_lines": 275
+  }
+}

@@ -1,0 +1,86 @@
+<div class="step-content">
+  <h1 class="mb-sm">O que está acontecendo?</h1>
+  <p class="text-secondary-mpt text-small">
+    Conte do seu jeito, em texto ou áudio, a irregularidade que você viu ou que aconteceu no seu ambiente de trabalho
+  </p>
+
+  <!-- Textarea com botão de áudio integrado -->
+  <div class="textarea-audio-wrapper mb-md">
+    <textarea
+      class="form-control-mpt textarea-relato"
+      [value]="relatoTexto()"
+      (input)="updateRelato($any($event.target).value)"
+      placeholder="Transcrição de áudio: Descreva aqui a irregularidade..."
+      rows="5"
+      id="relato-texto"
+    ></textarea>
+    <button
+      class="audio-btn-inline"
+      [class.recording]="isRecording()"
+      (click)="toggleRecording()"
+      id="btn-gravar-audio"
+      [attr.aria-label]="isRecording() ? 'Parar gravação' : 'Gravar áudio'"
+    >
+      <i [class]="isRecording() ? 'bi bi-stop-circle-fill' : 'bi bi-mic-fill'"></i>
+    </button>
+  </div>
+
+  <div class="audio-notice mb-lg">
+    <i class="bi bi-shield-check"></i>
+    <span>Sua voz não será identificada</span>
+  </div>
+
+  @if (audioRecorded()) {
+    <div class="audio-recorded-badge mb-lg">
+      <i class="bi bi-check-circle-fill"></i>
+      <span>Áudio gravado com sucesso</span>
+    </div>
+  }
+
+  <!-- Tipos de irregularidades -->
+  <h3 class="section-subtitle">Tipos de irregularidades</h3>
+  <p class="text-secondary-mpt text-small mb-md">
+    Deslize para ver mais e selecione as opções (Opcional):
+  </p>
+
+  <!-- Checklist com paginação -->
+  <div class="checklist-grid">
+    @for (item of pagedIrregularidades[currentPage()]; track item.id) {
+      <div
+        class="checklist-item-card"
+        [class.selected]="isSelected(item.id)"
+        (click)="toggleIrregularidade(item.id)"
+        [id]="'check-' + item.id"
+      >
+        <div class="check-box-corner">
+          <i [class]="isSelected(item.id) ? 'bi bi-check-square-fill' : 'bi bi-square'"></i>
+        </div>
+        <div class="check-icon-center">
+          <i [class]="item.icon"></i>
+        </div>
+        <span class="check-label-bottom">{{ item.label }}</span>
+      </div>
+    }
+  </div>
+
+  <!-- Pagination dots -->
+  <div class="pagination-dots mt-lg">
+    @for (page of pagedIrregularidades; track $index) {
+      <span
+        class="dot"
+        [class.active]="currentPage() === $index"
+        (click)="setPage($index)"
+      ></span>
+    }
+  </div>
+</div>
+
+<!-- Footer buttons -->
+<div class="step-footer">
+  <button class="btn-mpt-primary" (click)="avancar()" id="btn-avancar-step1">
+    Avançar
+  </button>
+  <button class="btn-mpt-outline" (click)="voltar()" id="btn-voltar-step1">
+    Voltar
+  </button>
+</div>

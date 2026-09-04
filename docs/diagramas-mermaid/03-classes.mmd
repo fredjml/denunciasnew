@@ -1,0 +1,138 @@
+classDiagram
+    direction LR
+    class Complaint {
+      <<entity>>
+      +irregularidades: string[]
+      +relato_texto: string
+      +relato_audio: Blob
+      +relato_audio_transcricao: string
+      +periodo_ocorrencia: string
+      +modalidade_trabalho: string
+      +numero_prejudicados: string
+      +funcoes_setores: string
+      +nomes_dados: string
+      +grupos_vulneraveis: string[]
+      +procurou_outro_orgao: boolean
+      +tipo_identificacao: TipoIdentificacao
+      +nome_completo: string
+      +email: string
+      +telefone: string
+      +uf: string
+      +municipio: string
+      +municipio_ibge: string
+      +nome_empresa: string
+      +endereco_empresa: string
+      +cnpj_empresa: string
+      +anexos: FileAttachment[]
+    }
+    class TipoIdentificacao {
+      <<enumeration>>
+      ANONIMO
+      IDENTIFICADO
+    }
+    class FileAttachment {
+      <<entity · anexo>>
+      +file: File
+      +preview: string
+      +type: string
+    }
+    class WizardStep {
+      <<enumeration>>
+      ACOLHIMENTO
+      IRREGULARIDADES
+      OCORRENCIAS
+      EVIDENCIAS
+      IDENTIFICACAO
+      EMPRESA_LOCAL
+      REVISAO
+      ENVIANDO
+      CONFIRMACAO
+    }
+    class ComplaintService {
+      <<service · Angular>>
+      -complaint: Signal~Complaint~
+      -currentStep: Signal~WizardStep~
+      -highestStep: Signal~WizardStep~
+      -isSubmitting: Signal~boolean~
+      -isSubmitted: Signal~boolean~
+      -protocol: Signal~string~
+      -submissionError: Signal~Error~
+      +updateComplaint(partial: Partial~Complaint~) void
+      +nextStep() void
+      +prevStep() void
+      +goToStep(step: WizardStep) void
+      +submitComplaint() Promise~void~
+      +reset() void
+    }
+    class ComplaintApiClient {
+      <<boundary · gateway>>
+      -endpoint: string
+      +submitComplaint(complaint: Complaint) Promise~string~
+      -buildFormData(complaint: Complaint) FormData
+    }
+    class ComplaintController {
+      <<controller · Express>>
+      +receberDenuncia(req: Request, res: Response, next: NextFunction) Promise~void~
+    }
+    class ComplaintDomainService {
+      <<service · domínio>>
+      +validateComplaint(complaint: Complaint) string[]
+      +generateProtocol() string
+      +buildComplaintPayload(complaint: Complaint, protocol: string, timestamp: Date) MptEnvelope
+    }
+    class MptEnvelope {
+      <<value object · payload>>
+      +protocolo: string
+      +timestamp: string
+      +fonte: string
+      +versao: string
+      +sigilo: string
+      +denuncia: object
+    }
+    class UploadMiddleware {
+      <<middleware · Multer>>
+      +upload() RequestHandler
+      +cleanupUploadedFiles(files: File[]) Promise~void~
+    }
+    class ClamAvClient {
+      <<gateway · TCP>>
+      -host: string
+      -port: number
+      +scanUploadedFiles(files: File[]) Promise~ScanResult[]~
+    }
+    class ScanResult {
+      <<value object>>
+      +clean: boolean
+      +threat: string
+      +available: boolean
+    }
+    class MptApiClient {
+      <<gateway · HTTPS>>
+      -baseUrl: string
+      -bearer: string
+      -timeoutMs: number
+      +sendComplaint(payload: MptEnvelope, files: File[]) Promise~Response~
+    }
+    class RateLimiter {
+      <<middleware · Redis>>
+      -store: RedisStore
+      -windowMs: number
+      -maxRequests: number
+      +consume(ip: string) Promise~boolean~
+    }
+    Complaint "1" *-- "0..10" FileAttachment : anexos
+    Complaint "1" o-- "1" TipoIdentificacao : usa
+    ComplaintService "1" *-- "1" Complaint : mantém
+    ComplaintService "1" ..> WizardStep : usa
+    ComplaintService "1" ..> ComplaintApiClient : envia
+    ComplaintController "1" ..> ComplaintDomainService : «use»
+    ComplaintController "1" ..> UploadMiddleware : «use»
+    ComplaintController "1" ..> ClamAvClient : «use»
+    ComplaintController "1" ..> MptApiClient : «use»
+    ComplaintController "1" ..> RateLimiter : «use»
+    ComplaintDomainService "1" ..> MptEnvelope : «create»
+    ClamAvClient ..> ScanResult : produz
+    MptApiClient ..> MptEnvelope : consome
+    note for ComplaintService "Camada de estado do front-end. Signals reativos. Coordena wizard, submissão e reset."
+    note for ComplaintController "Ponto de entrada HTTP no BFF. Orquestra pipeline sem persistir denúncia."
+    note for MptEnvelope "Payload institucional enviado ao MPT: metadados de rastreio + denuncia."

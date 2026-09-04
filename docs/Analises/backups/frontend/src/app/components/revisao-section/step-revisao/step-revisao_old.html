@@ -1,0 +1,130 @@
+<div class="step-content">
+  <h1 class="mb-sm">Revise suas informações</h1>
+  <p class="text-secondary-mpt">
+    Por favor, confira os dados antes de enviar. Você pode editar qualquer etapa.
+  </p>
+
+  <!-- Step 1 - Irregularidades -->
+  <div class="review-section">
+    <div class="review-header">
+      <h4>O que está acontecendo?</h4>
+      <button class="edit-link" (click)="editStep(1)" id="edit-step1">Editar</button>
+    </div>
+    <div class="review-body">
+      <div class="review-item">
+        <span class="label">Irregularidades</span>
+        <span class="value">{{ irregularidadesLabel }}</span>
+      </div>
+      @if (complaint.relato_texto) {
+        <div class="review-item">
+          <span class="label">Relato</span>
+          <span class="value">{{ complaint.relato_texto | slice:0:80 }}...</span>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Step 2 - Ocorrências -->
+  <div class="review-section">
+    <div class="review-header">
+      <h4>Detalhamento da Ocorrência</h4>
+      <button class="edit-link" (click)="editStep(2)" id="edit-step2">Editar</button>
+    </div>
+    <div class="review-body">
+      @if (complaint.periodo_ocorrencia) {
+        <div class="review-item">
+          <span class="label">Período</span>
+          <span class="value">{{ complaint.periodo_ocorrencia }}</span>
+        </div>
+      }
+      @if (complaint.modalidade_trabalho) {
+        <div class="review-item">
+          <span class="label">Modalidade</span>
+          <span class="value">{{ complaint.modalidade_trabalho }}</span>
+        </div>
+      }
+      @if (complaint.numero_prejudicados) {
+        <div class="review-item">
+          <span class="label">Prejudicados</span>
+          <span class="value">{{ complaint.numero_prejudicados }}</span>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Step 3 - Evidências -->
+  <div class="review-section">
+    <div class="review-header">
+      <h4>Evidências</h4>
+      <button class="edit-link" (click)="editStep(3)" id="edit-step3">Editar</button>
+    </div>
+    <div class="review-body">
+      <div class="review-item">
+        <span class="label">Anexos</span>
+        <span class="value">{{ complaint.anexos.length }} arquivo(s)</span>
+      </div>
+      @if (complaint.grupos_vulneraveis.length > 0) {
+        <div class="review-item">
+          <span class="label">Grupos</span>
+          <span class="value">{{ complaint.grupos_vulneraveis.join(', ') }}</span>
+        </div>
+      }
+      <div class="review-item">
+        <span class="label">Outro órgão</span>
+        <span class="value">{{ complaint.procurou_outro_orgao === true ? 'Sim' : complaint.procurou_outro_orgao === false ? 'Não' : 'Não informado' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 4 - Identificação -->
+  <div class="review-section">
+    <div class="review-header">
+      <h4>Sigilo e Anonimato</h4>
+      <button class="edit-link" (click)="editStep(4)" id="edit-step4">Editar</button>
+    </div>
+    <div class="review-body">
+      <div class="review-item">
+        <span class="label">Identificação</span>
+        <span class="value">{{ identificacaoLabel }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 5 - Local -->
+  <div class="review-section">
+    <div class="review-header">
+      <h4>Onde o fato ocorreu?</h4>
+      <button class="edit-link" (click)="editStep(5)" id="edit-step5">Editar</button>
+    </div>
+    <div class="review-body">
+      <div class="review-item">
+        <span class="label">Local</span>
+        <span class="value">{{ complaint.municipio }}{{ complaint.uf ? ' / ' + complaint.uf : '' }}</span>
+      </div>
+      @if (complaint.nome_empresa) {
+        <div class="review-item">
+          <span class="label">Empresa</span>
+          <span class="value">{{ complaint.nome_empresa }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<div class="step-footer">
+  <button
+    class="btn-mpt-primary"
+    (click)="enviar()"
+    [disabled]="svc.isSubmitting()"
+    id="btn-enviar-denuncia"
+  >
+    @if (svc.isSubmitting()) {
+      <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+      Enviando...
+    } @else {
+      <i class="bi bi-shield-check me-2"></i>
+      Enviar Denúncia
+    }
+  </button>
+  <button class="btn-mpt-outline" (click)="voltar()" id="btn-voltar-step6">Voltar</button>
+</div>

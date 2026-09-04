@@ -1,0 +1,43 @@
+stateDiagram-v2
+    direction TB
+    [*] --> Preenchimento
+    state "Preenchimento (composto)" as Preenchimento {
+        direction LR
+        [*] --> Acolhimento
+        Acolhimento --> Irregularidades: iniciar
+        Irregularidades --> Ocorrencias: avançar
+        Ocorrencias --> Evidencias: avançar
+        Evidencias --> Identificacao: avançar
+        Identificacao --> EmpresaLocal: avançar
+        EmpresaLocal --> Revisao: avançar
+        Ocorrencias --> Irregularidades: voltar
+        Evidencias --> Ocorrencias: voltar
+        Identificacao --> Evidencias: voltar
+        EmpresaLocal --> Identificacao: voltar
+        Revisao --> EmpresaLocal: voltar
+        Revisao --> Irregularidades: editar relato
+        Revisao --> Ocorrencias: editar ocorrência
+        Revisao --> Evidencias: editar evidências
+        Revisao --> Identificacao: editar identificação
+        Revisao --> EmpresaLocal: editar local
+    }
+    Preenchimento --> Submissao: enviar / submitComplaint()
+    state "Submissão" as Submissao {
+        [*] --> Enviando
+        Enviando --> Decisao: resposta HTTP
+        state Decisao <<choice>>
+        Decisao --> Confirmacao: [201 + protocolo]
+        Decisao --> Preenchimento: [erro de submissão]
+    }
+    Confirmacao --> Preenchimento: reset / novo relato
+    Confirmacao --> [*]: encerrar
+    note right of Preenchimento
+        entry / carregar catálogo IBGE (fallback local)
+        do / persistir estado em signals
+        exit / bloquear edição durante envio
+    end note
+    note right of Submissao
+        entry / isSubmitting = true
+        do / POST /api/denuncias
+        exit / isSubmitting = false
+    end note

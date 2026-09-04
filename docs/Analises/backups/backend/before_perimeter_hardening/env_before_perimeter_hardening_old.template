@@ -1,0 +1,20 @@
+# Configuração do Servidor Backend
+
+# Porta do servidor (padrão: 3000)
+PORT=3000
+
+# URL da API interna do MPT para recebimento das denúncias
+# Substitua pela URL real fornecida pelo MPT
+MPT_API_URL=https://api.interna.mpt.mp.br/denuncias
+
+# Token de autenticação da API do MPT (se necessário)
+MPT_API_TOKEN=seu_token_aqui
+
+# Ambiente: development | production
+NODE_ENV=development
+
+# Tamanho máximo de upload por arquivo (em bytes) - default: 20MB
+MAX_FILE_SIZE=20971520
+
+# Número máximo de arquivos por denúncia
+MAX_FILES=10

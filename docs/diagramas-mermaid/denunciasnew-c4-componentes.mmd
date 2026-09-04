@@ -1,0 +1,106 @@
+flowchart LR
+    accTitle: C4 nível 3 — componentes do frontend e do BFF do novo leiaute (denunciasnew)
+    accDescr: Componentes internos do wizard mobile-first (8 telas do PDF), portas providas (●) e requeridas (○) e dependências entre contêineres. Marcadores «NOVO» são propostas do PDF (F2); «PART» dependem de decisão (DEC-DN-*).
+    subgraph frontend["«container» Angular SPA mobile-first (novo leiaute)"]
+        direction TB
+        shell["«component»<br/><b>App shell</b><br/><i>Angular root</i><br/>Router + Stepper (Progressive Disclosure)"]
+        acolhimento["«component · NOVO»<br/><b>StepAcolhimento</b><br/>Filtro inteligente (3 caminhos)<br/>+ vídeo institucional opcional<br/>(DN-RF-001 · DN-RF-002)"]
+        relato["«component · NOVO»<br/><b>StepRelatoGuiado</b><br/>Checklist visual de irregularidades<br/>+ texto ou áudio<br/>(DN-RF-003 · DN-RF-004)"]
+        detalhe["«component · NOVO»<br/><b>StepDetalhamento</b><br/>Nº trabalhadores + modalidade<br/>+ grupos vulneráveis<br/>(DN-RF-005..007)"]
+        evidencias["«component · NOVO»<br/><b>StepEvidencias</b><br/>Anexos + testemunhas<br/>(DN-RF-008..009)"]
+        sigilo["«component · NOVO»<br/><b>StepSigiloAnonimato</b><br/>Aviso destacado + toggle anônima<br/>(DN-RG-005 · DN-RF-010)"]
+        local["«component · NOVO»<br/><b>StepLocal</b><br/>Município/UF obrigatório<br/>Empresa opcional<br/>(DN-RF-011..012)"]
+        revisao["«component · NOVO»<br/><b>StepRevisao</b><br/>Sumário editável<br/>(DN-RF-013)"]
+        confirmacao["«component · NOVO»<br/><b>StepConfirmacao</b><br/>Protocolo + infográfico do fluxo<br/>(DN-RF-014)"]
+        audio["«component · NOVO»<br/><b>AudioRecorder</b><br/>MediaRecorder API<br/>+ transcrição preview"]
+        checklist["«component · NOVO»<br/><b>ChecklistIrregularidades</b><br/>Ícones + chips removíveis"]
+        uploader["«component»<br/><b>EvidenceUploader</b><br/>fetch + FormData"]
+        infografico["«component · NOVO»<br/><b>InfograficoFluxo</b><br/>SVG + descrição acessível<br/>(WCAG 2.1)"]
+        state["«component»<br/><b>ComplaintService</b><br/><i>signals</i><br/>Estado + navegação"]
+        client["«component»<br/><b>ComplaintApiClient</b><br/><i>fetch + FormData</i>"]
+        model["«component · type»<br/><b>Complaint / FileAttachment /<br/>Testemunha / Irregularidade</b>"]
+        fallback["«artifact»<br/><b>municipios-ibge.json</b><br/>fallback local"]
+        shell --> acolhimento
+        shell --> relato
+        shell --> detalhe
+        shell --> evidencias
+        shell --> sigilo
+        shell --> local
+        shell --> revisao
+        shell --> confirmacao
+        relato --> checklist
+        relato --> audio
+        evidencias --> uploader
+        confirmacao --> infografico
+        acolhimento --> state
+        relato --> state
+        detalhe --> state
+        evidencias --> state
+        sigilo --> state
+        local --> state
+        revisao --> state
+        confirmacao --> state
+        state --> model
+        state --> client
+        fallback -.->|"«use» quando IBGE falha"| local
+    end
+    subgraph bff["«container» Express BFF (novo leiaute)"]
+        direction TB
+        edge["«component»<br/><b>Bootstrap HTTP</b><br/>helmet · cors · morgan"]
+        rate["«component»<br/><b>RateLimiter</b><br/>rate-limit-redis"]
+        router["«component»<br/><b>Complaint Router</b><br/>POST /api/denuncias"]
+        upload["«component»<br/><b>UploadMiddleware</b><br/>Multer diskStorage (D-01)"]
+        controller["«component»<br/><b>ComplaintController</b>"]
+        domain["«component»<br/><b>ComplaintDomainService</b><br/>+ regras de anonimização<br/>(DN-RF-010 · DN-RNF-004)"]
+        av["«component»<br/><b>ClamAvClient</b><br/>TCP INSTREAM"]
+        mptClient["«component»<br/><b>MptApiClient</b><br/>axios + FormData"]
+        sttProxy["«component · NOVO · PART»<br/><b>SttProxy</b><br/>Encaminha áudio ao provedor STT<br/>(DEC-DN-11)"]
+        classifierProxy["«component · NOVO · PART»<br/><b>ClassifierProxy</b><br/>Categoria + prioridade<br/>(DEC-DN-12)"]
+        alertDispatcher["«component · NOVO · PART»<br/><b>AlertDispatcher</b><br/>Pautas urgentes<br/>(DEC-DN-22)"]
+        botIngress["«component · NOVO · PART»<br/><b>BotIngress</b><br/>Recebe envelope do WhatsApp Bot<br/>(DEC-DN-09)"]
+        swagger["«component»<br/><b>OpenAPI/Swagger</b><br/>/docs"]
+        health["«component»<br/><b>Health</b><br/>/health"]
+        edge --> rate
+        rate --> router
+        router --> upload
+        upload --> controller
+        controller --> domain
+        controller --> av
+        controller -.->|"«NOVO»"| sttProxy
+        controller -.->|"«NOVO»"| classifierProxy
+        controller -.->|"«NOVO»"| alertDispatcher
+        controller --> mptClient
+        edge -.->|"«NOVO»"| botIngress
+        botIngress -.-> controller
+        edge --> swagger
+        edge --> health
+    end
+    ifIBGE(("○<br/>IBGE Localidades<br/>HTTPS/JSON"))
+    ifDenuncia(("●<br/>ISubmitComplaint<br/>POST multipart"))
+    ifRateStore(("○<br/>Redis RESP"))
+    ifClamAv(("○<br/>ClamAV INSTREAM"))
+    ifMpt(("○<br/>MPT Complaint API"))
+    ifStt(("○<br/>STT provider<br/>«NOVO · PART»"))
+    ifClassifier(("○<br/>Classifier<br/>«NOVO · PART»"))
+    ifAlert(("○<br/>Alertas ops<br/>«NOVO · PART»"))
+    ifBot(("●<br/>Bot ingress<br/>«NOVO · PART»"))
+    local -->|"«requires»"| ifIBGE
+    client -->|"«requires»"| ifDenuncia
+    edge -->|"«provides»"| ifDenuncia
+    rate -->|"«requires»"| ifRateStore
+    av -->|"«requires»"| ifClamAv
+    mptClient -->|"«requires»"| ifMpt
+    sttProxy -->|"«requires»"| ifStt
+    classifierProxy -->|"«requires»"| ifClassifier
+    alertDispatcher -->|"«requires»"| ifAlert
+    botIngress -->|"«provides»"| ifBot
+    legenda["«legend»<br/><b>Notação</b><br/>● interface provida<br/>○ interface requerida<br/>«requires» / «provides»: dependência<br/>Azul: componente principal<br/>Cinza: componente de apoio<br/>Verde tracejado: «NOVO» do PDF<br/>Roxo: porta / interface<br/>«PART»: dependente de decisão do owner"]
+    classDef primary fill:#dbe4ee,stroke:#17324d,color:#17212b
+    classDef neutral fill:#f7f8fa,stroke:#65717d,color:#17212b
+    classDef iface fill:#ffffff,stroke:#8e44ad,color:#4a235a
+    classDef novo fill:#eaf7ea,stroke:#1e6b1e,color:#0f3d0f,stroke-dasharray: 4 3
+    class shell,state,client,edge,controller primary
+    class model,fallback,rate,router,upload,domain,av,mptClient,swagger,health,uploader neutral
+    class acolhimento,relato,detalhe,evidencias,sigilo,local,revisao,confirmacao,audio,checklist,infografico,sttProxy,classifierProxy,alertDispatcher,botIngress novo
+    class ifIBGE,ifDenuncia,ifRateStore,ifClamAv,ifMpt,ifStt,ifClassifier,ifAlert,ifBot iface
+    class legenda neutral

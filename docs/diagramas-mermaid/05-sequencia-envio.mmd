@@ -1,0 +1,64 @@
+sequenceDiagram
+    autonumber
+    actor Pessoa as 🧑 Pessoa demandante
+    participant SPA as 💻 Angular SPA
+    participant Estado as ComplaintService (signals)
+    participant API as ComplaintApiClient
+    participant BFF as 🛡️ Express BFF
+    participant Limite as RateLimiter / Redis
+    participant Upload as UploadMiddleware / temp
+    participant Domain as ComplaintDomainService
+    participant Scanner as ClamAvClient / ClamAV
+    participant MPT as MptApiClient / API MPT
+    Pessoa->>+SPA: Confirma envio após revisão
+    SPA->>+Estado: submitComplaint()
+    Estado->>+API: submitComplaint(complaint)
+    API->>API: buildFormData(campos + anexos)
+    API->>+BFF: POST /api/denuncias (multipart/form-data)
+    BFF->>+Limite: consume(ip)
+    alt limite excedido
+        Limite-->>-BFF: false
+        BFF-->>API: 429 Too Many Requests
+    else permitido
+        Limite-->>BFF: true
+        BFF->>+Upload: upload.any() (Multer diskStorage)
+        Upload-->>-BFF: body + files temporários
+        BFF->>BFF: JSON.parse(denuncia)
+        BFF->>+Domain: validateComplaint(complaint)
+        Domain-->>-BFF: erros[] ou []
+        alt entrada inválida
+            BFF-->>API: 400 / 413 / 422 + detalhes
+        else entrada válida
+            BFF->>+Scanner: scanUploadedFiles(files)
+            loop para cada anexo
+                Scanner->>Scanner: INSTREAM (TCP 3310)
+            end
+            Scanner-->>-BFF: ScanResult[] (clean · threat · unavailable)
+            alt ameaça detectada
+                BFF-->>API: 422 anexo rejeitado
+            else scanner indisponível em produção
+                BFF-->>API: 503 tente mais tarde
+            else anexos liberados
+                BFF->>Domain: generateProtocol()
+                Domain-->>BFF: protocolo
+                BFF->>Domain: buildComplaintPayload(complaint, protocolo, timestamp)
+                Domain-->>BFF: MptEnvelope
+                BFF->>+MPT: POST multipart + Bearer + timeout
+                alt MPT aceita
+                    MPT-->>-BFF: 200/201
+                    BFF-->>API: 201 + protocolo
+                    API-->>-Estado: protocol
+                    Estado-->>-SPA: isSubmitted=true · protocol
+                    SPA-->>-Pessoa: exibe protocolo
+                else falha ou timeout
+                    MPT-->>BFF: erro ou timeout
+                    BFF-->>API: 502 / 503
+                    API-->>Estado: Error
+                    Estado-->>SPA: submissionError
+                    SPA-->>Pessoa: exibe erro
+                end
+            end
+        end
+        Note over BFF,Upload: finally · cleanupUploadedFiles() sempre executa
+        BFF->>Upload: cleanupUploadedFiles(files)
+    end

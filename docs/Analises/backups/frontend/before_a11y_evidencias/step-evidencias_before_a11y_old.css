@@ -1,0 +1,131 @@
+/* Custom checkbox */
+.custom-checkbox {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--mpt-border);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: var(--transition-fast);
+  font-size: 0.9rem;
+}
+
+.custom-checkbox.checked {
+  background: var(--mpt-primary);
+  border-color: var(--mpt-primary);
+  color: var(--mpt-white);
+}
+
+.checkbox-card {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  border: 1.5px solid var(--mpt-border);
+  border-radius: var(--radius-sm);
+  background: var(--mpt-white);
+  transition: var(--transition-fast);
+}
+
+.checkbox-card.selected {
+  border-color: var(--mpt-primary);
+  background: #fef7f7;
+}
+
+/* Upload area as label */
+.upload-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  border: 2px dashed var(--mpt-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-xl);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  background: var(--mpt-bg);
+  text-align: center;
+}
+
+.upload-area:hover {
+  border-color: var(--mpt-primary-light);
+  background: #fef7f7;
+}
+
+.upload-area i {
+  font-size: 1.6rem;
+  color: var(--mpt-text-secondary);
+}
+
+.upload-area p {
+  color: var(--mpt-text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Inline radio */
+.radio-inline-group {
+  display: flex;
+  gap: var(--space-xl);
+}
+
+.radio-inline {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.radio-dot-sm {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--mpt-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.radio-dot-sm.active {
+  border-color: var(--mpt-primary);
+}
+
+.radio-dot-sm.active::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--mpt-primary);
+}
+
+/* ============ Botões de ação — paleta navy #1A2744 ============ */
+:host .btn-mpt-primary {
+  background: #1A2744;
+  border-color: #1A2744;
+}
+
+:host .btn-mpt-primary:hover {
+  background: #111B30;
+  box-shadow: 0 4px 12px rgba(26, 39, 68, 0.35);
+}
+
+:host .btn-mpt-primary:active {
+  background: #0D1525;
+}
+
+:host .btn-mpt-outline {
+  color: #1A2744;
+  border-color: #1A2744;
+}
+
+:host .btn-mpt-outline:hover {
+  background: #EEF0F3;
+  border-color: #111B30;
+  color: #111B30;
+}

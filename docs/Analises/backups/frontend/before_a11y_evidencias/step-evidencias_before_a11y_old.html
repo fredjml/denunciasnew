@@ -1,0 +1,99 @@
+<div class="step-content">
+  <h1 class="mb-sm">Evidências</h1>
+  <p class="text-secondary-mpt">
+    Este é o momento de detalhar a denúncia. Você pode anexar fotos, áudios, vídeos e documentos,
+    além de indicar a existência de testemunhas
+  </p>
+
+  <!-- Grupos vulneráveis -->
+  <h3 class="section-subtitle mb-md">Há grupos vulneráveis envolvidos?</h3>
+
+  <div
+    class="checkbox-card mb-sm"
+    [class.selected]="isGrupoSelected('criancas_adolescentes')"
+    (click)="toggleGrupo('criancas_adolescentes')"
+    id="check-criancas"
+  >
+    <div class="custom-checkbox" [class.checked]="isGrupoSelected('criancas_adolescentes')">
+      @if (isGrupoSelected('criancas_adolescentes')) {
+        <i class="bi bi-check2"></i>
+      }
+    </div>
+    <span>Crianças / Adolescentes</span>
+  </div>
+
+  <div
+    class="checkbox-card mb-lg"
+    [class.selected]="isGrupoSelected('pessoas_deficiencia')"
+    (click)="toggleGrupo('pessoas_deficiencia')"
+    id="check-pcd"
+  >
+    <div class="custom-checkbox" [class.checked]="isGrupoSelected('pessoas_deficiencia')">
+      @if (isGrupoSelected('pessoas_deficiencia')) {
+        <i class="bi bi-check2"></i>
+      }
+    </div>
+    <span>Pessoas com Deficiência</span>
+  </div>
+
+  <!-- Anexos -->
+  <h3 class="section-subtitle mb-md">Anexos (Opcional)</h3>
+
+  <label class="upload-area mb-md" for="file-upload" id="upload-area">
+    <i class="bi bi-mic-fill"></i>
+    <p>Toque para anexar fotos, áudios, vídeos ou documentos</p>
+    <input
+      id="file-upload"
+      type="file"
+      multiple
+      accept="image/*,audio/*,video/*,.pdf,.doc,.docx"
+      style="display:none"
+      (change)="onFileSelect($event)"
+    >
+  </label>
+
+  <!-- Arquivos selecionados -->
+  @for (file of svc.complaint().anexos; track $index) {
+    <div class="file-preview">
+      <div class="file-icon">
+        <i [class]="'bi ' + getFileIcon(file.type)"></i>
+      </div>
+      <span class="file-name">{{ file.file.name }}</span>
+      <button class="file-remove" (click)="removeFile($index)" [id]="'remove-file-' + $index">
+        <i class="bi bi-x-circle"></i>
+      </button>
+    </div>
+  }
+
+  <!-- Outros órgãos -->
+  <h3 class="section-subtitle mt-lg mb-sm">Outros Órgãos</h3>
+  <p class="text-secondary-mpt text-small mb-md">
+    Você já procurou outro órgão para denunciar este mesmo fato? (ex: Sindicato, Ministério do Trabalho)
+  </p>
+
+  <div class="radio-inline-group mb-lg">
+    <div
+      class="radio-inline"
+      [class.selected]="procurouOutroOrgao() === true"
+      (click)="setOrgao(true)"
+      id="orgao-sim"
+    >
+      <div class="radio-dot-sm" [class.active]="procurouOutroOrgao() === true"></div>
+      <span>Sim</span>
+    </div>
+    <div
+      class="radio-inline"
+      [class.selected]="procurouOutroOrgao() === false"
+      (click)="setOrgao(false)"
+      id="orgao-nao"
+    >
+      <div class="radio-dot-sm" [class.active]="procurouOutroOrgao() === false"></div>
+      <span>Não</span>
+    </div>
+  </div>
+</div>
+
+<div class="step-footer">
+  <button class="btn-mpt-primary" (click)="avancar()" id="btn-avancar-step3">Avançar</button>
+  <button class="btn-mpt-outline" (click)="voltar()" id="btn-voltar-step3">Voltar</button>
+</div>

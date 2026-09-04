@@ -1,0 +1,31 @@
+flowchart TB
+    accTitle: C4 nível 1 — contexto do Canal de Denúncias MPT (enriquecido com estereótipos UML)
+    accDescr: Sistema como caixa preta, atores humanos e sistemas externos, trust boundaries e protocolos.
+    pessoa(["«actor · person»<br/><b>Pessoa demandante</b><br/><i>Cidadã ou cidadão</i>"])
+    operacao(["«actor · person»<br/><b>Equipe de operação</b><br/><i>SRE / suporte</i>"])
+    subgraph boundary["«system boundary» Canal de Denúncias MPT · escopo"]
+        sistema["«system in focus»<br/><b>Canal de Denúncias MPT</b><br/><i>Sistema de software</i><br/>Coleta, protege, valida e encaminha<br/>denúncias trabalhistas ao MPT"]
+    end
+    ibge[["«external system»<br/><b>Serviço de localidades</b><br/><i>IBGE · HTTPS/JSON</i>"]]
+    mpt[["«external system»<br/><b>API interna do MPT</b><br/><i>Recebimento institucional</i>"]]
+    antimalware[["«external system»<br/><b>Serviço antimalware</b><br/><i>ClamAV · TCP INSTREAM</i>"]]
+    rateStore[("«datastore · external»<br/><b>Rate-limit store</b><br/><i>Redis</i>")]
+    pessoa ==>|"1 · registra relato, evidências<br/>(identificação opcional)"| sistema
+    sistema ==>|"1 · protocolo ou mensagem de erro"| pessoa
+    sistema -->|"0..* · consulta municípios por UF"| ibge
+    ibge -->|"nomes e códigos IBGE"| sistema
+    sistema ==>|"1 · encaminha denúncia aceita + anexos"| mpt
+    mpt -->|"aceite HTTP ou erro"| sistema
+    sistema -->|"0..10 · inspeciona anexos"| antimalware
+    antimalware -->|"limpo · ameaça · indisponível"| sistema
+    sistema -->|"1..* · contadores por IP"| rateStore
+    rateStore -->|"disponível ou excedido"| sistema
+    operacao -->|"verifica health, docs e contrato"| sistema
+    legenda["«legend»<br/><b>Notação C4 + UML</b><br/>Azul: sistema em foco<br/>Cinza: sistema/serviço externo<br/>«actor»: pessoa ou sistema<br/>═► fluxo primário (síncrono)<br/>─► integração auxiliar<br/>Rótulos com cardinalidade"]
+    classDef primary fill:#dbe4ee,stroke:#17324d,color:#17212b,stroke-width:2px
+    classDef neutral fill:#f7f8fa,stroke:#65717d,color:#17212b
+    classDef actor fill:#ffffff,stroke:#17324d,color:#17212b
+    class sistema primary
+    class ibge,mpt,antimalware,rateStore neutral
+    class pessoa,operacao actor
+    class legenda neutral

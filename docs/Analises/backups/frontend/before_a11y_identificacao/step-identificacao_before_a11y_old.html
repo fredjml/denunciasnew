@@ -1,0 +1,79 @@
+<div class="step-content">
+  <h1 class="mb-sm">Sigilo e Anonimato</h1>
+  <p class="text-secondary-mpt">
+    O Ministério Público do Trabalho mantém em sigilo os dados pessoais do denunciante.
+  </p>
+
+  <h3 class="section-subtitle mb-md">Como deseja seguir?</h3>
+
+  <div
+    class="radio-card mb-md"
+    [class.selected]="tipoIdentificacao() === 'anonimo'"
+    (click)="setTipo('anonimo')"
+    id="opt-anonimo"
+  >
+    <div class="radio-dot" [class.selected]="tipoIdentificacao() === 'anonimo'"></div>
+    <div class="radio-text">
+      <strong>Não quero me identificar e prefiro o anonimato.</strong>
+      <span class="d-block text-secondary-mpt text-small mt-1">
+        O MPT não poderá entrar em contato com você para obter detalhes da denúncia.
+      </span>
+    </div>
+  </div>
+
+  <div
+    class="radio-card mb-lg"
+    [class.selected]="tipoIdentificacao() === 'identificado'"
+    (click)="setTipo('identificado')"
+    id="opt-identificado"
+  >
+    <div class="radio-dot" [class.selected]="tipoIdentificacao() === 'identificado'"></div>
+    <div class="radio-text">
+      <strong>Quero me identificar.</strong>
+    </div>
+  </div>
+
+  @if (tipoIdentificacao() === 'identificado') {
+    <div class="identified-fields">
+      <div class="contato-header mb-sm">
+        <h3 class="section-subtitle mb-0">Seus dados de contato</h3>
+        <span class="badge-sigiloso"><i class="bi bi-lock-fill"></i> Sigiloso</span>
+      </div>
+      <div class="mb-md">
+        <input
+          type="text"
+          class="form-control-mpt"
+          [value]="nome()"
+          (input)="nome.set($any($event.target).value)"
+          placeholder="Nome Completo"
+          id="nome-completo"
+        >
+      </div>
+      <div class="mb-md">
+        <input
+          type="email"
+          class="form-control-mpt"
+          [value]="email()"
+          (input)="email.set($any($event.target).value)"
+          placeholder="E-mail"
+          id="email-contato"
+        >
+      </div>
+      <div class="mb-lg">
+        <input
+          type="tel"
+          class="form-control-mpt"
+          [value]="telefone()"
+          (input)="telefone.set($any($event.target).value)"
+          placeholder="Telefone ou WhatsApp"
+          id="telefone-contato"
+        >
+      </div>
+    </div>
+  }
+</div>
+
+<div class="step-footer">
+  <button class="btn-mpt-primary" (click)="avancar()" id="btn-avancar-step4">Avançar</button>
+  <button class="btn-mpt-outline" (click)="voltar()" id="btn-voltar-step4">Voltar</button>
+</div>
