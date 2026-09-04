@@ -6,8 +6,8 @@
 
 Este workspace hospeda o **MVP standalone** do novo formulário do Canal de Denúncias MPT.
 
-- **Frontend** em `app/` (Angular 22 standalone + signals).
-- **Backend mock** em `mock-api/` (Express Node.js) — **não é o backend final**.
+- **Frontend** em `frontend/` (Angular 22 standalone + signals).
+- **Backend mock** em `backend-mock/` (Express Node.js) — **não é o backend final**.
 - **Contrato** em `contract/openapi.yaml` (OpenAPI 3.1) — fonte de verdade compartilhada com o backend real futuro.
 - **Documentação de planejamento** em `docs/` (F1..F7 do ciclo de análise).
 
@@ -48,7 +48,7 @@ Todas as `R-*` de [`docs/licoesaprendidas/04-ia-rules-skills-tools-mcp-agents.md
 - **`R-DN-03`** — decisão automatizada `URGENTE` exige flag `revisada_por_humano=true` antes de despachar alerta.
 - **`R-DN-04`** — rate limit compartilhado (mesmo no mock).
 - **`R-DN-05`** — fixtures sintéticas apenas (`SYN-*`, `@example.com`, TTS `espeak-ng`).
-- **`R-DN-06`** — contrato `contract/openapi.yaml` só muda com PR + review; `app/src/app/api/generated.ts` é auto-gerado e não deve ser editado manualmente.
+- **`R-DN-06`** — contrato `contract/openapi.yaml` só muda com PR + review; `frontend/src/app/api/generated.ts` é auto-gerado e não deve ser editado manualmente.
 
 ## 5. Comandos permitidos (sem autorização adicional)
 
@@ -69,18 +69,18 @@ Todas as `R-*` de [`docs/licoesaprendidas/04-ia-rules-skills-tools-mcp-agents.md
 - Chamar backend real do MPT (`api.mpt.mp.br/**`)
 - Instalar dependências fora do `package.json` lockfile
 - Modificar `contract/openapi.yaml` fora de PR
-- Editar `app/src/app/api/generated.ts` manualmente
+- Editar `frontend/src/app/api/generated.ts` manualmente
 
 ## 7. Padrões de código
 
-- **TypeScript strict** em todo o `app/`.
+- **TypeScript strict** em todo o `frontend/`.
 - **Angular standalone components** (sem NgModule tradicional).
 - **Signals** para estado reativo local e compartilhado.
 - **Testes unit ANTES** da implementação (TDD estrito para lógica de negócio).
 - **A11y:** WCAG 2.1 AA (piso obrigatório antes do MVP público), 2.2 AA (alvo para release final). CI valida via `@axe-core/playwright`.
 - **Performance mobile:** Lighthouse Slow 3G no CI. LCP ≤ 4 s, TTI ≤ 6 s (defaults; ajustar após DEC-DN-08).
 - **Redação de logs:** `pino-noir` habilitado desde o dia 1.
-- **CSS:** puro + tokens de design em `app/src/styles/tokens.css`. Sem framework CSS (Bootstrap/Material/Tailwind).
+- **CSS:** puro + tokens de design em `frontend/src/styles/tokens.css`. Sem framework CSS (Bootstrap/Material/Tailwind).
 - **Contrato:** `openapi-typescript` gera tipos automaticamente de `contract/openapi.yaml`.
 
 ## 8. Autoridade final

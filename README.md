@@ -8,8 +8,8 @@
 
 | O quê | Onde |
 | --- | --- |
-| Frontend | `app/` — Angular 22 standalone + signals |
-| Backend mock | `mock-api/` — Express + pino |
+| Frontend | `frontend/` — Angular 22 standalone + signals |
+| Backend mock | `backend-mock/` — Express + pino |
 | Contrato compartilhado | `contract/openapi.yaml` |
 | Governança | [`AGENTS.md`](AGENTS.md) |
 | Planejamento | [`docs/`](docs/) (F1–F7) |
@@ -24,10 +24,10 @@ Pré-requisitos: Node.js ≥ 22.15, npm ≥ 11.
 git clone https://github.com/fredjml/denunciasnew.git
 cd denunciasnew
 
-# 2. Instalar dependências (raiz + app + mock-api)
+# 2. Instalar dependências (raiz + frontend + backend-mock)
 npm install
-npm --prefix app install
-npm --prefix mock-api install
+npm --prefix frontend install
+npm --prefix backend-mock install
 
 # 3. Rodar frontend + backend mock em paralelo
 npm run dev
@@ -42,10 +42,10 @@ npm run dev
 
 | Script | O que faz |
 | --- | --- |
-| `npm run dev` | Sobe frontend + mock em paralelo |
+| `npm run dev` | Sobe frontend + backend-mock em paralelo |
 | `npm run build` | Build de produção do frontend |
-| `npm test` | Vitest unit em `app/` e `mock-api/` |
-| `npm run e2e` | Playwright multi-browser em `app/e2e/` |
+| `npm test` | Vitest unit em `frontend/` e `backend-mock/` |
+| `npm run e2e` | Playwright multi-browser em `frontend/e2e/` |
 | `npm run lint` | ESLint em ambos |
 
 ## Estrutura de diretórios
@@ -54,20 +54,20 @@ npm run dev
 denunciasnew/
 ├── AGENTS.md               governança local (leitura obrigatória para IA)
 ├── README.md               este arquivo
-├── package.json            meta-scripts orquestrando app + mock-api
+├── package.json            meta-scripts orquestrando frontend + backend-mock
 ├── .gitignore
 ├── .editorconfig
 ├── contract/               contrato OpenAPI 3.1 (fonte de verdade)
 │   ├── openapi.yaml
 │   └── README.md
-├── app/                    frontend Angular 22
+├── frontend/               aplicação Angular 22
 │   ├── src/
 │   │   ├── app/            wizard de 8 telas + serviços
 │   │   ├── assets/         fixtures sintéticas + tokens
 │   │   └── styles/         tokens.css
 │   ├── e2e/
 │   └── package.json
-├── mock-api/               backend mock Express
+├── backend-mock/           API mock Express (substituiída pelo backend real futuro)
 │   ├── src/
 │   ├── test/
 │   └── package.json
@@ -79,7 +79,7 @@ denunciasnew/
 
 Toda comunicação frontend ↔ backend passa por `contract/openapi.yaml`. Ele é o **único** artefato que o backend real futuro precisa respeitar para se acoplar.
 
-**Regra R-DN-06:** mudanças no contrato exigem PR + review. O arquivo `app/src/app/api/generated.ts` é auto-gerado por `openapi-typescript` e **não** deve ser editado manualmente.
+**Regra R-DN-06:** mudanças no contrato exigem PR + review. O arquivo `frontend/src/app/api/generated.ts` é auto-gerado por `openapi-typescript` e **não** deve ser editado manualmente.
 
 ## Deploy
 

@@ -43,10 +43,10 @@ if (require.main === module) {
   const port = Number.parseInt(process.env.PORT || '3001', 10);
   const app = createApp();
   app.listen(port, () => {
-    logger.info({ port }, 'mock-api iniciado');
+    logger.info({ port }, 'backend-mock iniciado');
     // Log amigável para dev
     // eslint-disable-next-line no-console
-    console.log(`\n  mock-api ▶  http://localhost:${port}`);
+    console.log(`\n  backend-mock ▶  http://localhost:${port}`);
     // eslint-disable-next-line no-console
     console.log('  GET  /health');
     // eslint-disable-next-line no-console

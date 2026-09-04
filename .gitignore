@@ -7,19 +7,18 @@ pnpm-debug.log*
 .npmrc.local
 
 # Angular
-/app/dist/
-/app/.angular/
-/app/coverage/
-/app/tmp/
-/app/out-tsc/
-/app/*.launch
-/app/.sass-cache/
+/frontend/dist/
+/frontend/.angular/
+/frontend/coverage/
+/frontend/tmp/
+/frontend/out-tsc/
+/frontend/*.launch
+/frontend/.sass-cache/
 
 # Testes / cobertura
 coverage/
 .nyc_output/
-/mock-api/coverage/
-/app/coverage/
+/backend-mock/coverage/
 playwright-report/
 test-results/
 blob-report/

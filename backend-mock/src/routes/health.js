@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
     status: 'ok',
     timestamp: new Date().toISOString(),
     version: pkg.version,
-    service: 'mock-api',
+    service: 'backend-mock',
   });
 });
 

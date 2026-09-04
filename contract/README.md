@@ -1,6 +1,6 @@
 # Contrato compartilhado — `denunciasnew`
 
-Este diretório contém o **contrato OpenAPI 3.1** entre o frontend Angular (`app/`) e qualquer backend que respeite o mesmo formato — hoje é o `mock-api/`, amanhã será o backend real feito por outra equipe.
+Este diretório contém o **contrato OpenAPI 3.1** entre o frontend Angular (`frontend/`) e qualquer backend que respeite o mesmo formato — hoje é o `backend-mock/`, amanhã será o backend real feito por outra equipe.
 
 ## Fonte de verdade
 
@@ -15,7 +15,7 @@ Este diretório contém o **contrato OpenAPI 3.1** entre o frontend Angular (`ap
 
 1. **Mudanças exigem PR + review.** Não editar diretamente em `main`.
 2. **O backend real futuro pode ACRESCENTAR campos**, mas nunca **REMOVER** os declarados.
-3. **`app/src/app/api/generated.ts` é AUTOGERADO** por `openapi-typescript` a partir deste arquivo. Nunca editar manualmente.
+3. **`frontend/src/app/api/generated.ts` é AUTOGERADO** por `openapi-typescript` a partir deste arquivo. Nunca editar manualmente.
 4. **CI valida drift** (`.github/workflows/contract-drift.yml`) — se `generated.ts` estiver defasado, falha.
 5. **Toda mudança de contrato deve gerar changelog** aqui em `CHANGELOG.md` (a criar quando primeira alteração acontecer).
 
@@ -30,7 +30,7 @@ npx @apidevtools/swagger-cli validate contract/openapi.yaml
 ## Como regenerar tipos TypeScript
 
 ```powershell
-npx openapi-typescript contract/openapi.yaml --output app/src/app/api/generated.ts
+npx openapi-typescript contract/openapi.yaml --output frontend/src/app/api/generated.ts
 ```
 
 ## Convenções

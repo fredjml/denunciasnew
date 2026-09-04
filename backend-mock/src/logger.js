@@ -22,7 +22,7 @@ const redactedKeys = [
 const logger = pino(
   {
     level: process.env.LOG_LEVEL || 'info',
-    base: { service: 'mock-api', version: '0.1.0' },
+    base: { service: 'backend-mock', version: '0.1.0' },
     timestamp: pino.stdTimeFunctions.isoTime,
     serializers: noir(redactedKeys, '[REDIGIDO]'),
   }

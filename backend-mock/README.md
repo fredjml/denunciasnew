@@ -1,4 +1,4 @@
-# mock-api
+# backend-mock
 
 Backend mock (Express + Node.js) do MVP `denunciasnew`. **Não é o backend final.** Serve para o frontend rodar como protótipo e para publicar o contrato OpenAPI que o backend real futuro deve respeitar.
 
