@@ -45,13 +45,9 @@ if (require.main === module) {
   app.listen(port, () => {
     logger.info({ port }, 'backend-mock iniciado');
     // Log amigável para dev
-    // eslint-disable-next-line no-console
     console.log(`\n  backend-mock ▶  http://localhost:${port}`);
-    // eslint-disable-next-line no-console
     console.log('  GET  /health');
-    // eslint-disable-next-line no-console
     console.log('  POST /api/denuncias');
-    // eslint-disable-next-line no-console
     console.log('  GET  /api/municipios?uf=SP\n');
   });
 }

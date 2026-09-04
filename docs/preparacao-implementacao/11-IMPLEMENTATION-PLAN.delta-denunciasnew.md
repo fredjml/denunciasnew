@@ -54,12 +54,12 @@ Todas as fatias respeitam `R-INC-01` (menor mudança coerente) e `R-SCOPE-01` (s
 
 | ID | Requisito | Arquivos permitidos | Teste focal | Ameaça | Evidência | Rollback | Depend. | Owner | Estado |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| FATIA-DN-CP0-01 | Setup CI para axe-core | `.github/workflows/ci.yml` | job `a11y-axe` executa `@axe-core/playwright` e falha em violação `serious+` | RA-01 histórico + DN-RNF-001 | log workflow | reverter YAML | — | Infra + QA | PRONTA-P/-AUTORIZAÇÃO |
-| FATIA-DN-CP0-02 | Setup CI para Lighthouse mobile | `.github/workflows/ci.yml` | job `lighthouse-mobile` executa `--preset=perf --form-factor=mobile --throttling.cpuSlowdownMultiplier=4` | DN-RNF-003 | JSON Lighthouse | reverter YAML | CP0-01 | Infra + SRE | PRONTA-P/-AUTORIZAÇÃO |
-| FATIA-DN-CP0-03 | Setup CI para ESLint com regras a11y | `.eslintrc.*`, `.github/workflows/ci.yml` | job `lint` falha em `jsx-a11y/*` (Angular equivalente) | RA-01 | log workflow | reverter config | — | Infra + Frontend | PRONTA-P/-AUTORIZAÇÃO |
-| FATIA-DN-CP0-04 | Setup `msw` como mock server padrão | `test/mocks/handlers.ts`, `test/mocks/server.ts`, `vitest.config.*` | test suite carrega `msw` e intercepta `/api/*` | Cobertura geral | log Vitest | reverter setup | — | Frontend + Backend | PRONTA-P/-AUTORIZAÇÃO |
-| FATIA-DN-CP0-05 | Fixtures sintéticas centrais | `test/fixtures/fixtures.ts` (nomes, emails, protocolos `SYN-`, áudio TTS) | test suite carrega fixtures | R-SEC-01 kit | log Vitest | reverter fixtures | — | QA | PRONTA-P/-AUTORIZAÇÃO |
-| FATIA-DN-CP0-06 | Setup `pino-noir` para redaction | `server/logger.js`, testes | 4 testes rejeitam campos PII em log de saída | T-DN-05, T-DN-09 | trace/log sanitizado | reverter logger | — | Backend + DPO | BLOQUEADA — aguarda D-DN-06 (código do produto) |
+| FATIA-DN-CP0-01 | Setup CI para axe-core | `.github/workflows/ci.yml` | job `a11y-axe` executa `@axe-core/playwright` e falha em violação `serious+` | RA-01 histórico + DN-RNF-001 | log workflow | reverter YAML | — | Infra + QA | IMPLEMENTADA — gate local detectou contraste 3,88:1 |
+| FATIA-DN-CP0-02 | Setup CI para Lighthouse mobile | `.github/workflows/ci.yml` | job `lighthouse-mobile` executa `--preset=perf --form-factor=mobile --throttling.cpuSlowdownMultiplier=4` | DN-RNF-003 | JSON Lighthouse | reverter YAML | CP0-01 | Infra + SRE | IMPLEMENTADA — coleta local inconclusiva; validar no CI Linux |
+| FATIA-DN-CP0-03 | Setup CI para ESLint com regras a11y | `frontend/eslint.config.mjs`, `.github/workflows/ci.yml` | job `lint` aplica regras Angular e template-a11y | RA-01 | log workflow | reverter config | — | Infra + Frontend | IMPLEMENTADA — lint aprovado |
+| FATIA-DN-CP0-04 | Setup `msw` como mock server padrão | `frontend/src/test/mocks/handlers.ts`, `frontend/src/test/mocks/server.ts` | test suite carrega `msw` e intercepta `/api/*` | Cobertura geral | log Vitest | reverter setup | — | Frontend + Backend | IMPLEMENTADA — teste focal aprovado |
+| FATIA-DN-CP0-05 | Fixtures sintéticas centrais | `frontend/src/test/fixtures/fixtures.ts` (`SYN-*`, `@example.com`) | test suite carrega fixtures | R-SEC-01 kit | log Vitest | reverter fixtures | — | QA | IMPLEMENTADA — teste focal aprovado |
+| FATIA-DN-CP0-06 | Setup `pino-noir` para redaction | `backend-mock/src/logger.js`, `backend-mock/test/logger.spec.mjs` | 4 testes rejeitam campos PII em log de saída | T-DN-05, T-DN-09 | trace/log sanitizado | reverter logger | — | Backend + DPO | IMPLEMENTADA — 4/4 testes aprovados |
 
 ## 3. CP-1 — Tela Acolhimento (DN-RF-001, DN-RF-002)
 

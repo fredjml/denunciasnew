@@ -19,13 +19,18 @@ const redactedKeys = [
   'MPT_API_TOKEN',
 ];
 
-const logger = pino(
-  {
+const loggerOptions = {
     level: process.env.LOG_LEVEL || 'info',
     base: { service: 'backend-mock', version: '0.1.0' },
     timestamp: pino.stdTimeFunctions.isoTime,
     serializers: noir(redactedKeys, '[REDIGIDO]'),
-  }
-);
+  };
+
+function createLogger(destination) {
+  return pino(loggerOptions, destination);
+}
+
+const logger = createLogger();
 
 module.exports = logger;
+module.exports.createLogger = createLogger;

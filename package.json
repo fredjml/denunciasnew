@@ -9,10 +9,10 @@
     "start": "npm run dev",
     "install:all": "npm install && npm --prefix frontend install && npm --prefix backend-mock install",
     "build": "npm --prefix frontend run build",
-    "test": "npm --prefix frontend test -- --watch=false --browsers=ChromeHeadless && npm --prefix backend-mock test",
-    "test:unit:frontend": "npm --prefix frontend test -- --watch=false --browsers=ChromeHeadless",
+    "test": "npm --prefix frontend test -- --watch=false && npm --prefix backend-mock test",
+    "test:unit:frontend": "npm --prefix frontend test -- --watch=false",
     "test:unit:backend": "npm --prefix backend-mock test",
-    "lint": "echo 'lint aggregate: rode npm run lint dentro de frontend/ e backend-mock/'",
+    "lint": "npm --prefix frontend run lint && npm --prefix backend-mock run lint",
     "contract:validate": "npx --yes @redocly/cli lint contract/openapi.yaml",
     "contract:types": "npx --yes openapi-typescript contract/openapi.yaml --output frontend/src/app/api/generated.ts",
     "check:health": "curl.exe http://localhost:3001/health"

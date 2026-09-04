@@ -209,12 +209,12 @@ Cada task = 1 fatia `FATIA-DN-*` de [11-IMPLEMENTATION-PLAN.delta-denunciasnew.m
 ### Ciclo 1 — CP-0 (fundação CI) + CP-1 (Acolhimento)
 
 **CP-0:**
-- [ ] **T-CP0-01** `FATIA-DN-CP0-01` — CI job `a11y-axe` (`@axe-core/playwright wcag21aa`).
-- [ ] **T-CP0-02** `FATIA-DN-CP0-02` — CI job Lighthouse mobile.
-- [ ] **T-CP0-03** `FATIA-DN-CP0-03` — CI job ESLint com regras a11y Angular.
-- [ ] **T-CP0-04** `FATIA-DN-CP0-04` — `msw` setup + handlers padrão.
-- [ ] **T-CP0-05** `FATIA-DN-CP0-05` — Fixtures sintéticas centrais.
-- [ ] **T-CP0-06** `FATIA-DN-CP0-06` — `pino-noir` para redaction *(depende de código)*.
+- [x] **T-CP0-01** `FATIA-DN-CP0-01` — CI job `a11y-axe` (`@axe-core/playwright wcag21aa`). Implementada; gate detecta 3 ocorrências sérias de contraste no template inicial.
+- [x] **T-CP0-02** `FATIA-DN-CP0-02` — CI job Lighthouse mobile. Implementada; execução local Windows inconclusiva após 90 s, validação pendente no runner Linux.
+- [x] **T-CP0-03** `FATIA-DN-CP0-03` — CI job ESLint com regras a11y Angular. Implementada; lint agregado aprovado.
+- [x] **T-CP0-04** `FATIA-DN-CP0-04` — `msw` setup + handlers padrão. Implementada; teste focal aprovado.
+- [x] **T-CP0-05** `FATIA-DN-CP0-05` — Fixtures sintéticas centrais. Implementada; teste focal aprovado.
+- [x] **T-CP0-06** `FATIA-DN-CP0-06` — `pino-noir` para redaction. Implementada no `backend-mock`; 4/4 testes aprovados.
 
 **CP-1:**
 - [ ] **T-CP1-01** `FATIA-DN-CP1-01` — `StepAcolhimento` com 3 CTAs.

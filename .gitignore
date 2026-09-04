@@ -22,6 +22,8 @@ coverage/
 playwright-report/
 test-results/
 blob-report/
+/frontend/lighthouse-results/
+/frontend/.lighthouseci/
 
 # Build / bundlers
 dist/
