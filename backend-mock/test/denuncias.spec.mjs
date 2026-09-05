@@ -51,6 +51,33 @@ describe('POST /api/denuncias', () => {
     expect(res.body.codigo).toBe('CAMPO_NAO_ACEITO');
   });
 
+  it('rejeita quando o cliente tenta forçar prioridade (T-DN-06)', async () => {
+    const res = await request(createApp())
+      .post('/api/denuncias')
+      .field('denuncia', denunciaValida({ prioridade: 'URGENTE' }));
+
+    expect(res.status).toBe(400);
+    expect(res.body.codigo).toBe('CAMPO_NAO_ACEITO');
+  });
+
+  it('classifica automaticamente com base nas irregularidades (CP-6)', async () => {
+    const res = await request(createApp())
+      .post('/api/denuncias')
+      .field(
+        'denuncia',
+        denunciaValida({
+          irregularidades: [{ codigo: 'FALTA_EPI' }, { codigo: 'ASSEDIO' }, { codigo: 'ATRASO_SALARIAL' }],
+        }),
+      );
+
+    expect(res.status).toBe(201);
+    expect(res.body.classificacao).toMatchObject({
+      prioridade: 'ALTA',
+      metodo: 'REGRA_DETERMINISTICA',
+      revisada_por_humano: false,
+    });
+  });
+
   it('rejeita JSON inválido no campo denuncia', async () => {
     const res = await request(createApp()).post('/api/denuncias').field('denuncia', '{invalido');
 

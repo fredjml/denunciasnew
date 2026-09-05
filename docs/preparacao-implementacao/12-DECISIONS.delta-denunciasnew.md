@@ -104,6 +104,30 @@
 - **Owner:** Produto + Financeiro.
 - **Status:** **FECHADA** (default).
 
+### DEC-DN-08 — SLA de performance mobile (LCP/TTI)
+
+- **Contexto:** PDF pág. 4 exige usabilidade em rede móvel de baixa velocidade, mas não fixa um
+  número. `frontend/lighthouserc.json` já trazia um default (`LCP ≤ 4 s`, `TTI ≤ 6 s`) desde o
+  CP-0, aguardando confirmação do owner.
+- **Decisão do owner (2026-09-05):** **aceitar o default** — `LCP ≤ 4 s`, `TTI ≤ 6 s`, medido sob
+  throttling Slow 3G real (400 Kbps / 400 ms RTT) contra o **build de produção** (não o dev
+  server).
+- **Consequência:**
+  - `FATIA-DN-MOBILE-03` deixa de estar bloqueada; o job `lighthouse-mobile` do CI passa a medir
+    contra `dist/frontend/browser` servido estaticamente (`npx http-server`), com throttling de
+    rede explícito — antes disso o job media contra `ng serve` (dev, não otimizado), o que
+    produzia números artificialmente ruins (~143 s) sem relação com o app real.
+  - **Resultado real medido nesta sessão: LCP ≈ 10,2 s / TTI ≈ 10,2 s — não atinge o alvo.** O
+    app ainda não foi otimizado para Slow 3G (sem lazy-loading de rotas, bundle único de
+    ~330 KB).
+  - Para não travar todo o CI por um requisito de performance que exige um checkpoint dedicado de
+    otimização (fora do escopo desta sessão), as asserções de `largest-contentful-paint` e
+    `interactive` ficam em nível **`warn`** (visível no relatório, não bloqueia o pipeline) até
+    `CP-mobile-perf` efetivamente otimizar o bundle — só então subir para `error`.
+- **Owner:** Frederico José Monteiro Leite (Produto) + Frontend (execução da otimização).
+- **Status:** **FECHADA** (alvo definido e medido); trabalho de otimização em si fica registrado
+  como item novo do backlog (`CP-mobile-perf`), não como parte desta decisão.
+
 ### DEC-DN-P-F5-7 — Meta WhatsApp sandbox
 
 - **Decisão do owner:** **arquivada** — decorrente de DEC-DN-09 = Opção A (chatbot fora do MVP).
@@ -168,7 +192,6 @@
 
 | ID | Assunto | Owner esperado | Bloqueio |
 | --- | --- | --- | --- |
-| DEC-DN-08 | SLA de performance mobile (LCP/TTI) | Frontend + Arquitetura | fatia `FATIA-DN-PERF-01` fica em **BLOQUEADA — aguarda DEC-DN-08** (aplica default `LCP ≤ 4 s / TTI ≤ 6 s` só quando confirmado) |
 | DEC-DN-10 | Taxonomia oficial de irregularidades | Produto + Jurídico | fatia `FATIA-DN-C1` roda com taxonomia mock local (`docs/preparacao-implementacao/prompts/fases/F6-taxonomia-mock.json`) |
 | DEC-DN-11 | Provedor + retenção STT | Arquitetura + DPO | não impacta o MVP (STT ficou mock por P-F5-6) |
 | DEC-DN-12 | Classificador determinístico vs ML + revisão humana | Produto + Jurídico + Segurança | mesma nota; mock determinístico no MVP |
@@ -212,8 +235,8 @@
 | Estado | Contagem |
 | --- | ---: |
 | FECHADA (respondida em 2026-09-04) | 8 |
-| FECHADA (respondida em 2026-09-05: DEC-DN-16, DEC-DN-20) | 2 |
-| aberta — bloqueia MVP | 1 (DEC-DN-08) — `DEC-DN-19` deixa de bloquear o MVP em si (protocolo mock já cobre o fluxo; só bloqueia o *release* com o formato oficial do MPT) |
+| FECHADA (respondida em 2026-09-05: DEC-DN-16, DEC-DN-20, DEC-DN-08) | 3 |
+| aberta — bloqueia MVP | 0 — `DEC-DN-19` não bloqueia o MVP em si (protocolo mock já cobre o fluxo; só bloqueia o *release* com o formato oficial do MPT) |
 | aberta — parcial (princípio fechado, detalhe pendente) | 1 (DEC-DN-26) |
 | aberta — não bloqueia MVP | 10 |
 | arquivada (fora do escopo do MVP) | 2 (DEC-DN-09B, DEC-DN-P-F5-7) |

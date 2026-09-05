@@ -60,15 +60,19 @@ Cada fatia exige **owner nomeado antes de executar** (autorização just-in-time
 
 ## 2. Decisões pendentes por prioridade
 
-### 2.1 Bloqueiam MVP público (5)
+### 2.1 Bloqueiam MVP público (5 na origem — status atualizado em 2026-09-05)
 
-| ID | Assunto | Owner | Fatia bloqueada | Sugestão |
+> Tabela mantida como registro histórico do planejamento (F6). Todas as 4 primeiras já foram
+> resolvidas durante a implementação; só `DEC-DN-19` segue aberta (e só bloqueia o *release*
+> final, não o MVP em si — ver `12-DECISIONS.delta-denunciasnew.md`).
+
+| ID | Assunto | Owner | Fatia bloqueada | Status atual |
 | --- | --- | --- | --- | --- |
-| **D-DN-01** | Modelo de versionamento | Owner técnico | rollback de TODAS | Adotar Git com branch `feat/denunciasnew-mvp` |
-| **D-DN-06** | Código do produto ausente | Owner do produto | 9 fatias CP-6 + CP0-06/CP4-05/CP5-04 | Reabrir `cidadania-canal-denuncias/` |
-| **DEC-DN-08** | SLA performance mobile (LCP/TTI) | Frontend + Arquitetura | `FATIA-DN-MOBILE-03` | Sugerir default LCP ≤ 4 s / TTI ≤ 6 s (`Slow 3G`) |
-| **DEC-DN-16** | LGPD de testemunhas | DPO + Jurídico | `FATIA-DN-CP3-07` | Sugerir consentimento explícito + retenção 30 d |
-| **DEC-DN-19** | Formato oficial do protocolo real | Produto | `FATIA-DN-CP5-04` | MVP usa `SYN-*` mock; real precisa ser definido antes do release |
+| **D-DN-01** | Modelo de versionamento | Owner técnico | rollback de TODAS | ✅ **RESOLVIDO** — Git em uso desde o início da implementação |
+| **D-DN-06** | Código do produto ausente | Owner do produto | 9 fatias CP-6 + CP0-06/CP4-05/CP5-04 | ✅ **RESOLVIDO** — CP-0 a CP-6 implementados nesta sessão |
+| **DEC-DN-08** | SLA performance mobile (LCP/TTI) | Frontend + Arquitetura | `FATIA-DN-MOBILE-03` | ✅ **FECHADA** (2026-09-05) — default aceito; resultado real não atinge o alvo ainda (ver `12-DECISIONS.delta-denunciasnew.md`) |
+| **DEC-DN-16** | LGPD de testemunhas | DPO + Jurídico | `FATIA-DN-CP3-07` | ✅ **FECHADA** (2026-09-05) — só sim/não, sem nome/contato |
+| **DEC-DN-19** | Formato oficial do protocolo real | Produto | `FATIA-DN-CP5-04` | 🟡 **ABERTA** — MVP usa `SYN-*` mock; formato real bloqueia só o *release*, não o MVP |
 
 ### 2.2 Bloqueiam qualidade do MVP mas não a implementação (3)
 
@@ -277,7 +281,7 @@ Cada task = 1 fatia `FATIA-DN-*` de [11-IMPLEMENTATION-PLAN.delta-denunciasnew.m
 **CP-mobile-perf:**
 - [ ] **T-MOB-01** `FATIA-DN-MOBILE-01` — Playwright multi-viewport ≤ 360 px.
 - [ ] **T-MOB-02** `FATIA-DN-MOBILE-02` — Área de toque ≥ 44×44 px.
-- [ ] **T-MOB-03** `FATIA-DN-MOBILE-03` — Lighthouse Slow 3G *(bloqueada — DEC-DN-08)*.
+- [x] **T-MOB-03** `FATIA-DN-MOBILE-03` — Lighthouse Slow 3G. Implementada (2026-09-05); `DEC-DN-08` fechada com o default (LCP≤4s/TTI≤6s). Resultado real medido não atinge o alvo (~10,2s) — asserções em `warn` até otimização dedicada.
 
 ## 6. Tasks Pós-MVP
 
@@ -287,7 +291,14 @@ Cada task = 1 fatia `FATIA-DN-*` de [11-IMPLEMENTATION-PLAN.delta-denunciasnew.m
 
 ### CP-6 (Classificador + Alertas mock + LGPD art. 20)
 
-- [ ] `FATIA-DN-CP6-01..07` — 7 fatias, todas dependentes do código do produto (CP0-06 destravado).
+- [x] `FATIA-DN-CP6-01,02,03,04,05,07` — 6 de 7 fatias implementadas (2026-09-05) com defaults
+      mockados simples (owner autorizou via `DEC-DN-12` interina): classificador determinístico
+      por regra (nº irregularidades + grupos vulneráveis), dispatcher de alerta mock (só log, sem
+      canal real — `DEC-DN-22` não decidida), URGENTE sempre pendente de revisão humana (sem
+      interface admin real).
+- [ ] `FATIA-DN-CP6-06` — Rate limit/throttle no dispatcher. **Não implementada** — é
+      infraestrutura real (rajada de 20 requisições), não um mock simples; registrada como
+      pendência explícita.
 
 ### Chatbot (`DEC-DN-09B`)
 

@@ -4,6 +4,8 @@ const express = require('express');
 const { upload } = require('../middleware/upload');
 const { validarAnexo } = require('../services/attachment-validation');
 const { gerarProtocolo } = require('../services/protocolo');
+const { classificar } = require('../services/classifier-mock');
+const { avaliarAlerta } = require('../services/alert-dispatcher-mock');
 const logger = require('../logger');
 
 const router = express.Router();
@@ -67,24 +69,24 @@ router.post('/', (req, res) => {
     }
 
     // R-DN-02: rejeitar campos setados só server-side vindos do cliente
-    if (body.classificacao) {
+    if (body.classificacao || body.prioridade) {
       return res.status(400).json({
         codigo: 'CAMPO_NAO_ACEITO',
-        mensagem: 'classificacao é definida no servidor (R-DN-02)',
+        mensagem: 'classificacao/prioridade são definidas no servidor (R-DN-02)',
       });
     }
 
     const protocolo = gerarProtocolo();
     const timestamp = new Date().toISOString();
 
-    const classificacao = {
-      categoria: 'GERAL',
-      subcategoria: 'REVISAO_INICIAL',
-      prioridade: 'BAIXA',
-      metodo: 'REGRA_DETERMINISTICA',
-      versao_classificador: 'mock-0.1.0',
-      revisada_por_humano: false,
-    };
+    // T-DN-05: classificar() só recebe códigos/enums não identificadores — nunca nome/e-mail/
+    // telefone/testemunhas (R-DN-01).
+    const classificacao = classificar({
+      irregularidades: body.irregularidades,
+      grupos_vulneraveis: body.grupos_vulneraveis,
+    });
+
+    avaliarAlerta({ protocolo, classificacao, requestId: req.requestId });
 
     logger.info(
       {
