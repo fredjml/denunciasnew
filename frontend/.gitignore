@@ -42,3 +42,9 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Vídeo institucional real do MPT, baixado manualmente pelo owner só para teste local do
+# player (ver video-institucional.ts). Nunca commitar: é conteúdo real de terceiro (não
+# sintético, R-DN-05), grande (~59 MB) e ainda não é o vídeo final aprovado para produção.
+public/media/video-institucional-mpt-es-35-anos.mp4
+public/media/video-institucional-mpt-es-35-anos.vtt

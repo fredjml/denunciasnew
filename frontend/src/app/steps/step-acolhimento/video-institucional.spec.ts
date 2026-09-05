@@ -36,6 +36,11 @@ describe('VideoInstitucional', () => {
     const transcript = fixture.nativeElement.querySelector('[data-testid="transcricao-video"]');
 
     expect(transcript).toBeTruthy();
-    expect(transcript.textContent).toContain('Conteúdo institucional pendente');
+    // Conteúdo varia por ambiente (placeholder sintético em produção; nota de vídeo de teste
+    // local em dev — ver video-institucional.ts) — ambos deixam claro que não é o vídeo final.
+    const text = transcript.textContent ?? '';
+    const isPlaceholder = text.includes('Conteúdo institucional pendente');
+    const isTesteLocal = text.includes('usado só para teste local');
+    expect(isPlaceholder || isTesteLocal).toBe(true);
   });
 });

@@ -7,14 +7,17 @@
       [attr.controls]="started() ? true : null"
       preload="metadata"
       aria-describedby="video-description"
-      aria-label="Vídeo Explicativo: conheça o papel do MPT"
+      [attr.aria-label]="videoAriaLabel()"
     >
+      @if (videoSrc()) {
+        <source [src]="videoSrc()" type="video/mp4" />
+      }
       <track
         default
         kind="captions"
         label="Português"
         srclang="pt-BR"
-        src="/media/video-institucional-placeholder.vtt"
+        [src]="captionsSrc()"
       />
       Seu navegador não oferece suporte ao elemento de vídeo.
     </video>
@@ -24,16 +27,24 @@
         <span class="video-overlay__play">
           <app-icon name="play" [size]="28" />
         </span>
-        <span class="video-overlay__caption">Vídeo Explicativo (45s)</span>
+        <span class="video-overlay__caption">{{ overlayCaption() }}</span>
       </button>
     }
   </div>
 
   <details id="video-description" class="transcript" data-testid="transcricao-video">
     <summary>Ver transcrição do vídeo</summary>
-    <p>
-      Conteúdo institucional pendente de aprovação. Este texto é um placeholder sintético e não
-      substitui a versão oficial do MPT.
-    </p>
+    @if (videoSrc()) {
+      <p>
+        Vídeo real do MPT-ES ("Vídeo Manifesto — 35 anos") usado só para teste local do player
+        nesta rodada — não é o vídeo institucional final aprovado para este produto, e a
+        legenda exibida não é uma transcrição completa do áudio.
+      </p>
+    } @else {
+      <p>
+        Conteúdo institucional pendente de aprovação. Este texto é um placeholder sintético e não
+        substitui a versão oficial do MPT.
+      </p>
+    }
   </details>
 </section>
