@@ -1,0 +1,59 @@
+flowchart LR
+    accTitle: Casos de uso do denunciasnew — as-built (2026-09-05)
+    accDescr: Atores reais e casos de uso realmente implementados no MVP; nenhum caso de uso de chatbot, classificador real ou BFF de anonimização aparece aqui, por estarem fora do MVP.
+
+    cidadao(["«actor · primário»<br/>Cidadã/cidadão"])
+    agentePublico(["«actor · primário»<br/>Agente de órgão público"])
+    mock(["«actor · sistema»<br/>backend-mock"])
+    mptExterno(["«actor · sistema externo»<br/>Sites do MPT (nova aba)"])
+
+    subgraph sistema["📋 denunciasnew — MVP"]
+        direction TB
+        acessarPortal(("Acessar Portal<br/>(Acesso Rápido)"))
+        acessarServicoExterno(("Abrir serviço externo<br/>do MPT em nova aba"))
+        escolherCaminho(("Escolher caminho<br/>no Acolhimento"))
+        contarPorTexto(("Contar ocorrência<br/>por texto"))
+        contarPorAudio(("Contar ocorrência<br/>por áudio (mock STT)"))
+        selecionarIrregularidade(("Selecionar tipo(s)<br/>de irregularidade"))
+        detalharOcorrencia(("Detalhar período,<br/>modalidade, nº afetados"))
+        anexarEvidencia(("Anexar evidência<br/>(foto/doc, validado)"))
+        marcarGrupoVulneravel(("Marcar grupo<br/>vulnerável envolvido"))
+        indicarTestemunha(("Indicar se há<br/>testemunha (sim/não)"))
+        escolherAnonimato(("Escolher anônimo<br/>ou identificado"))
+        informarLocal(("Informar UF/Município<br/>(obrigatório)"))
+        revisarDados(("Revisar e editar<br/>qualquer seção"))
+        enviarDenuncia(("Enviar denúncia"))
+        receberProtocolo(("Receber protocolo<br/>SYN-*"))
+        retomarAposF5(("Retomar de onde parou<br/>após fechar/recarregar"))
+        instalarPwa(("Instalar como app<br/>(PWA)"))
+    end
+
+    cidadao --> acessarPortal
+    agentePublico --> acessarPortal
+    acessarPortal -->|"«extend»"| acessarServicoExterno
+    acessarPortal --> escolherCaminho
+    escolherCaminho -->|"«extend»<br/>opção Ouvidoria"| acessarServicoExterno
+    escolherCaminho --> contarPorTexto
+    escolherCaminho -->|"«extend»"| contarPorAudio
+    contarPorTexto --> selecionarIrregularidade
+    contarPorAudio --> selecionarIrregularidade
+    selecionarIrregularidade --> detalharOcorrencia
+    detalharOcorrencia --> anexarEvidencia
+    anexarEvidencia -->|"«extend»"| marcarGrupoVulneravel
+    anexarEvidencia -->|"«extend»"| indicarTestemunha
+    anexarEvidencia --> escolherAnonimato
+    escolherAnonimato --> informarLocal
+    informarLocal --> revisarDados
+    revisarDados -->|"«include»"| enviarDenuncia
+    enviarDenuncia --> mock
+    enviarDenuncia --> receberProtocolo
+    acessarServicoExterno --> mptExterno
+    cidadao -.->|"a qualquer momento"| retomarAposF5
+    cidadao -.->|"opcional"| instalarPwa
+
+    classDef actorClass fill:#ffffff,stroke:#17324d,color:#17212b
+    classDef useCaseClass fill:#eef2f5,stroke:#4a6274,color:#17212b
+    classDef externalClass fill:#f3f4f6,stroke:#6b7280,color:#374151,stroke-dasharray: 3 3
+    class cidadao,agentePublico actorClass
+    class mock,mptExterno externalClass
+    class acessarPortal,acessarServicoExterno,escolherCaminho,contarPorTexto,contarPorAudio,selecionarIrregularidade,detalharOcorrencia,anexarEvidencia,marcarGrupoVulneravel,indicarTestemunha,escolherAnonimato,informarLocal,revisarDados,enviarDenuncia,receberProtocolo,instalarPwa useCaseClass

@@ -1,0 +1,33 @@
+flowchart TB
+    accTitle: Contexto do sistema denunciasnew — C4 nível 1 (as-built, 2026-09-05)
+    accDescr: Cidadão e agente público usam a SPA Angular para registrar denúncia; a Ouvidoria e demais serviços do MPT são acessados como links externos, não integrados; o backend-mock é o único sistema que a SPA chama via rede.
+
+    cidadao["👤 Cidadã/cidadão<br/>quer relatar irregularidade trabalhista"]
+    agentePublico["👤 Agente de órgão público<br/>quer denunciar em nome da instituição"]
+
+    subgraph sistema["«sistema em foco» Canal de Denúncias — denunciasnew"]
+        spa["SPA Angular 22<br/>PWA instalável<br/>(frontend/)"]
+        mock["backend-mock<br/>Express — porta 3001<br/>(NÃO é produção)"]
+    end
+
+    mptExterno["🌐 Sistemas institucionais do MPT<br/>peticionamento, consulta de processos,<br/>transparência (mpt.mp.br/prt17.mpt.mp.br)"]
+    ouvidoriaExterna["🌐 URL de Ouvidoria<br/>(proteste.org.br — confirmada pelo owner,<br/>não é domínio do MPT)"]
+    backendReal["🏗️ Backend de produção real<br/>«futuro» — equipe externa,<br/>consome contract/openapi.yaml"]
+
+    cidadao -->|"usa no navegador/celular"| spa
+    agentePublico -->|"usa no navegador/celular"| spa
+    spa -->|"POST /api/denuncias, /api/municipios, /api/stt<br/>(multipart/JSON)"| mock
+    spa -->|"abre em nova aba<br/>(sem embed, sem cookie de terceiro)"| mptExterno
+    spa -->|"abre em nova aba<br/>(tile Ouvidoria + Acolhimento)"| ouvidoriaExterna
+    mock -.->|"substituído por, mesmo contrato"| backendReal
+
+    classDef personClass fill:#ffffff,stroke:#17324d,color:#17212b
+    classDef systemClass fill:#8c1d2c,stroke:#5c1420,color:#ffffff
+    classDef mockClass fill:#fdece0,stroke:#c1591a,color:#5c2a0c
+    classDef externalClass fill:#f3f4f6,stroke:#6b7280,color:#374151,stroke-dasharray: 3 3
+    classDef futureClass fill:#eef2f5,stroke:#4a6274,color:#17212b,stroke-dasharray: 5 3
+    class cidadao,agentePublico personClass
+    class spa systemClass
+    class mock mockClass
+    class mptExterno,ouvidoriaExterna externalClass
+    class backendReal futureClass

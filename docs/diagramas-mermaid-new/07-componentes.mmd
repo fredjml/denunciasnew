@@ -1,12 +1,13 @@
 flowchart LR
-    accTitle: Componentes do frontend denunciasnew — como construído (as-built, 2026-09-05)
-    accDescr: Componentes Angular standalone realmente implementados (commits addbd7b..c24f910), seus serviços de estado, os módulos compartilhados e a única chamada de rede real (POST /api/denuncias). Diferente de denunciasnew-c4-componentes.mmd (planejamento pré-implementação), este diagrama não contém nenhum componente especulativo — tudo aqui existe em frontend/src/app.
-    subgraph app["«container» Angular 22 standalone SPA — frontend/src/app"]
+    accTitle: Componentes do frontend denunciasnew — C4 nível 3, as-built (2026-09-05, com Portal Home)
+    accDescr: Componentes Angular standalone realmente implementados, seus serviços de estado, os módulos compartilhados (incluindo o novo mpt-links.ts) e a única chamada de rede real (POST /api/denuncias, GET /api/municipios, POST /api/stt). Sem @angular/router (removido — nunca foi usado) e sem nenhum componente especulativo.
+    subgraph app["«container» Angular 22 standalone SPA — frontend/src/app (sem @angular/router)"]
         direction TB
         root["«root component»<br/><b>App</b> (app.ts)<br/>goTo(step) · currentTab · progresso"]
-        subgraph steps["steps/ — 8 telas do wizard"]
+        portalHome["«component, NOVO»<br/>PortalHome<br/>(portal-home/) — tela inicial"]
+        subgraph steps["steps/ — 8 telas do wizard (após o Portal)"]
             direction TB
-            acolhimento["StepAcolhimento<br/>+ VideoInstitucional"]
+            acolhimento["StepAcolhimento<br/>+ VideoInstitucional<br/>(vídeo real em dev, placeholder em prod)"]
             relato["StepRelatoGuiado<br/>+ AudioRecorderComponent"]
             detalhamento["StepDetalhamento"]
             evidencias["StepEvidencias"]
@@ -31,12 +32,17 @@ flowchart LR
         subgraph shared["shared/ — módulos reutilizados"]
             direction TB
             persisted["persisted-signal.ts<br/>createPersistedSignal()"]
-            icon["icon.ts<br/>‹app-icon› (13 ícones SVG inline)"]
+            icon["icon.ts<br/>‹app-icon› (14 ícones SVG inline)"]
             taxonomia["taxonomia.ts<br/>buscarIrregularidade() · Map"]
+            mptLinks["«NOVO»<br/>mpt-links.ts<br/>URLs externas centralizadas"]
         end
         fallbackJson["«asset»<br/>municipios-ibge-fallback.json"]
+        swAsset["«asset»<br/>public/sw.js + manifest.webmanifest<br/>PWA — registra só em produção"]
+        root --> portalHome
         root --> acolhimento & relato & detalhamento & evidencias & sigilo & local & revisao & confirmacao
+        portalHome --> mptLinks
         acolhimento --> acolhimentoState
+        acolhimento -.->|"Fale com a Ouvidoria"| mptLinks
         relato --> relatoState & audioRecorder & sttClient & taxonomia
         detalhamento --> detalhamentoState
         evidencias --> evidenciasState & detalhamentoState
@@ -54,29 +60,35 @@ flowchart LR
         localState -.-> persisted
         root -.-> persisted
         acolhimento -.->|"ícones nos 3 caminhos"| icon
+        portalHome -.->|"ícones dos 6 tiles"| icon
         relato -.->|"ícones do checklist"| icon
         confirmacao -.->|"ícones do infográfico"| icon
+        root -.-> swAsset
     end
     subgraph mock["«container» backend-mock (Express) — porta 3001"]
         direction TB
-        denunciasRoute["POST /api/denuncias<br/>upload.fields() + attachment-validation"]
+        denunciasRoute["POST /api/denuncias<br/>upload.fields() + attachment-validation<br/>+ classifier-mock + alert-dispatcher-mock"]
         municipiosRoute["GET /api/municipios"]
         sttRoute["POST /api/stt"]
     end
+    linksExternos["🌐 mpt.mp.br / prt17.mpt.mp.br / proteste.org.br"]
     submission -->|"«requires» multipart/form-data"| denunciasRoute
     municipiosClient -->|"«requires» JSON"| municipiosRoute
     sttClient -->|"«requires» JSON"| sttRoute
-    legenda["«legend»<br/>Linha sólida: dependência de dados/renderização<br/>Linha tracejada: fallback/uso transversal<br/>Azul: shell raiz<br/>Cinza: serviço de estado/integração<br/>Roxo: módulo compartilhado<br/>Laranja: backend-mock (não é o backend de produção)"]
+    mptLinks -.->|"5 dos 6 tiles abrem em nova aba"| linksExternos
+    legenda["«legend»<br/>Linha sólida: dependência de dados/renderização<br/>Linha tracejada: fallback/uso transversal/asset<br/>Azul: shell raiz e tela inicial<br/>Cinza: serviço de estado/integração<br/>Roxo: módulo compartilhado<br/>Laranja: backend-mock (não é o backend de produção)<br/>Neutro tracejado: destino externo, sem integração"]
     classDef rootClass fill:#dbe4ee,stroke:#17324d,color:#17212b
     classDef stepClass fill:#f7f8fa,stroke:#65717d,color:#17212b
     classDef serviceClass fill:#eef2f5,stroke:#4a6274,color:#17212b
     classDef sharedClass fill:#f3ecf9,stroke:#6c3fa3,color:#3a1a5c
     classDef backendClass fill:#fdece0,stroke:#c1591a,color:#5c2a0c
     classDef assetClass fill:#ffffff,stroke:#8e44ad,color:#4a235a
-    class root rootClass
+    classDef externalClass fill:#f3f4f6,stroke:#6b7280,color:#374151,stroke-dasharray: 3 3
+    class root,portalHome rootClass
     class acolhimento,relato,detalhamento,evidencias,sigilo,local,revisao,confirmacao stepClass
     class acolhimentoState,relatoState,detalhamentoState,evidenciasState,sigiloState,localState,municipiosClient,audioRecorder,sttClient,submission serviceClass
-    class persisted,icon,taxonomia sharedClass
+    class persisted,icon,taxonomia,mptLinks sharedClass
     class denunciasRoute,municipiosRoute,sttRoute backendClass
-    class fallbackJson assetClass
+    class fallbackJson,swAsset assetClass
+    class linksExternos externalClass
     class legenda serviceClass

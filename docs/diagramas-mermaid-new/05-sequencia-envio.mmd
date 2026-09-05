@@ -1,5 +1,7 @@
 sequenceDiagram
     autonumber
+    accTitle: Sequência técnica real do envio de denúncia — as-built (2026-09-05, com classificador e dispatcher do CP-6)
+    accDescr: Do clique em Enviar Denúncia até a resposta 201, incluindo validação de anexo em duas camadas, classificação determinística real e avaliação de despacho de alerta com limite de taxa.
     actor Pessoa as 🧑 Denunciante
     participant Revisao as StepRevisao
     participant Submission as ComplaintSubmissionService
@@ -7,7 +9,10 @@ sequenceDiagram
     participant Backend as backend-mock<br/>POST /api/denuncias
     participant Upload as middleware/upload.js<br/>(multer + fileFilter)
     participant Validacao as attachment-validation.js<br/>(magic-bytes + ClamAV-mock)
+    participant Classifier as classifier-mock.js<br/>«nunca recebe PII»
+    participant Dispatcher as alert-dispatcher-mock.js<br/>«janela deslizante 5/60s»
     participant Protocolo as services/protocolo.js<br/>(crypto.randomBytes)
+
     Pessoa->>+Revisao: clica "Enviar Denúncia"
     Revisao->>+Submission: enviar()
     Submission->>Estados: lê todos os signals (irregularidades, detalhamento, sigilo, local, testemunhas)
@@ -33,13 +38,27 @@ sequenceDiagram
             Backend->>Backend: JSON.parse(body.denuncia)
             alt campo obrigatório ausente (origem/irregularidades/tipo_identificacao/uf/municipio)
                 Backend-->>Submission: 400 CAMPO_OBRIGATORIO_AUSENTE
-            else cliente tenta enviar `classificacao` (R-DN-02)
+            else cliente tenta enviar `classificacao` ou `prioridade` (R-DN-02)
                 Backend-->>Submission: 400 CAMPO_NAO_ACEITO
             else payload válido
                 Backend->>+Protocolo: gerarProtocolo()
                 Protocolo-->>-Backend: "SYN-XXXXXXXX"
-                Backend->>Backend: classificacao fixa server-side<br/>(BAIXA · REGRA_DETERMINISTICA · revisada_por_humano=false)
-                Backend-->>-Submission: 201 { protocolo, timestamp, classificacao }
+                Backend->>+Classifier: classificar({ irregularidades, grupos_vulneraveis })
+                Note over Classifier: só recebe códigos — nunca nome/e-mail/telefone (R-DN-01)
+                Classifier-->>-Backend: { categoria, prioridade, metodo:<br/>REGRA_DETERMINISTICA, revisada_por_humano:false }
+                Backend->>+Dispatcher: avaliarAlerta({ protocolo, classificacao })
+                alt prioridade != URGENTE
+                    Dispatcher-->>Backend: { despachado:false, motivo:PRIORIDADE_NAO_URGENTE }
+                else URGENTE e revisada_por_humano=false
+                    Dispatcher-->>Backend: { despachado:false, motivo:AGUARDANDO_REVISAO_HUMANA }
+                else URGENTE e revisada_por_humano=true e dentro do limite
+                    Dispatcher->>Dispatcher: log estruturado (sem PII)
+                    Dispatcher-->>Backend: { despachado:true, motivo:DESPACHADO }
+                else limite de 5 despachos/60s excedido
+                    Dispatcher-->>Backend: { despachado:false, motivo:LIMITE_DE_TAXA_EXCEDIDO }
+                end
+                deactivate Dispatcher
+                Backend-->>-Submission: 201 { protocolo, timestamp, classificacao }<br/>«nunca inclui despachado/motivo — interno»
             end
         end
     end

@@ -1,0 +1,48 @@
+flowchart LR
+    accTitle: Transformação dos dados do formulário ao protocolo — as-built (2026-09-05)
+    accDescr: Dado bruto digitado/gravado pelo usuário é mantido em signals e sessionStorage sem PII no envelope de classificação, convertido em FormData pelo ComplaintSubmissionService, validado em duas camadas no backend-mock, e nunca retorna PII na resposta.
+
+    entrada["Entrada do usuário<br/>texto, seleção, upload, áudio (Blob)"]
+    signals["Signals dos StateServices<br/>(RelatoState, DetalhamentoState, ...)"]
+    sessionStorage["sessionStorage<br/>(createPersistedSignal — tudo exceto File/Blob)"]
+    payload["ComplaintSubmissionService.buildPayload()<br/>traduz códigos internos → enums do contrato"]
+    formData["FormData multipart<br/>campo 'denuncia' (JSON) + arquivo_1..3 + arquivo_audio"]
+    uploadMw["multer + fileFilter<br/>(middleware/upload.js)"]
+    attachVal["magic-bytes + EICAR<br/>(attachment-validation.js)"]
+    envelopeClassificador["Envelope do classificador<br/>«sem PII» — só irregularidades[] + grupos_vulneraveis[]"]
+    classificacao["Classificacao<br/>categoria, prioridade, metodo,<br/>versao_classificador, revisada_por_humano=false"]
+    dispatcher["alert-dispatcher-mock<br/>decide despachar (log) ou não"]
+    protocoloGerado["Protocolo SYN-XXXXXXXX"]
+    resposta["Resposta 201<br/>«sem PII» — só protocolo"]
+    logs["Logs estruturados (pino)<br/>requestId, protocolo, categoria — nunca nome/e-mail/telefone"]
+
+    entrada --> signals
+    signals <--> sessionStorage
+    signals --> payload
+    payload --> formData
+    formData -->|"POST /api/denuncias"| uploadMw
+    uploadMw --> attachVal
+    attachVal -->|"rejeitado"| erro["400/422 — descartado, nada persiste"]
+    attachVal -->|"aceito"| envelopeClassificador
+    payload -.->|"extrai só códigos, nunca nome/e-mail"| envelopeClassificador
+    envelopeClassificador --> classificacao
+    classificacao --> dispatcher
+    dispatcher --> logs
+    classificacao --> protocoloGerado
+    protocoloGerado --> resposta
+    resposta -->|"única coisa que volta ao navegador"| signals
+    uploadMw -.-> logs
+    attachVal -.-> logs
+
+    classDef userClass fill:#ffffff,stroke:#17324d,color:#17212b
+    classDef stateClass fill:#eef2f5,stroke:#4a6274,color:#17212b
+    classDef mockClass fill:#fdece0,stroke:#c1591a,color:#5c2a0c
+    classDef noPiiClass fill:#e8f5e9,stroke:#1e7b34,color:#0f3d1a,stroke-width:2px
+    classDef errorClass fill:#fde8e8,stroke:#c0392b,color:#7a1f1f
+    classDef logClass fill:#f3ecf9,stroke:#6c3fa3,color:#3a1a5c
+    class entrada userClass
+    class signals,sessionStorage,payload,formData stateClass
+    class uploadMw,attachVal,dispatcher,protocoloGerado mockClass
+    class envelopeClassificador,classificacao,resposta noPiiClass
+    class erro errorClass
+    class logs logClass

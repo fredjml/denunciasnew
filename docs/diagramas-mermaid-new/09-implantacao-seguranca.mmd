@@ -1,0 +1,45 @@
+flowchart TB
+    accTitle: Topologia de execução e fronteiras de segurança — as-built (2026-09-05)
+    accDescr: Navegador do usuário roda a SPA e o service worker; o backend-mock local aplica CORS restrito, validação de anexo em duas camadas e rate limit em memória; nenhum componente de infraestrutura real (Redis, ClamAV real, WAF) existe neste repositório.
+
+    subgraph dispositivo["Dispositivo do usuário"]
+        browser["Navegador (Chrome/Safari/Firefox)<br/>ou PWA instalada"]
+        sw["Service Worker<br/>cache-first (assets same-origin)<br/>NUNCA intercepta /api/*"]
+        session["sessionStorage<br/>estado do wizard, sem PII fora do necessário"]
+    end
+
+    subgraph redeDev["Rede local de desenvolvimento"]
+        direction TB
+        cors["CORS — allowlist<br/>localhost:4200 / 127.0.0.1:4200<br/>(produção real deve restringir por origin)"]
+        subgraph backendMock["backend-mock (Express, porta 3001)"]
+            direction TB
+            correlationMw["middleware/correlation.js<br/>requestId por request, sem PII no log"]
+            uploadMw["middleware/upload.js<br/>multer + fileFilter por MIME/fieldname"]
+            attachVal["services/attachment-validation.js<br/>magic-bytes.js + clamav-mock.js (EICAR)"]
+            classifier["services/classifier-mock.js<br/>NUNCA recebe PII (R-DN-01)"]
+            dispatcher["services/alert-dispatcher-mock.js<br/>rate limit em memória (5/60s)<br/>URGENTE exige revisada_por_humano=true"]
+            protocolo["services/protocolo.js<br/>gera SYN-XXXXXXXX"]
+        end
+    end
+
+    fronteiraContrato{{"contract/openapi.yaml<br/>fronteira de confiança — única interface<br/>com o backend de produção real (futuro)"}}
+
+    browser -->|"HTTPS em produção<br/>HTTP em dev local"| cors
+    cors --> correlationMw --> uploadMw --> attachVal
+    attachVal -->|"rejeitado: MIME/assinatura/EICAR"| respostaErro["400/422 — sem publicar o arquivo"]
+    attachVal -->|"aceito"| classifier --> dispatcher --> protocolo
+    protocolo -->|"201 + protocolo"| browser
+    browser <-.-> sw
+    browser <-.-> session
+    backendMock -.->|"schema validado contra"| fronteiraContrato
+
+    classDef deviceClass fill:#eef2f5,stroke:#4a6274,color:#17212b
+    classDef boundaryClass fill:#fff7e6,stroke:#b8860b,color:#5c2a0c,stroke-width:2px
+    classDef mockClass fill:#fdece0,stroke:#c1591a,color:#5c2a0c
+    classDef errorClass fill:#fde8e8,stroke:#c0392b,color:#7a1f1f
+    classDef contractClass fill:#f3ecf9,stroke:#6c3fa3,color:#3a1a5c
+    class browser,sw,session deviceClass
+    class cors boundaryClass
+    class correlationMw,uploadMw,attachVal,classifier,dispatcher,protocolo mockClass
+    class respostaErro errorClass
+    class fronteiraContrato contractClass

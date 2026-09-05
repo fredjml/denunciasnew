@@ -1,7 +1,13 @@
 %% Fluxo de navegação vigente do wizard denunciasnew — baseline para comparar propostas futuras.
-%% Fonte: frontend/src/app/app.ts (signal currentStep) + app.html (@switch). 2026-09-05.
+%% Fonte: frontend/src/app/app.ts (signal currentStep) + app.html (@switch). Atualizado 2026-09-05
+%% após a implementação da tela de Portal (era a proposta em 02-fluxo-com-portal-home.mmd,
+%% agora este É o estado real — ver docs/diagramas-mermaid-new/08-estados-wizard.mmd para a
+%% versão completa e mantida deste diagrama).
 flowchart TD
-    A[Acolhimento] -->|escolha CIDADAO ou AGENTE_PUBLICO + Avançar| R[Relato Guiado]
+    P[Portal — Acesso Rápido] -->|Denuncie| A[Acolhimento]
+    P -->|tile externo| EXT2["Abre site do MPT em nova aba<br/>(não navega)"]
+
+    A -->|escolha CIDADAO ou AGENTE_PUBLICO + Avançar| R[Relato Guiado]
     A -->|escolha OUVIDORIA + Avançar| EXT["Abre URL da Ouvidoria<br/>em nova aba (não navega)"]
 
     R -->|pelo menos 1 irregularidade + Avançar| D[Detalhamento]
@@ -27,9 +33,11 @@ flowchart TD
     RV -->|Enviar Denúncia - sucesso| C[Confirmação]
     RV -->|Voltar| L
 
-    C -->|Início| A
+    C -->|Início| P
 
     classDef stepClass fill:#fff,stroke:#8c1d2c,stroke-width:1px;
     classDef extClass fill:#f8fafc,stroke:#5b6472,stroke-dasharray: 4 3;
+    classDef novaClass fill:#fff7e6,stroke:#b8860b,stroke-width:2px;
     class A,R,D,EV,S,L,RV,C stepClass;
-    class EXT extClass;
+    class EXT,EXT2 extClass;
+    class P novaClass;

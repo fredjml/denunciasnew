@@ -25,24 +25,25 @@ Estes diagramas foram derivados do código em `cidadania-canal-denuncias`, sem a
 | `09-implantacao-seguranca.mmd` | Topologia e fronteiras de segurança | Infraestrutura e segurança |
 | `10-fluxo-dados.mmd` | Transformação dos dados | Arquitetura, segurança e integração |
 
-## Diagramas do `denunciasnew` — como construído (as-built, 2026-09-05)
+## Diagramas do `denunciasnew` — planejamento (pré-implementação)
 
 Os 5 diagramas `denunciasnew-*.mmd` acima (contexto, C4 containers, C4 componentes, classes,
 casos de uso) foram desenhados **antes** da implementação (fase de planejamento F3) — contêm
 componentes especulativos («NOVO», «PART») que nunca chegaram a existir (ex.: `SttProxy`,
 `ClassifierProxy`, `BotIngress`, `ComplaintApiClient`) porque o MVP standalone entregue é mais
-enxuto que a proposta original do PDF. Os 3 diagramas abaixo foram gerados **depois** da
-implementação, direto do código real (commits `addbd7b`..`c24f910`), sem nenhum componente
-especulativo:
+enxuto que a proposta original do PDF. Mantidos como registro histórico da decisão de escopo,
+não como referência do estado atual.
 
-| Arquivo | Visão | Público principal |
-| --- | --- | --- |
-| `denunciasnew-frontend-componentes-asbuilt.mmd` | Componentes Angular reais (8 telas, 10 serviços, 3 módulos compartilhados) + a única chamada de rede real ao `backend-mock` | Desenvolvimento |
-| `denunciasnew-frontend-estados-wizard-asbuilt.mmd` | Máquina de estados real do wizard (8 estados, transições `advance`/`voltar`/`editar*`) | Frontend e QA |
-| `denunciasnew-frontend-sequencia-envio-asbuilt.mmd` | Sequência técnica real do envio: `ComplaintSubmissionService` → `multer`/`fileFilter` → `attachment-validation.js` → protocolo | Desenvolvimento e segurança |
+**O conjunto completo "como construído" do `denunciasnew` mudou de lugar:** está em
+[`docs/diagramas-mermaid-new/`](../diagramas-mermaid-new/) — 10 diagramas nas mesmas categorias
+desta pasta (arquitetura, contexto, classes, atividade, sequência, casos de uso, componentes,
+estados, implantação/segurança, fluxo de dados), gerados 100% do código real e mantidos
+atualizados a cada mudança estrutural. Os 3 arquivos `denunciasnew-frontend-*-asbuilt.mmd` que
+existiam nesta pasta foram descontinuados e substituídos por esse conjunto mais completo em
+2026-09-05.
 
-Não fazem parte de `validate-diagrams.js` (que valida só os 10 arquivos originais numerados) —
-mesma situação dos 5 diagramas de planejamento do `denunciasnew` acima.
+Não fazem parte de `validate-diagrams.js` (que valida só os 10 arquivos originais numerados
+desta pasta) — mesma situação da pasta `diagramas-mermaid-new/`.
 
 ## Premissas e limites
 

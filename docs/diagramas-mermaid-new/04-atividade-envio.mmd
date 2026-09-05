@@ -1,0 +1,58 @@
+flowchart TD
+    accTitle: Atividade ponta a ponta do envio de denúncia — as-built (2026-09-05)
+    accDescr: Caminho feliz do Portal até a Confirmação em destaque; desvios reais (Ouvidoria, microfone negado, arquivo rejeitado, envio com erro) em ramos secundários, todos implementados e cobertos por teste.
+
+    inicio(["Início — abre o app"]) --> portal["Portal: Acesso Rápido"]
+    portal -->|"Denuncie"| acolhimento["Acolhimento: escolhe caminho"]
+    portal -->|"tile Ouvidoria/externo"| externoAba["Abre nova aba<br/>(app permanece no Portal)"]
+    externoAba -.-> portal
+
+    acolhimento -->|"Cidadão/Agente público"| relato["Relato Guiado"]
+    acolhimento -->|"Fale com a Ouvidoria"| ouvidoriaAba["Abre nova aba<br/>(app permanece no Acolhimento)"]
+    ouvidoriaAba -.-> acolhimento
+
+    relato --> descreveTexto{"Descreve por texto<br/>ou pede áudio?"}
+    descreveTexto -->|texto| marcaIrregularidade
+    descreveTexto -->|áudio| consentimento{"Aceita consentimento<br/>de microfone?"}
+    consentimento -->|não| textoFallback["Continua só por texto<br/>(mensagem de fallback)"] --> marcaIrregularidade
+    consentimento -->|sim| gravaAudio["Grava áudio"] --> permissaoNavegador{"Navegador concede<br/>permissão real?"}
+    permissaoNavegador -->|negada| microfoneIndisponivel["Aviso: microfone não autorizado<br/>(campo de texto continua disponível)"] --> marcaIrregularidade
+    permissaoNavegador -->|concedida| transcreve["Transcreve (mock STT)"] --> statusStt{"Status da transcrição"}
+    statusStt -->|CONCLUIDA| marcaIrregularidade["Marca ao menos 1 irregularidade"]
+    statusStt -->|FALHA/TIMEOUT| avisoFalhaStt["Aviso: não foi possível transcrever<br/>(continua por texto)"] --> marcaIrregularidade
+
+    marcaIrregularidade -->|"Avançar (bloqueado sem irregularidade)"| detalhamento["Detalhamento<br/>(todos os campos opcionais)"]
+    detalhamento --> evidencias["Evidências"]
+    evidencias --> anexa{"Anexa arquivo?"}
+    anexa -->|"MIME/tamanho/assinatura inválidos"| erroAnexo["Erro exibido, arquivo não entra na lista"] --> evidencias
+    anexa -->|"válido"| listaAtualizada["Adiciona à lista (id único)"] --> evidencias
+    anexa -->|"não anexa (opcional)"| sigilo
+    evidencias -->|"Avançar"| sigilo["Sigilo e Anonimato"]
+
+    sigilo --> escolheIdent{"Anônimo ou identificado?"}
+    escolheIdent -->|"identificado"| dadosContato["Preenche nome/e-mail/telefone"]
+    escolheIdent -->|"anônimo"| semDados["Sem dados de contato"]
+    dadosContato --> confirmaAviso
+    semDados --> confirmaAviso{"Marca 'li e entendi o aviso'?"}
+    confirmaAviso -->|"não"| sigilo
+    confirmaAviso -->|"sim"| local["Local<br/>(UF/Município obrigatórios)"]
+
+    local --> validaLocal{"UF e Município preenchidos?"}
+    validaLocal -->|"não"| local
+    validaLocal -->|"sim"| revisao["Revisão — resumo editável"]
+
+    revisao -->|"Editar qualquer seção"| voltaSecao["Volta à seção,<br/>preserva as demais"] -.-> revisao
+    revisao -->|"Enviar Denúncia"| envia["POST /api/denuncias (multipart)"]
+    envia --> respostaOk{"Backend aceita (201)?"}
+    respostaOk -->|"não — validação/rede"| erroEnvio["Mensagem de erro,<br/>dados preservados"] --> revisao
+    respostaOk -->|"sim"| confirmacao(["Confirmação — protocolo SYN-* exibido"])
+    confirmacao -->|"Início"| portal
+
+    classDef mainClass fill:#8c1d2c,stroke:#5c1420,color:#ffffff
+    classDef decisionClass fill:#fff7e6,stroke:#b8860b,color:#5c2a0c
+    classDef exceptionClass fill:#f3f4f6,stroke:#6b7280,color:#374151,stroke-dasharray: 3 3
+    classDef terminalClass fill:#eef2f5,stroke:#4a6274,color:#17212b
+    class portal,acolhimento,relato,detalhamento,evidencias,sigilo,local,revisao,envia mainClass
+    class descreveTexto,consentimento,permissaoNavegador,statusStt,anexa,escolheIdent,confirmaAviso,validaLocal,respostaOk decisionClass
+    class externoAba,ouvidoriaAba,textoFallback,microfoneIndisponivel,avisoFalhaStt,erroAnexo,erroEnvio,voltaSecao exceptionClass
+    class inicio,confirmacao terminalClass

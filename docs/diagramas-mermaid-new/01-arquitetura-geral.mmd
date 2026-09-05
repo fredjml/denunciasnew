@@ -1,0 +1,36 @@
+flowchart TB
+    accTitle: Arquitetura de contêineres do denunciasnew — C4 nível 2 (as-built, 2026-09-05)
+    accDescr: A SPA Angular roda no navegador/celular, persiste estado em sessionStorage e cache de assets via service worker, e é o único cliente do backend-mock Express; nenhum outro serviço (fila, banco, cache distribuído) existe no repositório.
+
+    subgraph navegador["«ambiente» Navegador do usuário (desktop ou celular)"]
+        spa["«contêiner» SPA Angular 22<br/>standalone + signals, sem @angular/router<br/>frontend/src/app"]
+        sw["«contêiner» Service Worker<br/>frontend/public/sw.js<br/>cache-first (assets) / network-first (navegação)"]
+        storage["«armazenamento» sessionStorage<br/>createPersistedSignal()<br/>todo estado do wizard, exceto File/Blob"]
+    end
+
+    subgraph servidorMock["«ambiente» Node.js — porta 3001 (dev/teste)"]
+        mock["«contêiner» backend-mock<br/>Express + multer + pino<br/>backend-mock/src"]
+    end
+
+    manifest["«asset» manifest.webmanifest<br/>+ ícones — instalabilidade PWA"]
+    contrato["«contrato compartilhado»<br/>contract/openapi.yaml<br/>OpenAPI 3.1 — imutável fora de PR"]
+    linksExternos["🌐 mpt.mp.br / prt17.mpt.mp.br / proteste.org.br<br/>abertos em nova aba, sem integração"]
+
+    spa <-->|"registra/consulta cache"| sw
+    spa <-->|"lê/grava a cada mudança"| storage
+    spa -->|"instala a partir de"| manifest
+    spa -->|"POST/GET multipart e JSON<br/>(CORS restrito a localhost:4200 em dev)"| mock
+    spa -->|"abre em nova aba"| linksExternos
+    spa -.->|"tipos gerados por openapi-typescript"| contrato
+    mock -.->|"segue o mesmo schema"| contrato
+
+    classDef containerClass fill:#8c1d2c,stroke:#5c1420,color:#ffffff
+    classDef mockClass fill:#fdece0,stroke:#c1591a,color:#5c2a0c
+    classDef storageClass fill:#eef2f5,stroke:#4a6274,color:#17212b
+    classDef assetClass fill:#f3ecf9,stroke:#6c3fa3,color:#3a1a5c
+    classDef externalClass fill:#f3f4f6,stroke:#6b7280,color:#374151,stroke-dasharray: 3 3
+    class spa,sw containerClass
+    class mock mockClass
+    class storage storageClass
+    class manifest,contrato assetClass
+    class linksExternos externalClass

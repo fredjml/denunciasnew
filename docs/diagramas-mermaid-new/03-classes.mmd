@@ -1,0 +1,134 @@
+classDiagram
+    direction LR
+    note "As-built 2026-09-05 — cada classe abaixo existe em frontend/src/app/services ou shared, com o nome de arquivo exato indicado. Nenhuma é especulativa."
+
+    class App {
+      <<root component, app.ts>>
+      -currentStepState: PersistedSignal~WizardStep~
+      -protocoloState: PersistedSignal~string~
+      +currentTab: Signal~WizardTab~
+      +goTo(step: WizardStep) void
+      +startReport(choice: AcolhimentoChoice) void
+      +onEnviado(resultado: DenunciaAceita) void
+      +reiniciar() void
+    }
+    class WizardStep {
+      <<union type>>
+      PORTAL
+      ACOLHIMENTO
+      RELATO
+      DETALHAMENTO
+      EVIDENCIAS
+      SIGILO
+      LOCAL
+      REVISAO
+      CONFIRMACAO
+    }
+    class AcolhimentoStateService {
+      +selected: Signal~AcolhimentoChoice|null~
+      +select(choice) void
+    }
+    class RelatoStateService {
+      +relato: Signal~string~
+      +irregularidades: Signal~string[]~
+      +transcricao: Signal~string~
+      +transcricaoStatus: Signal~TranscricaoStatus~
+      -audioOriginal: Blob «não persistido»
+      +toggleIrregularidade(codigo) void
+      +setAudioOriginal(blob) void
+    }
+    class DetalhamentoStateService {
+      +periodoOcorrencia: Signal~string~
+      +modalidadeTrabalho: Signal~string~
+      +numeroTrabalhadores: Signal~string~
+      +funcoesSetores: Signal~string~
+    }
+    class EvidenciasStateService {
+      +arquivos: Signal~EvidenciaArquivo[]~
+      +gruposVulneraveis: Signal~string[]~
+      +erros: Signal~string[]~
+      +excedeLimiteEnvio() boolean
+      +remover(id: number) void
+    }
+    class EvidenciaArquivo {
+      <<entity>>
+      +id: number «único, não o nome»
+      +nome: string
+      +file: File
+    }
+    class SigiloStateService {
+      +tipoIdentificacao: Signal~TipoIdentificacao~
+      +avisoConfirmado: Signal~boolean~
+      +nomeCompleto: Signal~string~
+      +email: Signal~string~
+      +telefone: Signal~string~
+      +temTestemunhas: Signal~'SIM'|'NAO'|null~
+    }
+    class LocalStateService {
+      +uf: Signal~string~
+      +municipio: Signal~string~
+      +nomeEmpresa: Signal~string~
+      +enderecoEmpresa: Signal~string~
+    }
+    class MunicipiosClientService {
+      +buscar(uf) Promise~Municipio[]~
+      -fallback: municipios-ibge-fallback.json
+    }
+    class AudioRecorderService {
+      +recording: Signal~boolean~ «readonly, exposto de fato»
+      +start() void
+      +stop() Promise~Blob~
+    }
+    class SttClientService {
+      +transcribe(audio: Blob) Promise~TranscricaoResultado~
+    }
+    class ComplaintSubmissionService {
+      +buildPayload() FormData
+      +enviar() Promise~DenunciaAceita~
+    }
+    class DenunciaAceita {
+      <<entity, resposta 201>>
+      +protocolo: string
+    }
+    class PortalHome {
+      <<standalone component>>
+      +tiles: AcessoRapidoTile[]
+      +denunciar: OutputEmitterRef~void~
+    }
+    class MPT_LINKS {
+      <<const, shared/mpt-links.ts>>
+      +ouvidoria: string
+      +peticionamento: string
+      +consultaProcessos: string
+      +cartaDeServicos: string
+      +audienciasPublicas: string
+      +transparencia: string
+    }
+    class createPersistedSignal {
+      <<factory, shared/persisted-signal.ts>>
+      +value: WritableSignal~T~
+      +set(v: T) void
+    }
+
+    App --> WizardStep : usa
+    App --> PortalHome : renderiza (step PORTAL)
+    App --> MPT_LINKS : usa (Ouvidoria no Acolhimento)
+    PortalHome --> MPT_LINKS : usa (5 tiles externos)
+    App ..> createPersistedSignal : cria currentStep/protocolo
+    RelatoStateService ..> createPersistedSignal
+    DetalhamentoStateService ..> createPersistedSignal
+    EvidenciasStateService ..> createPersistedSignal
+    EvidenciasStateService --> EvidenciaArquivo
+    SigiloStateService ..> createPersistedSignal
+    LocalStateService ..> createPersistedSignal
+    AcolhimentoStateService ..> createPersistedSignal
+    RelatoStateService --> AudioRecorderService : usado por StepRelatoGuiado
+    RelatoStateService --> SttClientService : usado por StepRelatoGuiado
+    LocalStateService --> MunicipiosClientService : usado por StepLocal
+    ComplaintSubmissionService --> RelatoStateService : lê
+    ComplaintSubmissionService --> DetalhamentoStateService : lê
+    ComplaintSubmissionService --> EvidenciasStateService : lê
+    ComplaintSubmissionService --> SigiloStateService : lê
+    ComplaintSubmissionService --> LocalStateService : lê
+    ComplaintSubmissionService --> DenunciaAceita : produz
+    App --> DenunciaAceita : recebe via onEnviado

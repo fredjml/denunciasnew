@@ -1,8 +1,15 @@
 stateDiagram-v2
     direction TB
-    [*] --> ACOLHIMENTO
+    accTitle: Máquina de estados do wizard denunciasnew — as-built (2026-09-05, com Portal Home)
+    accDescr: 9 estados reais controlados por um único signal em app.ts, persistido em sessionStorage; PORTAL é o novo estado inicial, substituindo ACOLHIMENTO.
+
+    [*] --> PORTAL
+    PORTAL --> ACOLHIMENTO: denunciar() (clique em "Denuncie")
+    PORTAL --> PORTAL: clique em tile externo<br/>(abre nova aba, não navega)
+
     ACOLHIMENTO --> RELATO: startReport(choice)<br/>[choice != OUVIDORIA]
-    ACOLHIMENTO --> ACOLHIMENTO: startReport('OUVIDORIA')<br/>(permanece — sem link externo definido)
+    ACOLHIMENTO --> ACOLHIMENTO: startReport('OUVIDORIA')<br/>(abre MPT_LINKS.ouvidoria em nova aba)
+
     state "Grupo RELATO (aba \"Relato\", barra de progresso 1-4)" as grupoRelato {
         direction LR
         RELATO --> DETALHAMENTO: advance
@@ -23,10 +30,18 @@ stateDiagram-v2
     REVISAO --> LOCAL: editarLocal
     REVISAO --> CONFIRMACAO: enviado (POST 201 + protocolo)
     REVISAO --> REVISAO: enviado (POST falhou — erro exibido, usuário pode tentar de novo)
-    CONFIRMACAO --> ACOLHIMENTO: reiniciar (sessionStorage.clear() + reload)
+    CONFIRMACAO --> PORTAL: reiniciar (sessionStorage.clear() + reload)
+
+    note left of PORTAL
+        Novo estado inicial (era ACOLHIMENTO antes da tela de Portal).
+        currentTab() não é exibido neste estado — abas escondidas.
+        Componente: PortalHome (frontend/src/app/portal-home)
+    end note
     note right of grupoRelato
         currentTab() = 'RELATO' para os 4 estados deste grupo
         barra de progresso: 4 segmentos (RELATO/DETALHAMENTO/EVIDENCIAS/SIGILO)
+        RELATO, DETALHAMENTO, EVIDENCIAS, SIGILO, LOCAL, REVISAO, CONFIRMACAO
+        carregam via Angular @defer (on immediate) — chunk separado por tela
     end note
     note right of LOCAL
         currentTab() = 'EMPRESA'
