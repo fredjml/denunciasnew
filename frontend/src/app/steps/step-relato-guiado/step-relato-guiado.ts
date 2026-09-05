@@ -1,10 +1,10 @@
 import { Component, inject, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import taxonomia from '../../../assets/taxonomia-mock.json';
+import { taxonomia } from '../../shared/taxonomia';
 import { RelatoStateService } from '../../services/relato-state.service';
 import { SttClientService } from '../../services/stt-client.service';
 import { AudioRecorderComponent } from './audio-recorder';
-import { Icon, IconName } from '../../shared/icon';
+import { Icon } from '../../shared/icon';
 
 @Component({
   selector: 'app-step-relato-guiado',
@@ -16,11 +16,7 @@ import { Icon, IconName } from '../../shared/icon';
 export class StepRelatoGuiado {
   protected readonly state = inject(RelatoStateService);
   private readonly stt = inject(SttClientService);
-  protected readonly taxonomia = taxonomia as ReadonlyArray<{
-    codigo: string;
-    rotulo: string;
-    icone: IconName;
-  }>;
+  protected readonly taxonomia = taxonomia;
   protected readonly consentDialog = signal(false);
   protected readonly audioEnabled = signal(false);
   protected readonly microphoneUnavailable = signal(false);

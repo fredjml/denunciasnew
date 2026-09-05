@@ -2,8 +2,7 @@
 
 const express = require('express');
 const { upload } = require('../middleware/upload');
-const { magicBytesCorrespondem } = require('../services/magic-bytes');
-const { scanBuffer } = require('../services/clamav-mock');
+const { validarAnexo } = require('../services/attachment-validation');
 const logger = require('../logger');
 
 const router = express.Router();
@@ -30,19 +29,10 @@ router.post('/', (req, res) => {
 
     const arquivos = req.files || [];
     for (const arquivo of arquivos) {
-      if (!magicBytesCorrespondem(arquivo.mimetype, arquivo.buffer)) {
-        logger.warn({ requestId: req.requestId, codigo: 'MAGIC_BYTES_DIVERGENTE' }, 'evidencia_rejeitada');
-        return res.status(422).json({
-          codigo: 'MAGIC_BYTES_DIVERGENTE',
-          mensagem: `Conteúdo de "${arquivo.originalname}" não corresponde ao tipo declarado.`,
-        });
-      }
-      if (scanBuffer(arquivo.buffer).infected) {
-        logger.warn({ requestId: req.requestId, codigo: 'ARQUIVO_INFECTADO' }, 'evidencia_rejeitada');
-        return res.status(422).json({
-          codigo: 'ARQUIVO_INFECTADO',
-          mensagem: `"${arquivo.originalname}" foi bloqueado pela varredura antivírus.`,
-        });
+      const resultado = validarAnexo(arquivo);
+      if (!resultado.ok) {
+        logger.warn({ requestId: req.requestId, codigo: resultado.codigo }, 'evidencia_rejeitada');
+        return res.status(422).json({ codigo: resultado.codigo, mensagem: resultado.mensagem });
       }
     }
 

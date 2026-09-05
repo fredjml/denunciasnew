@@ -26,11 +26,14 @@ describe('AudioRecorderService', () => {
     });
     const service = TestBed.inject(AudioRecorderService);
 
+    expect(service.recording()).toBe(false);
     await service.start();
+    expect(service.recording()).toBe(true);
     const audio = await service.stop();
 
     expect(audio.type).toBe('audio/webm');
     expect(audio.size).toBeGreaterThan(0);
     expect(track.stop).toHaveBeenCalled();
+    expect(service.recording()).toBe(false);
   });
 });

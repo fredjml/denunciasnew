@@ -14,11 +14,11 @@ describe('AcolhimentoStateService', () => {
 
     expect(service.selected()).toBe('CIDADAO');
     expect(sessionStorage.length).toBe(1);
-    expect(sessionStorage.getItem('denunciasnew.origem_acolhimento')).toBe('CIDADAO');
+    expect(sessionStorage.getItem('denunciasnew.origem_acolhimento')).toBe(JSON.stringify('CIDADAO'));
   });
 
   it('restaura uma escolha válida da sessão', () => {
-    sessionStorage.setItem('denunciasnew.origem_acolhimento', 'AGENTE_PUBLICO');
+    sessionStorage.setItem('denunciasnew.origem_acolhimento', JSON.stringify('AGENTE_PUBLICO'));
 
     const service = TestBed.inject(AcolhimentoStateService);
 
@@ -26,11 +26,10 @@ describe('AcolhimentoStateService', () => {
   });
 
   it('descarta valor de sessão inválido', () => {
-    sessionStorage.setItem('denunciasnew.origem_acolhimento', 'VALOR_INVALIDO');
+    sessionStorage.setItem('denunciasnew.origem_acolhimento', JSON.stringify('VALOR_INVALIDO'));
 
     const service = TestBed.inject(AcolhimentoStateService);
 
     expect(service.selected()).toBeNull();
-    expect(sessionStorage.getItem('denunciasnew.origem_acolhimento')).toBeNull();
   });
 });

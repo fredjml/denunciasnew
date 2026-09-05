@@ -37,9 +37,10 @@ build/
 .env.*
 !.env.template
 
-# Editores / IDE
+# Editores / IDE / agentes de IA
 .idea/
 .vscode/
+.claude/
 !.vscode/extensions.json
 !.vscode/settings.template.json
 *.sublime-*

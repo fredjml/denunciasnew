@@ -29,6 +29,11 @@ test('percorre o wizard completo até a confirmação com protocolo SYN-*', asyn
 
   await expect(page.getByRole('heading', { name: 'Denúncia enviada com sucesso!' })).toBeVisible();
   await expect(page.getByTestId('protocolo')).toHaveText(/^SYN-[A-Z0-9]{8}$/);
+  const protocolo = await page.getByTestId('protocolo').textContent();
+
+  // Regressão: o protocolo não pode desaparecer se a página recarregar na tela de confirmação.
+  await page.reload();
+  await expect(page.getByTestId('protocolo')).toHaveText(protocolo ?? '');
 
   await page.getByTestId('voltar-inicio').click();
   await expect(page.getByRole('heading', { name: 'Denuncie ao MPT' })).toBeVisible();

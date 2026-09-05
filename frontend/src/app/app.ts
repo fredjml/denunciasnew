@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { createPersistedSignal } from './shared/persisted-signal';
 import { StepAcolhimento } from './steps/step-acolhimento/step-acolhimento';
 import { StepRelatoGuiado } from './steps/step-relato-guiado/step-relato-guiado';
@@ -9,6 +9,7 @@ import { StepLocal } from './steps/step-local/step-local';
 import { StepRevisao } from './steps/step-revisao/step-revisao';
 import { StepConfirmacao } from './steps/step-confirmacao/step-confirmacao';
 import { DenunciaAceita } from './services/complaint-submission.service';
+import { AcolhimentoChoice } from './services/acolhimento-state.service';
 
 type WizardStep =
   | 'ACOLHIMENTO'
@@ -40,8 +41,9 @@ const RELATO_STEPS: readonly WizardStep[] = ['RELATO', 'DETALHAMENTO', 'EVIDENCI
 })
 export class App {
   private readonly currentStepState = createPersistedSignal<WizardStep>('wizard_step', 'ACOLHIMENTO');
+  private readonly protocoloState = createPersistedSignal('protocolo', '');
   protected readonly currentStep = this.currentStepState.value;
-  protected readonly protocolo = signal('');
+  protected readonly protocolo = this.protocoloState.value;
 
   protected readonly currentTab = computed<WizardTab>(() => {
     const step = this.currentStep();
@@ -54,41 +56,18 @@ export class App {
   protected readonly totalRelatoSteps = RELATO_STEPS.length;
   protected readonly relatoStepIndex = computed(() => RELATO_STEPS.indexOf(this.currentStep()));
 
-  protected startReport(choice: string): void {
-    if (choice !== 'OUVIDORIA') this.currentStepState.set('RELATO');
+  /** Único ponto de transição entre passos — adicionar um passo novo não exige um método a mais. */
+  protected goTo(step: WizardStep): void {
+    this.currentStepState.set(step);
   }
 
-  protected goToDetalhamento(): void {
-    this.currentStepState.set('DETALHAMENTO');
-  }
-
-  protected goToEvidencias(): void {
-    this.currentStepState.set('EVIDENCIAS');
-  }
-
-  protected goToSigilo(): void {
-    this.currentStepState.set('SIGILO');
-  }
-
-  protected goToLocal(): void {
-    this.currentStepState.set('LOCAL');
-  }
-
-  protected goToRevisao(): void {
-    this.currentStepState.set('REVISAO');
-  }
-
-  protected goToAcolhimento(): void {
-    this.currentStepState.set('ACOLHIMENTO');
-  }
-
-  protected goToRelato(): void {
-    this.currentStepState.set('RELATO');
+  protected startReport(choice: AcolhimentoChoice): void {
+    if (choice !== 'OUVIDORIA') this.goTo('RELATO');
   }
 
   protected onEnviado(resultado: DenunciaAceita): void {
-    this.protocolo.set(resultado.protocolo);
-    this.currentStepState.set('CONFIRMACAO');
+    this.protocoloState.set(resultado.protocolo);
+    this.goTo('CONFIRMACAO');
   }
 
   protected reiniciar(): void {

@@ -1,5 +1,5 @@
 import { Component, inject, output, signal } from '@angular/core';
-import taxonomia from '../../../assets/taxonomia-mock.json';
+import { rotuloIrregularidade } from '../../shared/taxonomia';
 import { RelatoStateService } from '../../services/relato-state.service';
 import { DetalhamentoStateService } from '../../services/detalhamento-state.service';
 import { EvidenciasStateService } from '../../services/evidencias-state.service';
@@ -31,9 +31,7 @@ export class StepRevisao {
   readonly editarLocal = output<void>();
   readonly enviado = output<DenunciaAceita>();
 
-  protected rotuloIrregularidade(codigo: string): string {
-    return taxonomia.find((item) => item.codigo === codigo)?.rotulo ?? codigo;
-  }
+  protected readonly rotuloIrregularidade = rotuloIrregularidade;
 
   protected async enviar(): Promise<void> {
     this.enviando.set(true);

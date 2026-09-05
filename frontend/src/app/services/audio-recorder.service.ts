@@ -41,8 +41,8 @@ export class AudioRecorderService {
   private recorder: RecorderPort | null = null;
   private stream: MediaStream | null = null;
   private chunks: Blob[] = [];
-  readonly recording = signal(false).asReadonly();
   private readonly recordingState = signal(false);
+  readonly recording = this.recordingState.asReadonly();
 
   async start(): Promise<void> {
     this.stream = await this.mediaDevices.getUserMedia({ audio: true });

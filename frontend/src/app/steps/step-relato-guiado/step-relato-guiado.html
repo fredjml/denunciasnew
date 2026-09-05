@@ -75,12 +75,12 @@
     <p class="checklist-hint">Deslize para ver mais e selecione ao menos uma opção.</p>
     <div class="checklist-scroll" data-testid="checklist">
       @for (item of taxonomia; track item.codigo) {
-        <label class="checklist-item" [class.checklist-item--selected]="state.irregularidades().includes(item.codigo)">
+        <label class="checklist-item" [class.checklist-item--selected]="state.isIrregularidadeSelecionada(item.codigo)">
           <input
             type="checkbox"
             name="irregularidade"
             class="visually-hidden"
-            [checked]="state.irregularidades().includes(item.codigo)"
+            [checked]="state.isIrregularidadeSelecionada(item.codigo)"
             (change)="toggle(item.codigo)"
           />
           <app-icon [name]="item.icone" [size]="28" />

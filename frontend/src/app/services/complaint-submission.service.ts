@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import taxonomia from '../../assets/taxonomia-mock.json';
+import { buscarIrregularidade } from '../shared/taxonomia';
 import { RelatoStateService } from './relato-state.service';
 import { DetalhamentoStateService } from './detalhamento-state.service';
-import { EvidenciasStateService } from './evidencias-state.service';
+import { EvidenciasStateService, MAX_ANEXOS_ENVIO } from './evidencias-state.service';
 import { SigiloStateService } from './sigilo-state.service';
 import { LocalStateService } from './local-state.service';
 
@@ -58,11 +58,13 @@ export class ComplaintSubmissionService {
   /** Monta o objeto `Complaint` exatamente no formato de `contract/openapi.yaml` — nunca inventar campos fora dele (R-DN-06). */
   buildPayload(): Record<string, unknown> {
     const identificado = this.sigilo.tipoIdentificacao() === 'IDENTIFICADO';
+    // Regra única "só preenche quando identificado" — evita repetir o mesmo ternário por campo.
+    const soSeIdentificado = (valor: string): string | undefined => (identificado ? valor || undefined : undefined);
 
     const payload: Record<string, unknown> = {
       origem: 'WEB',
       irregularidades: this.relato.irregularidades().map((codigo) => {
-        const item = taxonomia.find((t) => t.codigo === codigo);
+        const item = buscarIrregularidade(codigo);
         return { codigo, rotulo: item?.rotulo, icone: item?.icone };
       }),
       relato_texto: this.relato.relato() || undefined,
@@ -75,9 +77,9 @@ export class ComplaintSubmissionService {
         .map((codigo) => GRUPO_VULNERAVEL_MAP[codigo])
         .filter(Boolean),
       tipo_identificacao: this.sigilo.tipoIdentificacao() || 'ANONIMO',
-      nome_completo: identificado ? this.sigilo.nomeCompleto() || undefined : undefined,
-      email: identificado ? this.sigilo.email() || undefined : undefined,
-      telefone: identificado ? this.sigilo.telefone() || undefined : undefined,
+      nome_completo: soSeIdentificado(this.sigilo.nomeCompleto()),
+      email: soSeIdentificado(this.sigilo.email()),
+      telefone: soSeIdentificado(this.sigilo.telefone()),
       uf: this.local.uf(),
       municipio: this.local.municipio(),
       municipio_ibge: this.local.municipioIbge() || undefined,
@@ -98,9 +100,14 @@ export class ComplaintSubmissionService {
     const formData = new FormData();
     formData.append('denuncia', JSON.stringify(this.buildPayload()));
 
-    this.evidencias.arquivos().slice(0, 3).forEach((arquivo, index) => {
-      formData.append(`arquivo_${index + 1}`, arquivo.arquivo, arquivo.nome);
-    });
+    // contract/openapi.yaml só reserva `MAX_ANEXOS_ENVIO` slots nomeados; o restante, se houver,
+    // já foi avisado ao usuário na tela de Evidências (`EvidenciasStateService.excedeLimiteEnvio`).
+    this.evidencias
+      .arquivos()
+      .slice(0, MAX_ANEXOS_ENVIO)
+      .forEach((arquivo, index) => {
+        formData.append(`arquivo_${index + 1}`, arquivo.arquivo, arquivo.nome);
+      });
 
     const audio = this.relato.audioOriginal();
     if (audio) {

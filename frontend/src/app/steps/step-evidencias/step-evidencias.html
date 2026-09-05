@@ -78,16 +78,21 @@
 
   @if (state.arquivos().length > 0) {
     <ul class="lista-arquivos" aria-label="Arquivos anexados">
-      @for (arquivo of state.arquivos(); track arquivo.nome) {
+      @for (arquivo of state.arquivos(); track arquivo.id) {
         <li>
           <span>{{ arquivo.nome }}</span>
-          <button type="button" (click)="remover(arquivo.nome)">
+          <button type="button" (click)="remover(arquivo.id)">
             <app-icon name="trash" [size]="18" />
             <span class="visually-hidden">Remover {{ arquivo.nome }}</span>
           </button>
         </li>
       }
     </ul>
+    @if (state.excedeLimiteEnvio()) {
+      <p role="status" class="aviso-limite-envio">
+        Apenas os 3 primeiros arquivos desta lista serão enviados com a denúncia.
+      </p>
+    }
   }
 
   <div class="wizard-actions">

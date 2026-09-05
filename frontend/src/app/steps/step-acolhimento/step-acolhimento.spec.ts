@@ -33,6 +33,6 @@ describe('StepAcolhimento', () => {
     fixture.detectChanges();
 
     expect(advance.disabled).toBe(false);
-    expect(sessionStorage.getItem('denunciasnew.origem_acolhimento')).toBe('CIDADAO');
+    expect(sessionStorage.getItem('denunciasnew.origem_acolhimento')).toBe(JSON.stringify('CIDADAO'));
   });
 });

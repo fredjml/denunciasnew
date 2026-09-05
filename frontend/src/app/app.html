@@ -32,27 +32,27 @@
     <app-step-acolhimento (advance)="startReport($event)" />
   }
   @case ('RELATO') {
-    <app-step-relato-guiado (advance)="goToDetalhamento()" (voltar)="goToAcolhimento()" />
+    <app-step-relato-guiado (advance)="goTo('DETALHAMENTO')" (voltar)="goTo('ACOLHIMENTO')" />
   }
   @case ('DETALHAMENTO') {
-    <app-step-detalhamento (advance)="goToEvidencias()" (voltar)="goToRelato()" />
+    <app-step-detalhamento (advance)="goTo('EVIDENCIAS')" (voltar)="goTo('RELATO')" />
   }
   @case ('EVIDENCIAS') {
-    <app-step-evidencias (advance)="goToSigilo()" (voltar)="goToDetalhamento()" />
+    <app-step-evidencias (advance)="goTo('SIGILO')" (voltar)="goTo('DETALHAMENTO')" />
   }
   @case ('SIGILO') {
-    <app-step-sigilo-anonimato (advance)="goToLocal()" (voltar)="goToEvidencias()" />
+    <app-step-sigilo-anonimato (advance)="goTo('LOCAL')" (voltar)="goTo('EVIDENCIAS')" />
   }
   @case ('LOCAL') {
-    <app-step-local (advance)="goToRevisao()" (voltar)="goToSigilo()" />
+    <app-step-local (advance)="goTo('REVISAO')" (voltar)="goTo('SIGILO')" />
   }
   @case ('REVISAO') {
     <app-step-revisao
-      (editarRelato)="goToRelato()"
-      (editarDetalhamento)="goToDetalhamento()"
-      (editarEvidencias)="goToEvidencias()"
-      (editarSigilo)="goToSigilo()"
-      (editarLocal)="goToLocal()"
+      (editarRelato)="goTo('RELATO')"
+      (editarDetalhamento)="goTo('DETALHAMENTO')"
+      (editarEvidencias)="goTo('EVIDENCIAS')"
+      (editarSigilo)="goTo('SIGILO')"
+      (editarLocal)="goTo('LOCAL')"
       (enviado)="onEnviado($event)"
     />
   }

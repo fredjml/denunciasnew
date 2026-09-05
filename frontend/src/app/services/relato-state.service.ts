@@ -31,6 +31,10 @@ export class RelatoStateService {
     );
   }
 
+  isIrregularidadeSelecionada(code: string): boolean {
+    return this.irregularidadesState.value().includes(code);
+  }
+
   setRelato(value: string): void {
     // eslint-disable-next-line no-control-regex -- sanitizacao intencional de caracteres de controle
     this.relatoState.set(value.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, ''));

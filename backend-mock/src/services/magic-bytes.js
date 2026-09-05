@@ -6,6 +6,9 @@ const ASSINATURAS = {
   'application/pdf': [Buffer.from('%PDF')],
   'image/jpeg': [Buffer.from([0xff, 0xd8, 0xff])],
   'image/png': [Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])],
+  'audio/webm': [Buffer.from([0x1a, 0x45, 0xdf, 0xa3])],
+  'audio/wav': [Buffer.from('RIFF')],
+  'audio/ogg': [Buffer.from('OggS')],
 };
 
 function magicBytesCorrespondem(mimetype, buffer) {

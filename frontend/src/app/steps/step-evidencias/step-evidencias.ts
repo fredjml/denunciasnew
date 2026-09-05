@@ -31,8 +31,8 @@ export class StepEvidencias {
     input.value = '';
   }
 
-  protected remover(nome: string): void {
-    this.state.remover(nome);
+  protected remover(id: number): void {
+    this.state.remover(id);
   }
 
   protected toggleGrupo(codigo: string): void {

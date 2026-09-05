@@ -1,46 +1,28 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { createPersistedSignal } from '../shared/persisted-signal';
 
 export type AcolhimentoChoice = 'CIDADAO' | 'AGENTE_PUBLICO' | 'OUVIDORIA';
 
-const STORAGE_KEY = 'denunciasnew.origem_acolhimento';
 const VALID_CHOICES: readonly AcolhimentoChoice[] = ['CIDADAO', 'AGENTE_PUBLICO', 'OUVIDORIA'];
 
-function isAcolhimentoChoice(value: string | null): value is AcolhimentoChoice {
-  return value !== null && VALID_CHOICES.includes(value as AcolhimentoChoice);
+function isAcolhimentoChoice(value: unknown): value is AcolhimentoChoice {
+  return typeof value === 'string' && VALID_CHOICES.includes(value as AcolhimentoChoice);
 }
 
 @Injectable({ providedIn: 'root' })
 export class AcolhimentoStateService {
-  private readonly selectedState = signal<AcolhimentoChoice | null>(this.restore());
-  readonly selected = this.selectedState.asReadonly();
+  private readonly selectedState = createPersistedSignal<AcolhimentoChoice | null>('origem_acolhimento', null);
+  readonly selected = this.selectedState.value;
+
+  constructor() {
+    // Descarta valor restaurado que não seja uma das opções válidas (ex.: chave adulterada).
+    const restaurado = this.selectedState.value();
+    if (restaurado !== null && !isAcolhimentoChoice(restaurado)) {
+      this.selectedState.set(null);
+    }
+  }
 
   select(choice: AcolhimentoChoice): void {
     this.selectedState.set(choice);
-    this.withStorage((storage) => storage.setItem(STORAGE_KEY, choice));
-  }
-
-  private restore(): AcolhimentoChoice | null {
-    let restored: AcolhimentoChoice | null = null;
-
-    this.withStorage((storage) => {
-      const value = storage.getItem(STORAGE_KEY);
-      if (isAcolhimentoChoice(value)) {
-        restored = value;
-      } else if (value !== null) {
-        storage.removeItem(STORAGE_KEY);
-      }
-    });
-
-    return restored;
-  }
-
-  private withStorage(operation: (storage: Storage) => void): void {
-    try {
-      if (typeof sessionStorage !== 'undefined') {
-        operation(sessionStorage);
-      }
-    } catch {
-      // Storage pode estar indisponível por política do navegador; o estado em memória permanece funcional.
-    }
   }
 }

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { EvidenciasStateService, MAX_ARQUIVOS, MAX_TAMANHO_BYTES } from './evidencias-state.service';
+import { EvidenciasStateService, MAX_ANEXOS_ENVIO, MAX_ARQUIVOS, MAX_TAMANHO_BYTES } from './evidencias-state.service';
 
 function makeFile(name: string, type: string, size: number): File {
   const blob = new Blob([new Uint8Array(size)], { type });
@@ -51,13 +51,29 @@ describe('EvidenciasStateService', () => {
     expect(service.erros()[0]).toContain(`Limite de ${MAX_ARQUIVOS}`);
   });
 
-  it('remove arquivo pelo nome', () => {
+  it('remove apenas o arquivo com o id clicado, mesmo com nomes duplicados', () => {
     const service = TestBed.inject(EvidenciasStateService);
-    service.adicionar([makeFile('SYN-laudo.pdf', 'application/pdf', 10)]);
+    service.adicionar([
+      makeFile('SYN-laudo.pdf', 'application/pdf', 10),
+      makeFile('SYN-laudo.pdf', 'application/pdf', 20),
+    ]);
+    const [primeiro, segundo] = service.arquivos();
 
-    service.remover('SYN-laudo.pdf');
+    service.remover(primeiro.id);
 
-    expect(service.arquivos()).toHaveLength(0);
+    expect(service.arquivos()).toHaveLength(1);
+    expect(service.arquivos()[0].id).toBe(segundo.id);
+  });
+
+  it('sinaliza quando os arquivos selecionados excedem o que será de fato enviado', () => {
+    const service = TestBed.inject(EvidenciasStateService);
+    const arquivos = Array.from({ length: MAX_ANEXOS_ENVIO }, (_, i) => makeFile(`SYN-${i}.pdf`, 'application/pdf', 10));
+
+    service.adicionar(arquivos);
+    expect(service.excedeLimiteEnvio()).toBe(false);
+
+    service.adicionar([makeFile('SYN-extra.pdf', 'application/pdf', 10)]);
+    expect(service.excedeLimiteEnvio()).toBe(true);
   });
 
   it('persiste apenas sim/não para testemunhas, sem nome ou contato', () => {
