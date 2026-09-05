@@ -1,0 +1,21 @@
+%% PROPOSTA (não implementada) — portal institucional como nova tela de entrada, antes do
+%% Acolhimento. Ver modelos-telas/02-portal-institucional-home.md — depende de respostas do
+%% owner antes de implementar. Comparar com diagramas-navegacao/01-fluxo-wizard-atual.mmd
+%% (estado atual, sem esta tela).
+flowchart TD
+    H["Portal institucional (Home) — NOVO, proposto"] -->|"DENUNCIE"| A[Acolhimento]
+    H -->|"tile Ouvidoria"| EXT["Abre URL da Ouvidoria em nova aba"]
+    H -->|"tiles sem destino confirmado (Petição, Consulta, Audiências, Carta de Serviços)"| Q["? — aguardando decisão do owner"]
+
+    A -->|escolha + Avançar| R[Relato Guiado]
+    A -->|OUVIDORIA + Avançar| EXT
+
+    R --> D[Detalhamento] --> EV[Evidências] --> S[Sigilo] --> L[Local] --> RV[Revisão] --> C[Confirmação]
+    C -->|Início| H
+
+    classDef novaClass fill:#fff7e6,stroke:#b8860b,stroke-width:2px,stroke-dasharray: 4 3;
+    classDef stepClass fill:#fff,stroke:#8c1d2c,stroke-width:1px;
+    classDef pendClass fill:#f8fafc,stroke:#5b6472,stroke-dasharray: 2 2;
+    class H novaClass;
+    class A,R,D,EV,S,L,RV,C stepClass;
+    class EXT,Q pendClass;
