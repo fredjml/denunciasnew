@@ -7,12 +7,14 @@
   </button>
 </header>
 
-<nav class="app-tabs" aria-label="Etapas da denúncia">
-  <span class="app-tabs__tab" [class.is-active]="currentTab() === 'ACOLHIMENTO'">Acolhimento</span>
-  <span class="app-tabs__tab" [class.is-active]="currentTab() === 'RELATO'">Relato</span>
-  <span class="app-tabs__tab" [class.is-active]="currentTab() === 'EMPRESA'">Empresa</span>
-  <span class="app-tabs__tab" [class.is-active]="currentTab() === 'REVISAO'">Revisão</span>
-</nav>
+@if (currentStep() !== 'PORTAL') {
+  <nav class="app-tabs" aria-label="Etapas da denúncia">
+    <span class="app-tabs__tab" [class.is-active]="currentTab() === 'ACOLHIMENTO'">Acolhimento</span>
+    <span class="app-tabs__tab" [class.is-active]="currentTab() === 'RELATO'">Relato</span>
+    <span class="app-tabs__tab" [class.is-active]="currentTab() === 'EMPRESA'">Empresa</span>
+    <span class="app-tabs__tab" [class.is-active]="currentTab() === 'REVISAO'">Revisão</span>
+  </nav>
+}
 
 @if (currentTab() === 'RELATO') {
   <div
@@ -30,6 +32,9 @@
 }
 
 @switch (currentStep()) {
+  @case ('PORTAL') {
+    <app-portal-home (denunciar)="goTo('ACOLHIMENTO')" />
+  }
   @case ('ACOLHIMENTO') {
     <app-step-acolhimento (advance)="startReport($event)" />
   }

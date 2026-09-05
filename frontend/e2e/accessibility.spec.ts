@@ -21,6 +21,7 @@ test('wizard completo (todas as etapas) não contém violações WCAG 2.1 AA ser
   page,
 }) => {
   await page.goto('/');
+  await page.getByTestId('portal-denuncie').click();
   await page.getByTestId('caminho-acolhimento').first().click();
   await page.getByTestId('avancar').click();
   await semViolacoesBloqueantes(page);

@@ -5,6 +5,7 @@ test('percorre o wizard completo até a confirmação com protocolo SYN-*', asyn
   await page.evaluate(() => sessionStorage.clear());
   await page.reload();
 
+  await page.getByTestId('portal-denuncie').click();
   await page.getByTestId('caminho-acolhimento').first().click();
   await page.getByTestId('avancar').click();
 
@@ -36,5 +37,5 @@ test('percorre o wizard completo até a confirmação com protocolo SYN-*', asyn
   await expect(page.getByTestId('protocolo')).toHaveText(protocolo ?? '');
 
   await page.getByTestId('voltar-inicio').click();
-  await expect(page.getByRole('heading', { name: 'Denuncie ao MPT' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Acesso Rápido' })).toBeVisible();
 });

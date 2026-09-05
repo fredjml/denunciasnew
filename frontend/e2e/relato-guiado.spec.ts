@@ -4,6 +4,7 @@ async function enterRelatoGuiado(page: Page): Promise<void> {
   await page.goto('/');
   await page.evaluate(() => sessionStorage.clear());
   await page.reload();
+  await page.getByTestId('portal-denuncie').click();
   await page.getByTestId('caminho-acolhimento').first().click();
   await page.getByTestId('avancar').click();
 }

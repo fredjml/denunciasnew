@@ -1,0 +1,29 @@
+<main id="conteudo-principal" class="page-shell">
+  <section aria-labelledby="acesso-rapido-title">
+    <h1 id="acesso-rapido-title">Acesso Rápido</h1>
+    <p class="lead">Serviços do Ministério Público do Trabalho. Os itens abaixo, exceto Ouvidoria, abrem o site oficial do MPT em uma nova aba.</p>
+
+    <ul class="tiles" data-testid="acesso-rapido-tiles">
+      @for (tile of tiles; track tile.label) {
+        <li>
+          <a
+            class="tile"
+            [href]="tile.href"
+            target="_blank"
+            rel="noopener noreferrer"
+            [attr.aria-label]="tile.label + ' (abre em nova aba, site do MPT)'"
+          >
+            <app-icon [name]="tile.icon" [size]="26" />
+            <span>{{ tile.label }}</span>
+          </a>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <div class="denuncie-bar">
+    <button type="button" class="denuncie-button" data-testid="portal-denuncie" (click)="onDenunciarClick()">
+      Denuncie
+    </button>
+  </div>
+</main>

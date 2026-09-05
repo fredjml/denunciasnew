@@ -1,0 +1,89 @@
+:host {
+  display: block;
+}
+
+.page-shell {
+  display: grid;
+  gap: var(--space-6);
+  width: min(100% - 2rem, var(--max-width-form));
+  margin: 0 auto;
+  padding: var(--space-6) 0 calc(var(--space-12) + 4.5rem);
+}
+
+.lead {
+  max-width: 38rem;
+  margin-top: var(--space-2);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tile {
+  display: grid;
+  gap: var(--space-2);
+  place-items: center;
+  padding: var(--space-4) var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-primary);
+  text-align: center;
+  text-decoration: none;
+  background: var(--color-bg);
+}
+
+.tile:hover {
+  border-color: var(--color-primary-light);
+}
+
+.tile app-icon {
+  color: var(--color-primary);
+}
+
+.tile span {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  line-height: var(--line-height-tight, 1.2);
+}
+
+.denuncie-bar {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 5;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-bg);
+  box-shadow: 0 -2px 8px rgb(0 0 0 / 0.08);
+}
+
+.denuncie-button {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 0;
+  border-radius: var(--radius-full);
+  color: var(--color-text-inverse);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  /* --color-accent (#d97706) com texto branco fica em 3.18:1, abaixo do mínimo AA (4.5:1) —
+     tom mais escuro da mesma família (âmbar) mantém a intenção visual do mockup e passa no
+     axe-core (confirmado via teste e2e de acessibilidade). */
+  background: #b45309;
+}
+
+.denuncie-button:hover {
+  filter: brightness(1.08);
+}
+
+@media (max-width: 26rem) {
+  .tiles {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

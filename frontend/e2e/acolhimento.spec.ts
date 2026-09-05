@@ -4,6 +4,7 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/');
   await page.evaluate(() => sessionStorage.clear());
   await page.reload();
+  await page.getByTestId('portal-denuncie').click();
 });
 
 test('apresenta os três caminhos e bloqueia o avanço sem escolha', async ({ page }) => {

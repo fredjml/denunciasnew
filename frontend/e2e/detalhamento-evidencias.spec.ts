@@ -4,6 +4,7 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/');
   await page.evaluate(() => sessionStorage.clear());
   await page.reload();
+  await page.getByTestId('portal-denuncie').click();
   await page.getByTestId('caminho-acolhimento').first().click();
   await page.getByTestId('avancar').click();
   await page.locator('.checklist-item').first().click();

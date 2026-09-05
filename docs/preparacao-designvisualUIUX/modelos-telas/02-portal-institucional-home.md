@@ -1,8 +1,9 @@
-# 02 — Portal institucional (Home) — proposta, não implementada
+# 02 — Portal institucional (Home)
 
-- **Status:** rascunho — owner confirmou que quer adicionar (via `AskUserQuestion`,
-  2026-09-05), mas várias peças de conteúdo/destino ainda não têm fonte definida. Não
-  implementar até a seção 4 (perguntas) ser respondida.
+- **Status:** implementado (2026-09-05) — `frontend/src/app/portal-home/`. Owner respondeu as
+  4 perguntas da seção 4 via `AskUserQuestion` (todas as opções recomendadas): tiles sem
+  contrato → link externo real; sem banner de notícia; vira a nova primeira tela; sem botão de
+  WhatsApp.
 - **Referência oficial:** `docs/Prototipacao/Versaomobile.png` — página 4 do PDF
   (`Documento externo-outros 010970.2026.pdf`), slide "Versão Mobile". **Atenção:** essa imagem
   no PDF ilustra o *site institucional atual do MPT como um todo* (contexto/motivação para o
@@ -73,7 +74,19 @@ outra; se a tela inteira for adiada, não há tela nenhuma ainda.
 
 ## Aprovação
 
-- **Owner:** — (pendente das perguntas acima)
-- **Data:** —
-- **Registro:** nenhum `AUTORIZACAO-*.md` ainda — a confirmação de "quero adicionar" já foi
-  dada (`AskUserQuestion`, 2026-09-05), mas o escopo exato depende das respostas da seção 4.
+- **Owner:** Frederico José Monteiro Leite.
+- **Data:** 2026-09-05.
+- **Registro:** `docs/preparacao-implementacao/prompts/VERIFICACAO-PORTAL-HOME-2026-09-05.md`.
+
+## URLs reais usadas (verificadas alcançáveis em 2026-09-05)
+
+| Tile | URL | Observação |
+| --- | --- | --- |
+| Petição eletrônica e protocolo | `https://peticionamento.prt17.mpt.mp.br` | 200 confirmado |
+| Consulta de Processos | `https://prt17.mpt.mp.br/servicos/movimentacao-de-procedimentos` | 200 confirmado (com User-Agent de navegador — o WAF do domínio bloqueia requisição sem UA) |
+| Carta de Serviços | `https://prt17.mpt.mp.br/servicos` | Nenhuma página dedicada "Carta de Serviços" foi encontrada; aponta para a página geral de serviços (200 confirmado) |
+| Audiências Públicas | `https://prt17.mpt.mp.br/servicos` | Mesma observação — nenhuma página dedicada encontrada |
+| Transparência | `https://mpt.mp.br/MPTransparencia/` | 200 confirmado |
+| Ouvidoria | `https://www.proteste.org.br/` | Reaproveita `MPT_LINKS.ouvidoria`, mesma URL já usada no Acolhimento (`DEC-DN-*` já cobre o motivo de não ser domínio do MPT) |
+
+Constantes centralizadas em `frontend/src/app/shared/mpt-links.ts`.
