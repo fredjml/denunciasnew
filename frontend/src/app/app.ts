@@ -24,6 +24,10 @@ type WizardTab = 'ACOLHIMENTO' | 'RELATO' | 'EMPRESA' | 'REVISAO';
 
 const RELATO_STEPS: readonly WizardStep[] = ['RELATO', 'DETALHAMENTO', 'EVIDENCIAS', 'SIGILO'];
 
+// FATIA-DN-CP1-03 — URL fornecida pelo owner em 2026-09-05. Não é um domínio do MPT; confirmada
+// explicitamente pelo owner após alerta (ver docs/preparacao-implementacao/12-DECISIONS.delta-denunciasnew.md).
+const URL_OUVIDORIA = 'https://www.proteste.org.br/';
+
 @Component({
   imports: [
     StepAcolhimento,
@@ -62,7 +66,11 @@ export class App {
   }
 
   protected startReport(choice: AcolhimentoChoice): void {
-    if (choice !== 'OUVIDORIA') this.goTo('RELATO');
+    if (choice === 'OUVIDORIA') {
+      window.open(URL_OUVIDORIA, '_blank', 'noopener,noreferrer');
+      return;
+    }
+    this.goTo('RELATO');
   }
 
   protected onEnviado(resultado: DenunciaAceita): void {

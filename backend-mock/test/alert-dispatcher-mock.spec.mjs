@@ -1,7 +1,11 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import dispatcherModule from '../src/services/alert-dispatcher-mock.js';
 
-const { avaliarAlerta } = dispatcherModule;
+const { avaliarAlerta, _resetParaTeste } = dispatcherModule;
+
+beforeEach(() => {
+  _resetParaTeste();
+});
 
 function classificacao(overrides = {}) {
   return {
@@ -44,6 +48,25 @@ describe('avaliarAlerta (mock de despacho)', () => {
     });
 
     expect(resultado).toEqual({ despachado: true, motivo: 'DESPACHADO' });
+  });
+
+  it('limita a taxa de despachos por janela deslizante (FATIA-DN-CP6-06)', () => {
+    for (let i = 0; i < 5; i += 1) {
+      const resultado = avaliarAlerta({
+        protocolo: `SYN-AAAAAAA${i}`,
+        classificacao: classificacao({ prioridade: 'URGENTE', revisada_por_humano: true }),
+        requestId: `req-${i}`,
+      });
+      expect(resultado).toEqual({ despachado: true, motivo: 'DESPACHADO' });
+    }
+
+    const sexto = avaliarAlerta({
+      protocolo: 'SYN-AAAAAAA5',
+      classificacao: classificacao({ prioridade: 'URGENTE', revisada_por_humano: true }),
+      requestId: 'req-5',
+    });
+
+    expect(sexto).toEqual({ despachado: false, motivo: 'LIMITE_DE_TAXA_EXCEDIDO' });
   });
 
   it('o payload avaliado nunca contém campo de PII (só protocolo/categoria/prioridade)', () => {

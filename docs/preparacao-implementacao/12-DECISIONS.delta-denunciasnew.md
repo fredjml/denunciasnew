@@ -117,16 +117,28 @@
     contra `dist/frontend/browser` servido estaticamente (`npx http-server`), com throttling de
     rede explícito — antes disso o job media contra `ng serve` (dev, não otimizado), o que
     produzia números artificialmente ruins (~143 s) sem relação com o app real.
-  - **Resultado real medido nesta sessão: LCP ≈ 10,2 s / TTI ≈ 10,2 s — não atinge o alvo.** O
-    app ainda não foi otimizado para Slow 3G (sem lazy-loading de rotas, bundle único de
-    ~330 KB).
+  - **Resultado real medido nesta sessão (antes da otimização): LCP ≈ 10,2 s / TTI ≈ 10,2 s — não
+    atinge o alvo.** O app ainda não tinha nenhuma otimização para Slow 3G (bundle único de
+    ~330 KB, sem code-splitting).
   - Para não travar todo o CI por um requisito de performance que exige um checkpoint dedicado de
     otimização (fora do escopo desta sessão), as asserções de `largest-contentful-paint` e
     `interactive` ficam em nível **`warn`** (visível no relatório, não bloqueia o pipeline) até
     `CP-mobile-perf` efetivamente otimizar o bundle — só então subir para `error`.
+  - **Atualização (2026-09-05, mesma sessão):** owner autorizou iniciar a otimização agora.
+    Aplicado code-splitting via `@defer (on immediate)` do Angular 17+ em `app.html` — os 7
+    componentes de passo além de Acolhimento (que precisa ficar eager por ser a primeira tela)
+    saem do bundle inicial e passam a ser *chunks* carregados só quando o usuário chega naquele
+    passo. **Resultado: bundle inicial cai de ~330 KB para 257 KB (≈70 KB gzip); LCP/TTI medidos
+    caem de ≈10,2 s para ≈8,26 s.** Ainda **não atinge o alvo de 4 s/6 s** — o bundle inicial
+    ainda inclui todo o Angular runtime + `app-step-acolhimento` + estilos globais, e não há mais
+    nenhum código de aplicação para dividir sem tocar nesse núcleo (ex.: análise de dependências
+    de terceiros, fontes, imagens). Otimização adicional (ex.: revisar peso de dependências no
+    bundle inicial, `NgOptimizedImage` se houver imagens, preload hints) fica como trabalho futuro
+    de `CP-mobile-perf`; as asserções continuam em `warn` até o alvo ser atingido de fato.
 - **Owner:** Frederico José Monteiro Leite (Produto) + Frontend (execução da otimização).
-- **Status:** **FECHADA** (alvo definido e medido); trabalho de otimização em si fica registrado
-  como item novo do backlog (`CP-mobile-perf`), não como parte desta decisão.
+- **Status:** **FECHADA** (alvo definido e medido); melhoria real aplicada nesta sessão (code-
+  splitting), mas alvo numérico ainda não atingido — trabalho remanescente fica registrado como
+  item do backlog (`CP-mobile-perf`), não como parte desta decisão.
 
 ### DEC-DN-P-F5-7 — Meta WhatsApp sandbox
 
@@ -188,6 +200,25 @@
 - **Status:** **aberta parcialmente** — princípio fechado (PR revisado obrigatório); detalhe
   operacional (onde/quem) continua pendente até a outra equipe estar definida.
 
+### DEC-DN-27 (nova) — Hosting do vídeo institucional sem cookies de terceiros
+
+- **Contexto:** `FATIA-DN-CP1-05` exige que o vídeo institucional opcional da tela de Acolhimento
+  não injete cookies de terceiro (nenhum embed de YouTube/Vimeo). A implementação já usava
+  `<video controls preload="metadata">` nativo, self-hosted, com `<track kind="captions">` local —
+  mas sem decisão formal registrada, a fatia ficava `BLOQUEADA`. (Nota: o identificador
+  "DEC-DN-25" foi usado informalmente numa pergunta anterior ao owner para este assunto, mas
+  `DEC-DN-25` já está ocupado neste documento pela decisão de instalação do LibreOffice — §3.
+  Esta decisão recebe o próximo número livre, `DEC-DN-27`, para evitar colisão.)
+- **Decisão do owner (2026-09-05):** **manter self-hosted (Opção recomendada)** — confirmado.
+- **Consequência:**
+  - Nenhuma mudança de código necessária: `video-institucional.html` já implementa `<video>`
+    nativo sem `src` de terceiro e sem iframe/embed.
+  - `FATIA-DN-CP1-05` deixa de estar bloqueada.
+  - Se um vídeo real for adicionado no futuro, o arquivo deve continuar sendo servido do mesmo
+    domínio do app (`frontend/public/media/`), nunca via embed de player externo.
+- **Owner:** Frederico José Monteiro Leite (Produto) + DPO.
+- **Status:** **FECHADA** — implementada (sem mudança de código necessária).
+
 ## 2. Decisões que permanecem abertas
 
 | ID | Assunto | Owner esperado | Bloqueio |
@@ -235,12 +266,12 @@
 | Estado | Contagem |
 | --- | ---: |
 | FECHADA (respondida em 2026-09-04) | 8 |
-| FECHADA (respondida em 2026-09-05: DEC-DN-16, DEC-DN-20, DEC-DN-08) | 3 |
+| FECHADA (respondida em 2026-09-05: DEC-DN-16, DEC-DN-20, DEC-DN-08, DEC-DN-27) | 4 |
 | aberta — bloqueia MVP | 0 — `DEC-DN-19` não bloqueia o MVP em si (protocolo mock já cobre o fluxo; só bloqueia o *release* com o formato oficial do MPT) |
 | aberta — parcial (princípio fechado, detalhe pendente) | 1 (DEC-DN-26) |
 | aberta — não bloqueia MVP | 10 |
 | arquivada (fora do escopo do MVP) | 2 (DEC-DN-09B, DEC-DN-P-F5-7) |
-| Total catalogadas nesta análise | **26** |
+| Total catalogadas nesta análise | **27** |
 
 ## 5. Regra de precedência aplicada
 

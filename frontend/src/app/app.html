@@ -32,31 +32,59 @@
     <app-step-acolhimento (advance)="startReport($event)" />
   }
   @case ('RELATO') {
-    <app-step-relato-guiado (advance)="goTo('DETALHAMENTO')" (voltar)="goTo('ACOLHIMENTO')" />
+    @defer (on immediate) {
+      <app-step-relato-guiado (advance)="goTo('DETALHAMENTO')" (voltar)="goTo('ACOLHIMENTO')" />
+    } @loading (minimum 100ms) {
+      <p class="app-step-loading">Carregando…</p>
+    }
   }
   @case ('DETALHAMENTO') {
-    <app-step-detalhamento (advance)="goTo('EVIDENCIAS')" (voltar)="goTo('RELATO')" />
+    @defer (on immediate) {
+      <app-step-detalhamento (advance)="goTo('EVIDENCIAS')" (voltar)="goTo('RELATO')" />
+    } @loading (minimum 100ms) {
+      <p class="app-step-loading">Carregando…</p>
+    }
   }
   @case ('EVIDENCIAS') {
-    <app-step-evidencias (advance)="goTo('SIGILO')" (voltar)="goTo('DETALHAMENTO')" />
+    @defer (on immediate) {
+      <app-step-evidencias (advance)="goTo('SIGILO')" (voltar)="goTo('DETALHAMENTO')" />
+    } @loading (minimum 100ms) {
+      <p class="app-step-loading">Carregando…</p>
+    }
   }
   @case ('SIGILO') {
-    <app-step-sigilo-anonimato (advance)="goTo('LOCAL')" (voltar)="goTo('EVIDENCIAS')" />
+    @defer (on immediate) {
+      <app-step-sigilo-anonimato (advance)="goTo('LOCAL')" (voltar)="goTo('EVIDENCIAS')" />
+    } @loading (minimum 100ms) {
+      <p class="app-step-loading">Carregando…</p>
+    }
   }
   @case ('LOCAL') {
-    <app-step-local (advance)="goTo('REVISAO')" (voltar)="goTo('SIGILO')" />
+    @defer (on immediate) {
+      <app-step-local (advance)="goTo('REVISAO')" (voltar)="goTo('SIGILO')" />
+    } @loading (minimum 100ms) {
+      <p class="app-step-loading">Carregando…</p>
+    }
   }
   @case ('REVISAO') {
-    <app-step-revisao
-      (editarRelato)="goTo('RELATO')"
-      (editarDetalhamento)="goTo('DETALHAMENTO')"
-      (editarEvidencias)="goTo('EVIDENCIAS')"
-      (editarSigilo)="goTo('SIGILO')"
-      (editarLocal)="goTo('LOCAL')"
-      (enviado)="onEnviado($event)"
-    />
+    @defer (on immediate) {
+      <app-step-revisao
+        (editarRelato)="goTo('RELATO')"
+        (editarDetalhamento)="goTo('DETALHAMENTO')"
+        (editarEvidencias)="goTo('EVIDENCIAS')"
+        (editarSigilo)="goTo('SIGILO')"
+        (editarLocal)="goTo('LOCAL')"
+        (enviado)="onEnviado($event)"
+      />
+    } @loading (minimum 100ms) {
+      <p class="app-step-loading">Carregando…</p>
+    }
   }
   @default {
-    <app-step-confirmacao [protocolo]="protocolo()" (inicio)="reiniciar()" />
+    @defer (on immediate) {
+      <app-step-confirmacao [protocolo]="protocolo()" (inicio)="reiniciar()" />
+    } @loading (minimum 100ms) {
+      <p class="app-step-loading">Carregando…</p>
+    }
   }
 }

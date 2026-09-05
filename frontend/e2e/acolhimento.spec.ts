@@ -27,6 +27,18 @@ test('persiste a escolha na sessão após recarregar a página', async ({ page }
   await expect(page.getByTestId('avancar')).toBeEnabled();
 });
 
+test('"Fale com a Ouvidoria" abre em nova aba e não avança o wizard (FATIA-DN-CP1-03)', async ({ page }) => {
+  await page.getByTestId('caminho-acolhimento').nth(2).click();
+  const [popup] = await Promise.all([
+    page.waitForEvent('popup'),
+    page.getByTestId('avancar').click(),
+  ]);
+
+  expect(popup.url()).toBe('https://www.proteste.org.br/');
+  await popup.close();
+  await expect(page.getByRole('heading', { name: 'Denuncie ao MPT' })).toBeVisible();
+});
+
 test('oferece vídeo opcional sem autoplay, com legenda e transcrição', async ({ page }) => {
   const video = page.locator('video');
 

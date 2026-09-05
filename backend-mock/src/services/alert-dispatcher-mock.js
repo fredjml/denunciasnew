@@ -2,6 +2,19 @@
 
 const logger = require('../logger');
 
+// FATIA-DN-CP6-06 — janela deslizante simples para evitar rajada de despachos (ex.: revisão
+// humana em lote setando várias URGENTEs de uma vez). Estado em memória do processo: aceitável
+// para um mock de instância única; um canal real (DEC-DN-22) precisará de um limitador
+// compartilhado (Redis, etc.) se rodar em múltiplas instâncias.
+const JANELA_MS = 60_000;
+const LIMITE_POR_JANELA = 5;
+let despachosNaJanela = [];
+
+function despachosPermitidos(agora) {
+  despachosNaJanela = despachosNaJanela.filter((timestamp) => agora - timestamp < JANELA_MS);
+  return despachosNaJanela.length < LIMITE_POR_JANELA;
+}
+
 // FATIA-DN-CP6-05/07 — mock de despacho de alerta para pautas urgentes (DEC-DN-22: canal real
 // não decidido; este mock só registra a decisão em log, sem PII, sem webhook real).
 //
@@ -23,6 +36,16 @@ function avaliarAlerta({ protocolo, classificacao, requestId }) {
     return { despachado: false, motivo: 'AGUARDANDO_REVISAO_HUMANA' };
   }
 
+  const agora = Date.now();
+  if (!despachosPermitidos(agora)) {
+    logger.warn(
+      { requestId, protocolo, prioridade: classificacao.prioridade, categoria: classificacao.categoria },
+      'alerta_limitado_por_taxa'
+    );
+    return { despachado: false, motivo: 'LIMITE_DE_TAXA_EXCEDIDO' };
+  }
+
+  despachosNaJanela.push(agora);
   logger.warn(
     { requestId, protocolo, prioridade: classificacao.prioridade, categoria: classificacao.categoria },
     'alerta_despachado'
@@ -30,4 +53,8 @@ function avaliarAlerta({ protocolo, classificacao, requestId }) {
   return { despachado: true, motivo: 'DESPACHADO' };
 }
 
-module.exports = { avaliarAlerta };
+function _resetParaTeste() {
+  despachosNaJanela = [];
+}
+
+module.exports = { avaliarAlerta, _resetParaTeste };
