@@ -64,4 +64,17 @@ describe('StepEvidencias', () => {
 
     expect(fixture.componentInstance['detalhamento'].gruposVulneraveis()).toContain('IDOSOS');
   });
+
+  it('permite responder sim/não sobre testemunhas sem pedir nome ou contato', () => {
+    const fixture = TestBed.createComponent(StepEvidencias);
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+
+    (host.querySelector('[data-testid="testemunhas-sim"]') as HTMLInputElement).click();
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance['state'].temTestemunhas()).toBe('SIM');
+    expect(host.querySelector('input[name*="nome"]')).toBeNull();
+    expect(host.querySelector('input[name*="contato"]')).toBeNull();
+  });
 });

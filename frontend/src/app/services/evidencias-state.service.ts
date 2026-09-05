@@ -1,4 +1,5 @@
 import { Injectable, signal } from '@angular/core';
+import { createPersistedSignal } from '../shared/persisted-signal';
 
 export const MIME_PERMITIDOS = ['application/pdf', 'image/jpeg', 'image/png'] as const;
 export const MAX_ARQUIVOS = 10;
@@ -11,13 +12,26 @@ export interface EvidenciaArquivo {
   readonly arquivo: File;
 }
 
+/**
+ * DEC-DN-16: só coletamos "há testemunhas? sim/não". Nome/contato da testemunha NÃO são
+ * coletados neste formulário — ficam para a investigação formal, fora do app (decisão do owner
+ * de 2026-09-05, ver 12-DECISIONS.delta-denunciasnew.md).
+ */
+export type TemTestemunhas = 'SIM' | 'NAO' | '';
+
 @Injectable({ providedIn: 'root' })
 export class EvidenciasStateService {
   private readonly arquivosState = signal<readonly EvidenciaArquivo[]>([]);
   private readonly errosState = signal<readonly string[]>([]);
+  private readonly temTestemunhasState = createPersistedSignal<TemTestemunhas>('evidencias_tem_testemunhas', '');
 
   readonly arquivos = this.arquivosState.asReadonly();
   readonly erros = this.errosState.asReadonly();
+  readonly temTestemunhas = this.temTestemunhasState.value;
+
+  setTemTestemunhas(value: TemTestemunhas): void {
+    this.temTestemunhasState.set(value);
+  }
 
   adicionar(files: readonly File[]): void {
     const erros: string[] = [];

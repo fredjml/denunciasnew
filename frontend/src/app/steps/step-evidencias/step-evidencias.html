@@ -19,6 +19,36 @@
     }
   </fieldset>
 
+  <fieldset class="checklist">
+    <legend>Há testemunhas? (opcional)</legend>
+    <label>
+      <input
+        type="radio"
+        name="tem-testemunhas"
+        data-testid="testemunhas-sim"
+        [checked]="state.temTestemunhas() === 'SIM'"
+        (change)="setTemTestemunhas('SIM')"
+      />
+      <span>Sim</span>
+    </label>
+    <label>
+      <input
+        type="radio"
+        name="tem-testemunhas"
+        data-testid="testemunhas-nao"
+        [checked]="state.temTestemunhas() === 'NAO'"
+        (change)="setTemTestemunhas('NAO')"
+      />
+      <span>Não</span>
+    </label>
+    @if (state.temTestemunhas() === 'SIM') {
+      <p class="hint">
+        Não é preciso informar nome ou contato da testemunha agora — isso será tratado na
+        investigação.
+      </p>
+    }
+  </fieldset>
+
   <div class="upload-field">
     <label for="evidencias-input" class="upload-dropzone">
       <app-icon name="upload" [size]="28" />

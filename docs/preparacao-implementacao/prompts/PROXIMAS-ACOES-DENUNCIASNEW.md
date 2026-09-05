@@ -243,7 +243,7 @@ Cada task = 1 fatia `FATIA-DN-*` de [11-IMPLEMENTATION-PLAN.delta-denunciasnew.m
 - [x] **T-CP3-04** `FATIA-DN-CP3-04` — Validação MIME + magic bytes. Implementada em `backend-mock` (endpoint de teste `/api/evidencias`, fora do contrato); integ-sim aprovado.
 - [x] **T-CP3-05** `FATIA-DN-CP3-05` — Rejeitar `.exe` e `.bat`. Implementada.
 - [x] **T-CP3-06** `FATIA-DN-CP3-06` — ClamAV mock. Implementada via assinatura EICAR (sem TCP/INSTREAM real).
-- [ ] **T-CP3-07** `FATIA-DN-CP3-07` — Subformulário testemunhas *(bloqueada — DEC-DN-16)*.
+- [x] **T-CP3-07** `FATIA-DN-CP3-07` — Pergunta "há testemunhas?" sim/não. Implementada (2026-09-05); DEC-DN-16 decidiu não coletar nome/contato de testemunha no formulário público.
 
 ### Ciclo 4 — CP-4 (Sigilo + Local) + CP-5 (Revisão + Confirmação)
 
@@ -264,7 +264,7 @@ Cada task = 1 fatia `FATIA-DN-*` de [11-IMPLEMENTATION-PLAN.delta-denunciasnew.m
 - [x] **T-CP5-04** `FATIA-DN-CP5-04` — Gerador protocolo `SYN-XXXXXXXX`. Já existia desde CP-1; agora exercitado de ponta a ponta.
 - [x] **T-CP5-05** `FATIA-DN-CP5-05` — `StepConfirmacao`. Implementada; protocolo real exibido.
 - [x] **T-CP5-06** `FATIA-DN-CP5-06` — Infográfico acessível (texto + ícones). Implementada.
-- [ ] **T-CP5-07** `FATIA-DN-CP5-07` — Copy do infográfico com SLA *(bloqueada — DEC-DN-20)*.
+- [ ] **T-CP5-07** `FATIA-DN-CP5-07` — Copy do infográfico com SLA *(descartada — DEC-DN-20: owner decidiu não prometer prazo; reabrir só com SLA formal da Ouvidoria/Corregedoria)*.
 
 ### Ciclo 5 — CP-a11y-piso + CP-mobile-perf
 

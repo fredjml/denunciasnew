@@ -7,7 +7,10 @@ function makeFile(name: string, type: string, size: number): File {
 }
 
 describe('EvidenciasStateService', () => {
-  beforeEach(() => TestBed.resetTestingModule());
+  beforeEach(() => {
+    sessionStorage.clear();
+    TestBed.resetTestingModule();
+  });
 
   it('aceita arquivo PDF/JPG/PNG dentro do limite', () => {
     const service = TestBed.inject(EvidenciasStateService);
@@ -55,5 +58,17 @@ describe('EvidenciasStateService', () => {
     service.remover('SYN-laudo.pdf');
 
     expect(service.arquivos()).toHaveLength(0);
+  });
+
+  it('persiste apenas sim/não para testemunhas, sem nome ou contato', () => {
+    const service = TestBed.inject(EvidenciasStateService);
+
+    expect(service.temTestemunhas()).toBe('');
+
+    service.setTemTestemunhas('SIM');
+    expect(service.temTestemunhas()).toBe('SIM');
+
+    service.setTemTestemunhas('NAO');
+    expect(service.temTestemunhas()).toBe('NAO');
   });
 });

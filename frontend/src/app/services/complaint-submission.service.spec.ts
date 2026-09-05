@@ -4,6 +4,7 @@ import { RelatoStateService } from './relato-state.service';
 import { DetalhamentoStateService } from './detalhamento-state.service';
 import { SigiloStateService } from './sigilo-state.service';
 import { LocalStateService } from './local-state.service';
+import { EvidenciasStateService } from './evidencias-state.service';
 
 describe('ComplaintSubmissionService', () => {
   beforeEach(() => {
@@ -46,6 +47,18 @@ describe('ComplaintSubmissionService', () => {
     expect(payload['municipio']).toBe('São Paulo');
     expect(payload['nome_completo']).toBeUndefined();
     expect((payload['irregularidades'] as unknown[])[0]).toMatchObject({ codigo: 'FALTA_EPI' });
+    expect(payload['testemunhas']).toBeUndefined();
+  });
+
+  it('inclui testemunhas apenas como sim/não, sem nome ou contato (DEC-DN-16)', () => {
+    montarEstadoBasico();
+    const evidencias = TestBed.inject(EvidenciasStateService);
+    evidencias.setTemTestemunhas('SIM');
+    const service = TestBed.inject(ComplaintSubmissionService);
+
+    const payload = service.buildPayload();
+
+    expect(payload['testemunhas']).toEqual([{ tem_testemunhas: true }]);
   });
 
   it('inclui dados de contato somente quando identificado', () => {

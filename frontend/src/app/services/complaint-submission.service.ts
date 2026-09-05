@@ -83,6 +83,11 @@ export class ComplaintSubmissionService {
       municipio_ibge: this.local.municipioIbge() || undefined,
       nome_empresa: this.local.nomeEmpresa() || undefined,
       endereco_empresa: this.local.enderecoEmpresa() || undefined,
+      // DEC-DN-16: só sim/não — nome/contato da testemunha não são coletados neste formulário.
+      testemunhas:
+        this.evidencias.temTestemunhas() === ''
+          ? undefined
+          : [{ tem_testemunhas: this.evidencias.temTestemunhas() === 'SIM' }],
       consentimento_lgpd: this.sigilo.avisoConfirmado(),
     };
 

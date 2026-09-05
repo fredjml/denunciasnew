@@ -1,5 +1,5 @@
 import { Component, inject, output } from '@angular/core';
-import { EvidenciasStateService } from '../../services/evidencias-state.service';
+import { EvidenciasStateService, TemTestemunhas } from '../../services/evidencias-state.service';
 import { DetalhamentoStateService } from '../../services/detalhamento-state.service';
 import { Icon } from '../../shared/icon';
 
@@ -37,6 +37,10 @@ export class StepEvidencias {
 
   protected toggleGrupo(codigo: string): void {
     this.detalhamento.toggleGrupoVulneravel(codigo);
+  }
+
+  protected setTemTestemunhas(value: TemTestemunhas): void {
+    this.state.setTemTestemunhas(value);
   }
 
   protected goNext(): void {

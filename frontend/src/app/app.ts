@@ -9,7 +9,6 @@ import { StepLocal } from './steps/step-local/step-local';
 import { StepRevisao } from './steps/step-revisao/step-revisao';
 import { StepConfirmacao } from './steps/step-confirmacao/step-confirmacao';
 import { DenunciaAceita } from './services/complaint-submission.service';
-import { Icon } from './shared/icon';
 
 type WizardStep =
   | 'ACOLHIMENTO'
@@ -34,7 +33,6 @@ const RELATO_STEPS: readonly WizardStep[] = ['RELATO', 'DETALHAMENTO', 'EVIDENCI
     StepLocal,
     StepRevisao,
     StepConfirmacao,
-    Icon,
   ],
   selector: 'app-root',
   styleUrl: './app.css',

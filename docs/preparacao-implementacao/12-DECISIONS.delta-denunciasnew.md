@@ -109,6 +109,61 @@
 - **Decisão do owner:** **arquivada** — decorrente de DEC-DN-09 = Opção A (chatbot fora do MVP).
 - **Status:** **arquivada até DEC-DN-09B ser retomada**.
 
+### DEC-DN-16 — Tratamento LGPD de testemunhas
+
+- **Contexto:** PDF pág. 9 (DN-RF-009) pede permitir "indicar a existência de testemunhas". O
+  contrato (`contract/openapi.yaml`, schema `Testemunha`) já modela isso como `tem_testemunhas`
+  (boolean, obrigatório dentro do objeto) + `nome_referencial`/`contato_opcional` (ambos
+  opcionais) — ou seja, o contrato já permite submeter só o booleano, sem nome/contato.
+- **Decisão do owner (2026-09-05):** **coletar apenas "há testemunhas? sim/não"** no formulário
+  público. Nome, contato ou qualquer outro dado de identificação da testemunha **não são
+  coletados nesta fase** — ficam para a etapa de investigação formal conduzida pelo procurador,
+  fora do app.
+- **Consequência:**
+  - `FATIA-DN-CP3-07` deixa de estar bloqueada, mas seu escopo muda: nada de subformulário de
+    nome/contato — só o toggle Sim/Não na tela de Evidências.
+  - `ComplaintSubmissionService` envia `testemunhas: [{ tem_testemunhas: true|false }]` quando o
+    usuário responde; omite o campo quando não respondido (campo é opcional no contrato).
+  - Se no futuro o owner decidir coletar nome/contato de testemunha, é preciso reabrir esta
+    decisão com DPO/Jurídico antes de tocar no formulário novamente.
+- **Owner:** Frederico José Monteiro Leite (Produto).
+- **Status:** **FECHADA** — implementada nesta sessão.
+
+### DEC-DN-20 — SLA de análise inicial no infográfico de confirmação
+
+- **Contexto:** PDF pág. 13 sugere informar "tempo estimado de análise" na tela de confirmação,
+  mas não define o número; nenhum SLA formal da Ouvidoria/Corregedoria do MPT foi apresentado
+  como fonte.
+- **Decisão do owner (2026-09-05):** **não prometer prazo.** A tela de confirmação mantém a
+  descrição das etapas (Recebimento → Triagem → Investigação) sem number de dias/SLA.
+- **Consequência:**
+  - `FATIA-DN-CP5-07` fica **descartada** (não apenas bloqueada) enquanto não houver SLA formal
+    para citar — reabrir só se/quando a Ouvidoria/Corregedoria fornecer um número real.
+  - Nenhuma mudança de código necessária: a implementação atual (`step-confirmacao`) já não
+    promete prazo algum.
+- **Owner:** Frederico José Monteiro Leite (Produto).
+- **Status:** **FECHADA** — nenhuma ação pendente.
+
+### DEC-DN-26 (nova) — Processo de coordenação do contrato com o backend real
+
+- **Contexto:** `contract/openapi.yaml` é a interface imutável entre este frontend e o backend de
+  produção, que será construído por uma equipe externa (`R-DN-06`). Já ocorreram 2 casos nesta
+  fase de implementação em que um campo mostrado no mockup visual do PDF não existia no contrato
+  ("Nomes e Dados" na tela de Detalhamento; "CNPJ da Empresa" na tela de Local) — sinal de que
+  esse tipo de divergência vai se repetir.
+- **Decisão do owner (2026-09-05):** estabelecer um **processo de PR revisado pelas duas
+  equipes** para qualquer mudança em `contract/openapi.yaml`, antes de qualquer lado (frontend
+  ou backend real) assumir um campo novo como certo.
+- **Consequência:**
+  - Nenhuma mudança de contrato deve ser feita unilateralmente por este workspace daqui para
+    frente — inclusive pelo próprio agente de IA, que já vinha seguindo essa regra via `R-DN-06`.
+  - Detalhe operacional do processo (qual repositório, quem aprova, prazo de review) ainda
+    **não foi definido** — falta combinar com a equipe do backend real quando ela existir/for
+    identificada.
+- **Owner:** Frederico José Monteiro Leite (Produto) + equipe do backend real (a identificar).
+- **Status:** **aberta parcialmente** — princípio fechado (PR revisado obrigatório); detalhe
+  operacional (onde/quem) continua pendente até a outra equipe estar definida.
+
 ## 2. Decisões que permanecem abertas
 
 | ID | Assunto | Owner esperado | Bloqueio |
@@ -120,14 +175,13 @@
 | DEC-DN-13 | Obrigatoriedade de nº estimado de trabalhadores | Produto | fatia `FATIA-DN-D1` adota opcional por default; muda para obrigatório sem retrabalho se decidido |
 | DEC-DN-14 | Taxonomia oficial de modalidade de trabalho | Produto + Jurídico | fatia `FATIA-DN-D1` adota lista genérica (`presencial/remoto/híbrido/informal/terceirizado/outra`) |
 | DEC-DN-15 | Limites de upload (tamanho, quantidade) | Arquitetura + Segurança | fatia `FATIA-DN-D2` adota default herdado (10 arquivos × 20 MiB) |
-| DEC-DN-16 | Tratamento LGPD de testemunhas | DPO + Jurídico | fatia `FATIA-DN-D3` fica **BLOQUEADA — aguarda DEC-DN-16** (LGPD específica) |
 | DEC-DN-17 | Meta quantitativa de redução de retrabalho | Produto | não bloqueia MVP (KPI de negócio) |
 | DEC-DN-18 | Política de retenção de logs | DPO | `pino-noir` com retenção 30 d default; ajuste posterior sem retrabalho |
 | DEC-DN-19 | Formato do protocolo local final | Produto | MVP usa prefixo `SYN-` para teste; formato real do MPT vira `DEC-DN-19` (bloqueador de release) |
-| DEC-DN-20 | SLA de análise inicial | Produto | não impacta código, só copy do infográfico |
 | DEC-DN-21 | Baseline pré-implantação para KPIs | Produto + Dados | não bloqueia MVP |
 | DEC-DN-22 | SLA + canal de alertas | SRE + Segurança | mock no MVP; DPO revisa payload sem PII |
 | DEC-DN-23 | Estratégia de coexistência dos `.mmd` `denunciasnew-*` com validador | Arquitetura | fatia `FATIA-DN-DIAG-01` propõe patch ao validador (opcional) |
+| DEC-DN-26 | Detalhe operacional do processo de PR de contrato com a equipe do backend real | Produto + equipe backend real | princípio fechado (PR revisado obrigatório, ver §1); falta definir repositório/aprovadores quando a equipe existir |
 
 ## 3. Novas decisões catalogadas em F4/F6 (adicionais)
 
@@ -157,11 +211,13 @@
 
 | Estado | Contagem |
 | --- | ---: |
-| FECHADA (respondida nesta rodada) | 8 |
-| aberta — bloqueia MVP | 3 (DEC-DN-08, DEC-DN-16, DEC-DN-19) |
-| aberta — não bloqueia MVP | 12 |
+| FECHADA (respondida em 2026-09-04) | 8 |
+| FECHADA (respondida em 2026-09-05: DEC-DN-16, DEC-DN-20) | 2 |
+| aberta — bloqueia MVP | 1 (DEC-DN-08) — `DEC-DN-19` deixa de bloquear o MVP em si (protocolo mock já cobre o fluxo; só bloqueia o *release* com o formato oficial do MPT) |
+| aberta — parcial (princípio fechado, detalhe pendente) | 1 (DEC-DN-26) |
+| aberta — não bloqueia MVP | 10 |
 | arquivada (fora do escopo do MVP) | 2 (DEC-DN-09B, DEC-DN-P-F5-7) |
-| Total catalogadas nesta análise | **25** |
+| Total catalogadas nesta análise | **26** |
 
 ## 5. Regra de precedência aplicada
 
