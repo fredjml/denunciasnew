@@ -129,12 +129,23 @@
     componentes de passo além de Acolhimento (que precisa ficar eager por ser a primeira tela)
     saem do bundle inicial e passam a ser *chunks* carregados só quando o usuário chega naquele
     passo. **Resultado: bundle inicial cai de ~330 KB para 257 KB (≈70 KB gzip); LCP/TTI medidos
-    caem de ≈10,2 s para ≈8,26 s.** Ainda **não atinge o alvo de 4 s/6 s** — o bundle inicial
-    ainda inclui todo o Angular runtime + `app-step-acolhimento` + estilos globais, e não há mais
-    nenhum código de aplicação para dividir sem tocar nesse núcleo (ex.: análise de dependências
-    de terceiros, fontes, imagens). Otimização adicional (ex.: revisar peso de dependências no
-    bundle inicial, `NgOptimizedImage` se houver imagens, preload hints) fica como trabalho futuro
-    de `CP-mobile-perf`; as asserções continuam em `warn` até o alvo ser atingido de fato.
+    caem de ≈10,2 s para ≈8,26 s.**
+  - **Atualização 2 (2026-09-05, rodada seguinte):** análise do relatório do Lighthouse mostrou
+    87% do tempo de LCP em "Render Delay" (custo de CPU sob throttling 4x, não rede) — sinal de
+    que o próximo ganho real estava no peso do bundle inicial em si, não em mais code-splitting.
+    Investigação encontrou `@angular/router` instalado, importado em `app.config.ts`
+    (`provideRouter(routes)`) e com um arquivo `app.routes.ts` — **mas nunca usado**: a navegação
+    inteira do wizard sempre foi por signal local (`app.ts`, `WizardStep`), sem nenhuma rota,
+    `RouterLink` ou `ActivatedRoute` em lugar nenhum do código. Removida a dependência por
+    completo (`app.config.ts`, `app.routes.ts` apagado, `@angular/router` fora do
+    `package.json`/lockfile). **Resultado: bundle inicial cai de 257 KB para 185 KB raw (72 KB →
+    54 KB gzip); LCP/TTI medidos caem de ≈8,26 s para ≈7,21 s.**
+  - **Estado final desta sessão: ainda não atinge o alvo de 4 s/6 s**, mas caiu de ≈10,2 s para
+    ≈7,2 s (~30% de melhoria total). O restante do gap é o custo inerente do runtime Angular +
+    `app-step-acolhimento` sob CPU 4x throttled — não há mais dependência morta óbvia para
+    remover; o próximo ganho exigiria uma investigação mais profunda (ex.: SSR/hidratação,
+    reduzir peso de polyfills, ou aceitar o alvo como não realista para este stack sob Slow 3G
+    real). Registrado como trabalho futuro de `CP-mobile-perf`; as asserções continuam em `warn`.
 - **Owner:** Frederico José Monteiro Leite (Produto) + Frontend (execução da otimização).
 - **Status:** **FECHADA** (alvo definido e medido); melhoria real aplicada nesta sessão (code-
   splitting), mas alvo numérico ainda não atingido — trabalho remanescente fica registrado como
