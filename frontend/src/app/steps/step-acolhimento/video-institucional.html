@@ -1,26 +1,39 @@
 <section class="video-card" aria-labelledby="video-title">
-  <div class="video-copy">
-    <p class="eyebrow">Vídeo Explicativo (opcional)</p>
-    <h2 id="video-title">Conheça o papel do MPT</h2>
-    <p>Duração de 45 a 60 segundos. Você pode continuar sem assistir.</p>
+  <h2 id="video-title" class="visually-hidden">Vídeo Explicativo</h2>
+
+  <div class="video-frame" [class.video-frame--started]="started()">
+    <video
+      #videoEl
+      [attr.controls]="started() ? true : null"
+      preload="metadata"
+      aria-describedby="video-description"
+      aria-label="Vídeo Explicativo: conheça o papel do MPT"
+    >
+      <track
+        default
+        kind="captions"
+        label="Português"
+        srclang="pt-BR"
+        src="/media/video-institucional-placeholder.vtt"
+      />
+      Seu navegador não oferece suporte ao elemento de vídeo.
+    </video>
+
+    @if (!started()) {
+      <button type="button" class="video-overlay" data-testid="video-play" (click)="play()">
+        <span class="video-overlay__play">
+          <app-icon name="play" [size]="28" />
+        </span>
+        <span class="video-overlay__caption">Vídeo Explicativo (45s)</span>
+      </button>
+    }
   </div>
 
-  <video controls preload="metadata" aria-describedby="video-description">
-    <track
-      default
-      kind="captions"
-      label="Português"
-      srclang="pt-BR"
-      src="/media/video-institucional-placeholder.vtt"
-    />
-    Seu navegador não oferece suporte ao elemento de vídeo.
-  </video>
-
-  <div id="video-description" class="transcript" data-testid="transcricao-video">
-    <h3>Transcrição</h3>
+  <details id="video-description" class="transcript" data-testid="transcricao-video">
+    <summary>Ver transcrição do vídeo</summary>
     <p>
       Conteúdo institucional pendente de aprovação. Este texto é um placeholder sintético e não
       substitui a versão oficial do MPT.
     </p>
-  </div>
+  </details>
 </section>

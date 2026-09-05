@@ -73,7 +73,7 @@
   <fieldset class="checklist">
     <legend>Tipos de irregularidades</legend>
     <p class="checklist-hint">Deslize para ver mais e selecione ao menos uma opção.</p>
-    <div class="checklist-scroll" data-testid="checklist">
+    <div class="checklist-scroll" data-testid="checklist" (scroll)="onChecklistScroll($event)">
       @for (item of taxonomia; track item.codigo) {
         <label class="checklist-item" [class.checklist-item--selected]="state.isIrregularidadeSelecionada(item.codigo)">
           <input
@@ -83,9 +83,15 @@
             [checked]="state.isIrregularidadeSelecionada(item.codigo)"
             (change)="toggle(item.codigo)"
           />
+          <span class="checklist-item__check" aria-hidden="true"></span>
           <app-icon [name]="item.icone" [size]="28" />
           <span>{{ item.rotulo }}</span>
         </label>
+      }
+    </div>
+    <div class="checklist-dots" aria-hidden="true">
+      @for (dot of dots; track dot) {
+        <span class="checklist-dots__dot" [class.checklist-dots__dot--active]="activeDot() === dot"></span>
       }
     </div>
   </fieldset>

@@ -20,10 +20,27 @@ export class StepRelatoGuiado {
   protected readonly consentDialog = signal(false);
   protected readonly audioEnabled = signal(false);
   protected readonly microphoneUnavailable = signal(false);
+
+  /** Paginação em bolinhas do carrossel horizontal de irregularidades (mockup). */
+  protected readonly dotCount = Math.max(1, Math.ceil(this.taxonomia.length / 2));
+  protected readonly dots = Array.from({ length: this.dotCount }, (_, i) => i);
+  protected readonly activeDot = signal(0);
   readonly advance = output<void>();
   readonly voltar = output<void>();
 
   protected toggle(code: string): void { this.state.toggleIrregularidade(code); }
+
+  protected onChecklistScroll(event: Event): void {
+    const el = event.target as HTMLElement;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    if (maxScroll <= 0) {
+      this.activeDot.set(0);
+      return;
+    }
+    const ratio = el.scrollLeft / maxScroll;
+    this.activeDot.set(Math.round(ratio * (this.dotCount - 1)));
+  }
+
   protected goNext(): void { this.advance.emit(); }
   protected goBack(): void { this.voltar.emit(); }
   protected setRelato(value: string): void { this.state.setRelato(value); }

@@ -6,16 +6,28 @@ describe('VideoInstitucional', () => {
     await TestBed.configureTestingModule({ imports: [VideoInstitucional] }).compileComponents();
   });
 
-  it('não usa autoplay e oferece controles e legendas', () => {
+  it('não usa autoplay, oferece legendas, e só mostra os controles nativos após o play (FATIA-DN-mockup)', () => {
     const fixture = TestBed.createComponent(VideoInstitucional);
     fixture.detectChanges();
-    const video = fixture.nativeElement.querySelector('video') as HTMLVideoElement;
+    const host = fixture.nativeElement as HTMLElement;
+    const video = host.querySelector('video') as HTMLVideoElement;
     const captions = video.querySelector('track[kind="captions"]') as HTMLTrackElement;
 
     expect(video.autoplay).toBe(false);
-    expect(video.controls).toBe(true);
     expect(captions).toBeTruthy();
     expect(captions.default).toBe(true);
+
+    // Antes do play: overlay customizado visível, controles nativos ausentes (como no mockup).
+    expect(video.controls).toBe(false);
+    const overlay = host.querySelector('[data-testid="video-play"]') as HTMLButtonElement;
+    expect(overlay).toBeTruthy();
+
+    overlay.click();
+    fixture.detectChanges();
+
+    // Após o play: controles nativos assumem, overlay some.
+    expect(video.controls).toBe(true);
+    expect(host.querySelector('[data-testid="video-play"]')).toBeNull();
   });
 
   it('mantém uma transcrição textual visível sem exigir reprodução', () => {

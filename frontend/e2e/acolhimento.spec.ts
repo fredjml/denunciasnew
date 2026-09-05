@@ -39,11 +39,16 @@ test('"Fale com a Ouvidoria" abre em nova aba e não avança o wizard (FATIA-DN-
   await expect(page.getByRole('heading', { name: 'Denuncie ao MPT' })).toBeVisible();
 });
 
-test('oferece vídeo opcional sem autoplay, com legenda e transcrição', async ({ page }) => {
+test('oferece vídeo opcional sem autoplay, com overlay de play e transcrição', async ({ page }) => {
   const video = page.locator('video');
 
   await expect(video).toHaveJSProperty('autoplay', false);
-  await expect(video).toHaveJSProperty('controls', true);
+  await expect(video).toHaveJSProperty('controls', false);
   await expect(video.locator('track[kind="captions"]')).toHaveCount(1);
   await expect(page.getByTestId('transcricao-video')).toBeVisible();
+
+  await expect(page.getByTestId('video-play')).toBeVisible();
+  await page.getByTestId('video-play').click();
+  await expect(video).toHaveJSProperty('controls', true);
+  await expect(page.getByTestId('video-play')).toHaveCount(0);
 });

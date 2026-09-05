@@ -17,13 +17,14 @@
 .checklist-hint { margin: 0; color: var(--color-text-secondary); font-size: var(--font-size-sm); }
 .checklist-scroll { display: flex; gap: var(--space-3); padding-bottom: var(--space-2); overflow-x: auto; }
 .checklist-item {
+  position: relative;
   display: grid;
   flex: 0 0 auto;
   gap: var(--space-2);
   place-items: center;
-  width: 7rem;
-  padding: var(--space-4) var(--space-3);
-  border: 2px solid var(--color-border);
+  width: 8rem;
+  padding: var(--space-5) var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   color: var(--color-text-secondary);
   text-align: center;
@@ -31,6 +32,36 @@
 }
 .checklist-item app-icon { color: var(--color-primary); }
 .checklist-item--selected { border-color: var(--color-primary); color: var(--color-primary-dark); background: #fbecee; }
+
+.checklist-item__check {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  width: 1rem;
+  height: 1rem;
+  border: 1.5px solid var(--color-border-strong);
+  border-radius: var(--radius-sm, 0.25rem);
+  background: var(--color-bg);
+}
+.checklist-item--selected .checklist-item__check {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+}
+.checklist-item--selected .checklist-item__check::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 0.55rem;
+  height: 0.3rem;
+  border-left: 2px solid var(--color-text-inverse);
+  border-bottom: 2px solid var(--color-text-inverse);
+  transform: rotate(-45deg) translateY(-1px);
+}
+
+.checklist-dots { display: flex; justify-content: center; gap: var(--space-2); padding-top: var(--space-1); }
+.checklist-dots__dot { width: 6px; height: 6px; border-radius: var(--radius-full); background: var(--color-border-strong); }
+.checklist-dots__dot--active { background: var(--color-primary); }
 
 .wizard-actions { display: grid; gap: var(--space-3); justify-items: stretch; }
 .primary-action { padding: var(--space-3) var(--space-4); border: 2px solid var(--color-primary); border-radius: var(--radius-md); color: var(--color-text-inverse); font-weight: 700; background: var(--color-primary); }
