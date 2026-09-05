@@ -34,7 +34,7 @@ describe('StepEvidencias', () => {
 
     expect(host.querySelectorAll('.lista-arquivos li')).toHaveLength(1);
 
-    (host.querySelector('button[aria-label="Remover SYN-laudo.pdf"]') as HTMLButtonElement).click();
+    (host.querySelector('.lista-arquivos button') as HTMLButtonElement).click();
     fixture.detectChanges();
 
     expect(host.querySelectorAll('.lista-arquivos li')).toHaveLength(0);
@@ -52,5 +52,16 @@ describe('StepEvidencias', () => {
     fixture.detectChanges();
 
     expect(host.querySelector('[role="alert"]')?.textContent).toContain('não permitido');
+  });
+
+  it('permite marcar grupos vulneráveis envolvidos (opcional)', () => {
+    const fixture = TestBed.createComponent(StepEvidencias);
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+
+    (host.querySelectorAll('input[name="grupo-vulneravel"]')[0] as HTMLInputElement).click();
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance['detalhamento'].gruposVulneraveis()).toContain('IDOSOS');
   });
 });

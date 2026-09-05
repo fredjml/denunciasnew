@@ -1,39 +1,13 @@
 :host {
   display: block;
-  min-height: 100dvh;
-  background: var(--color-bg-subtle);
-}
-
-.site-header {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: var(--space-2) var(--space-6);
-  padding: var(--space-4) max(var(--space-4), calc((100% - var(--max-width-content)) / 2));
-  color: var(--color-text-inverse);
-  background: var(--color-primary);
-}
-
-.brand,
-.service-name {
-  font-weight: 700;
 }
 
 .page-shell {
   display: grid;
-  gap: var(--space-8);
+  gap: var(--space-6);
   width: min(100% - 2rem, var(--max-width-form));
   margin: 0 auto;
-  padding: var(--space-8) 0 var(--space-12);
-}
-
-.step-label {
-  margin-bottom: var(--space-2);
-  color: var(--color-primary);
-  font-size: var(--font-size-sm);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  padding: var(--space-6) 0 var(--space-12);
 }
 
 .lead {
@@ -45,24 +19,35 @@
 
 .choice-group {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-3);
   min-width: 0;
-  margin: 0;
+  margin: var(--space-3) 0 0;
   padding: 0;
   border: 0;
 }
 
 .choice-card {
-  display: grid;
-  gap: var(--space-2);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
   width: 100%;
-  padding: var(--space-5);
-  border: 2px solid var(--color-border);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   color: var(--color-text-primary);
   text-align: left;
   background: var(--color-bg);
   box-shadow: var(--shadow-sm);
+}
+
+.choice-card app-icon {
+  flex-shrink: 0;
+  color: var(--color-primary);
+}
+
+.choice-text {
+  display: grid;
+  gap: var(--space-1);
 }
 
 .choice-card:hover {
@@ -71,18 +56,19 @@
 
 .choice-card--selected {
   border-color: var(--color-primary);
-  background: #eaf5fb;
+  background: #fbecee;
   box-shadow: 0 0 0 1px var(--color-primary);
 }
 
 .choice-title {
   color: var(--color-primary-dark);
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-base);
   font-weight: 700;
 }
 
 .choice-description {
   color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
   line-height: var(--line-height-base);
 }
 
@@ -113,13 +99,9 @@
 }
 
 @media (max-width: 30rem) {
-  .site-header {
-    flex-direction: column;
-  }
-
   .page-shell {
-    gap: var(--space-6);
-    padding-top: var(--space-6);
+    gap: var(--space-5);
+    padding-top: var(--space-4);
   }
 
   .primary-action {

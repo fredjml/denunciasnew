@@ -12,13 +12,25 @@ export type ModalidadeTrabalho =
 
 @Injectable({ providedIn: 'root' })
 export class DetalhamentoStateService {
+  private readonly periodoOcorrenciaState = signal('');
   private readonly numeroTrabalhadoresState = signal<NumeroTrabalhadores>('');
   private readonly modalidadeTrabalhoState = signal<ModalidadeTrabalho>('');
+  private readonly funcoesSetoresState = signal('');
   private readonly gruposVulneraveisState = signal<readonly string[]>([]);
 
+  readonly periodoOcorrencia = this.periodoOcorrenciaState.asReadonly();
   readonly numeroTrabalhadores = this.numeroTrabalhadoresState.asReadonly();
   readonly modalidadeTrabalho = this.modalidadeTrabalhoState.asReadonly();
+  readonly funcoesSetores = this.funcoesSetoresState.asReadonly();
   readonly gruposVulneraveis = this.gruposVulneraveisState.asReadonly();
+
+  setPeriodoOcorrencia(value: string): void {
+    this.periodoOcorrenciaState.set(value);
+  }
+
+  setFuncoesSetores(value: string): void {
+    this.funcoesSetoresState.set(value);
+  }
 
   setNumeroTrabalhadores(value: NumeroTrabalhadores): void {
     this.numeroTrabalhadoresState.set(value);

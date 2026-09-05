@@ -1,43 +1,34 @@
 <main class="page-shell" id="conteudo-principal">
   <header>
-    <p class="step-label">Relato guiado</p>
-    <h1>Conte o que aconteceu</h1>
-    <p>Marque as situações relacionadas e descreva os fatos do seu jeito.</p>
+    <h1>O que está acontecendo?</h1>
+    <p>Conte do seu jeito, em texto ou áudio, a irregularidade que você viu ou que aconteceu no seu ambiente de trabalho.</p>
   </header>
-
-  <fieldset class="checklist">
-    <legend>Quais situações estão relacionadas?</legend>
-    @for (item of taxonomia; track item.codigo) {
-      <label>
-        <input
-          type="checkbox"
-          name="irregularidade"
-          [checked]="state.irregularidades().includes(item.codigo)"
-          (change)="toggle(item.codigo)"
-        />
-        <span aria-hidden="true">●</span>
-        <span>{{ item.rotulo }}</span>
-      </label>
-    }
-  </fieldset>
 
   <div class="text-field">
     <label for="relato">Descreva os fatos do seu jeito</label>
-    <textarea
-      id="relato"
-      rows="8"
-      [ngModel]="state.relato()"
-      (ngModelChange)="setRelato($event)"
-      aria-describedby="contador-relato"
-    ></textarea>
+    <div class="relato-box">
+      <textarea
+        id="relato"
+        rows="6"
+        [ngModel]="state.relato()"
+        (ngModelChange)="setRelato($event)"
+        aria-describedby="contador-relato"
+      ></textarea>
+      <button
+        type="button"
+        class="mic-button"
+        data-testid="usar-audio"
+        aria-label="Contar por áudio"
+        (click)="requestAudio()"
+      >
+        <app-icon name="mic" [size]="20" />
+      </button>
+    </div>
     <p id="contador-relato" data-testid="contador-relato">{{ state.relato().length }} caracteres</p>
+    <p class="privacidade-audio">Sua voz não será identificada.</p>
   </div>
 
-  <section class="audio-section" aria-labelledby="audio-title">
-    <h2 id="audio-title">Prefere contar por áudio?</h2>
-    <p>O uso do microfone é opcional. Você pode concluir todo o relato por texto.</p>
-    <button type="button" data-testid="usar-audio" (click)="requestAudio()">Usar áudio</button>
-
+  <section class="audio-section">
     @if (consentDialog()) {
       <div class="dialog-backdrop" role="dialog" aria-modal="true" aria-labelledby="consent-title">
         <div class="dialog-card">
@@ -79,11 +70,34 @@
     </section>
   }
 
-  <button
-    class="primary-action"
-    type="button"
-    data-testid="avancar-relato"
-    [disabled]="state.irregularidades().length === 0"
-    (click)="goNext()"
-  >Avançar</button>
+  <fieldset class="checklist">
+    <legend>Tipos de irregularidades</legend>
+    <p class="checklist-hint">Deslize para ver mais e selecione ao menos uma opção.</p>
+    <div class="checklist-scroll" data-testid="checklist">
+      @for (item of taxonomia; track item.codigo) {
+        <label class="checklist-item" [class.checklist-item--selected]="state.irregularidades().includes(item.codigo)">
+          <input
+            type="checkbox"
+            name="irregularidade"
+            class="visually-hidden"
+            [checked]="state.irregularidades().includes(item.codigo)"
+            (change)="toggle(item.codigo)"
+          />
+          <app-icon [name]="item.icone" [size]="28" />
+          <span>{{ item.rotulo }}</span>
+        </label>
+      }
+    </div>
+  </fieldset>
+
+  <div class="wizard-actions">
+    <button
+      class="primary-action"
+      type="button"
+      data-testid="avancar-relato"
+      [disabled]="state.irregularidades().length === 0"
+      (click)="goNext()"
+    >Avançar</button>
+    <button class="secondary-action" type="button" (click)="goBack()">Voltar</button>
+  </div>
 </main>

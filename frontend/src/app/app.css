@@ -1,3 +1,83 @@
 :host {
   display: block;
+  min-height: 100dvh;
+  background: var(--color-bg-subtle);
+}
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text-inverse);
+  background: var(--color-primary);
+}
+
+.app-header__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.app-header__help {
+  display: grid;
+  place-items: center;
+  width: var(--touch-target-min);
+  height: var(--touch-target-min);
+  border: 2px solid rgb(255 255 255 / 0.6);
+  border-radius: var(--radius-full);
+  color: var(--color-text-inverse);
+  font-weight: 700;
+  background: transparent;
+}
+
+.app-tabs {
+  display: flex;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.app-tabs__tab {
+  flex: 1 0 auto;
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+}
+
+.app-tabs__tab.is-active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+.app-tabs__tab--pending {
+  color: var(--color-text-muted);
+}
+
+.app-progress {
+  display: flex;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-bg);
+}
+
+.app-progress__segment {
+  flex: 1;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: var(--color-border);
+}
+
+.app-progress__segment.is-filled {
+  background: var(--color-primary);
 }

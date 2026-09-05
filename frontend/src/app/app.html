@@ -1,14 +1,46 @@
+<a class="skip-link" href="#conteudo-principal">Ir para o conteúdo principal</a>
+
+<header class="app-header">
+  <span class="app-header__brand">
+    <app-icon name="shield-lock" [size]="28" />
+    MPT
+  </span>
+  <button type="button" class="app-header__help" aria-label="Ajuda">?</button>
+</header>
+
+<nav class="app-tabs" aria-label="Etapas da denúncia">
+  <span class="app-tabs__tab" [class.is-active]="currentTab() === 'ACOLHIMENTO'">Acolhimento</span>
+  <span class="app-tabs__tab" [class.is-active]="currentTab() === 'RELATO'">Relato</span>
+  <span class="app-tabs__tab app-tabs__tab--pending">Empresa</span>
+  <span class="app-tabs__tab app-tabs__tab--pending">Revisão</span>
+</nav>
+
+@if (currentTab() === 'RELATO') {
+  <div
+    class="app-progress"
+    role="progressbar"
+    aria-label="Progresso do relato"
+    [attr.aria-valuenow]="relatoStepIndex() + 1"
+    aria-valuemin="1"
+    [attr.aria-valuemax]="totalRelatoSteps"
+  >
+    @for (segmento of [0, 1, 2]; track segmento) {
+      <span class="app-progress__segment" [class.is-filled]="segmento <= relatoStepIndex()"></span>
+    }
+  </div>
+}
+
 @switch (currentStep()) {
   @case ('ACOLHIMENTO') {
     <app-step-acolhimento (advance)="startReport($event)" />
   }
   @case ('RELATO') {
-    <app-step-relato-guiado (advance)="goToDetalhamento()" />
+    <app-step-relato-guiado (advance)="goToDetalhamento()" (voltar)="goToAcolhimento()" />
   }
   @case ('DETALHAMENTO') {
-    <app-step-detalhamento (advance)="goToEvidencias()" />
+    <app-step-detalhamento (advance)="goToEvidencias()" (voltar)="goToRelato()" />
   }
   @default {
-    <app-step-evidencias />
+    <app-step-evidencias (voltar)="goToDetalhamento()" />
   }
 }

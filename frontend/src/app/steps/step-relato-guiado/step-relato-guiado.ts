@@ -4,25 +4,32 @@ import taxonomia from '../../../assets/taxonomia-mock.json';
 import { RelatoStateService } from '../../services/relato-state.service';
 import { SttClientService } from '../../services/stt-client.service';
 import { AudioRecorderComponent } from './audio-recorder';
+import { Icon, IconName } from '../../shared/icon';
 
 @Component({
   selector: 'app-step-relato-guiado',
   standalone: true,
-  imports: [FormsModule, AudioRecorderComponent],
+  imports: [FormsModule, AudioRecorderComponent, Icon],
   templateUrl: './step-relato-guiado.html',
   styleUrl: './step-relato-guiado.css',
 })
 export class StepRelatoGuiado {
   protected readonly state = inject(RelatoStateService);
   private readonly stt = inject(SttClientService);
-  protected readonly taxonomia = taxonomia;
+  protected readonly taxonomia = taxonomia as ReadonlyArray<{
+    codigo: string;
+    rotulo: string;
+    icone: IconName;
+  }>;
   protected readonly consentDialog = signal(false);
   protected readonly audioEnabled = signal(false);
   protected readonly microphoneUnavailable = signal(false);
   readonly advance = output<void>();
+  readonly voltar = output<void>();
 
   protected toggle(code: string): void { this.state.toggleIrregularidade(code); }
   protected goNext(): void { this.advance.emit(); }
+  protected goBack(): void { this.voltar.emit(); }
   protected setRelato(value: string): void { this.state.setRelato(value); }
   protected requestAudio(): void { this.consentDialog.set(true); }
   protected declineAudio(): void { this.consentDialog.set(false); this.audioEnabled.set(false); }

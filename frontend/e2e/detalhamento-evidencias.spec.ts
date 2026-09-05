@@ -6,16 +6,16 @@ test.beforeEach(async ({ page }) => {
   await page.reload();
   await page.getByTestId('caminho-acolhimento').first().click();
   await page.getByTestId('avancar').click();
-  await page.locator('input[name="irregularidade"]').first().check();
+  await page.locator('.checklist-item').first().click();
   await page.getByTestId('avancar-relato').click();
 });
 
 test('navega de Relato Guiado até Detalhamento e depois Evidências', async ({ page }) => {
-  await expect(page.getByRole('heading', { name: 'Mais alguns detalhes' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Detalhamento da ocorrência' })).toBeVisible();
 
   await page.getByTestId('avancar-detalhamento').click();
 
-  await expect(page.getByRole('heading', { name: 'Quer anexar alguma evidência?' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Evidências' })).toBeVisible();
 });
 
 test('anexa um PDF sintético válido em Evidências', async ({ page }) => {

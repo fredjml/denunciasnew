@@ -1,10 +1,26 @@
-:host { display: block; min-height: 100dvh; background: var(--color-bg-subtle); }
-.page-shell { display: grid; gap: var(--space-6); width: min(100% - 2rem, var(--max-width-form)); margin: auto; padding: var(--space-8) 0; }
-.step-label { color: var(--color-primary); font-weight: 700; text-transform: uppercase; }
+:host { display: block; }
+.page-shell { display: grid; gap: var(--space-6); width: min(100% - 2rem, var(--max-width-form)); margin: auto; padding: var(--space-6) 0 var(--space-12); }
+.checklist { display: grid; gap: var(--space-2); padding: 0; border: 0; }
+.checklist legend { margin-bottom: var(--space-2); font-weight: 700; }
+.checklist label { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg); }
 .upload-field { display: grid; gap: var(--space-2); }
-.upload-field label { font-weight: 700; }
+.upload-dropzone {
+  display: grid;
+  gap: var(--space-2);
+  place-items: center;
+  padding: var(--space-6) var(--space-4);
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-secondary);
+  text-align: center;
+  background: var(--color-bg);
+}
+.upload-dropzone app-icon { color: var(--color-primary); }
+.upload-hint { color: var(--color-text-muted); font-size: var(--font-size-sm); }
 .erros { padding: var(--space-4); border: 1px solid var(--color-danger); border-radius: var(--radius-md); color: var(--color-danger); }
 .lista-arquivos { display: grid; gap: var(--space-2); padding: 0; list-style: none; }
 .lista-arquivos li { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg); }
-.primary-action { justify-self: end; padding: var(--space-2) var(--space-4); border: 2px solid var(--color-primary); border-radius: var(--radius-md); color: var(--color-text-inverse); background: var(--color-primary); font-weight: 700; }
-@media (max-width: 30rem) { .primary-action { width: 100%; } }
+.lista-arquivos button { display: grid; place-items: center; border: 0; color: var(--color-danger); background: transparent; }
+.wizard-actions { display: grid; gap: var(--space-3); }
+.primary-action { padding: var(--space-3) var(--space-4); border: 2px solid var(--color-primary); border-radius: var(--radius-md); color: var(--color-text-inverse); font-weight: 700; background: var(--color-primary); }
+.secondary-action { padding: var(--space-3) var(--space-4); border: 2px solid var(--color-border-strong); border-radius: var(--radius-md); color: var(--color-text-secondary); font-weight: 700; background: var(--color-bg); }

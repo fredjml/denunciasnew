@@ -25,7 +25,7 @@ test('wizard completo (relato, detalhamento, evidências) não contém violaçõ
   await page.getByTestId('avancar').click();
   await semViolacoesBloqueantes(page);
 
-  await page.locator('input[name="irregularidade"]').first().check();
+  await page.locator('.checklist-item').first().click();
   await page.getByTestId('avancar-relato').click();
   await semViolacoesBloqueantes(page);
 

@@ -1,17 +1,38 @@
-:host { display: block; min-height: 100dvh; background: var(--color-bg-subtle); }
-.page-shell { display: grid; gap: var(--space-6); width: min(100% - 2rem, var(--max-width-form)); margin: auto; padding: var(--space-8) 0; }
-.step-label { color: var(--color-primary); font-weight: 700; text-transform: uppercase; }
-.checklist { display: grid; gap: var(--space-3); padding: 0; border: 0; }
-.checklist legend, .text-field label { margin-bottom: var(--space-3); font-weight: 700; }
-.checklist label { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg); }
-.text-field { display: grid; }
-textarea { width: 100%; padding: var(--space-3); border: 1px solid var(--color-border-strong); border-radius: var(--radius-md); font: inherit; resize: vertical; }
-[data-testid='contador-relato'] { color: var(--color-text-secondary); text-align: right; }
-.audio-section { padding: var(--space-5); border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-bg); }
-button { padding: var(--space-2) var(--space-4); border: 2px solid var(--color-primary); border-radius: var(--radius-md); color: var(--color-primary-dark); background: var(--color-bg); font-weight: 700; }
-.primary-action { justify-self: end; color: var(--color-text-inverse); background: var(--color-primary); }
-.primary-action:disabled { border-color: var(--color-border-strong); color: var(--color-text-secondary); background: var(--color-bg-muted); }
+:host { display: block; }
+.page-shell { display: grid; gap: var(--space-6); width: min(100% - 2rem, var(--max-width-form)); margin: auto; padding: var(--space-6) 0 var(--space-12); }
+.text-field { display: grid; gap: var(--space-2); }
+.text-field label { font-weight: 700; }
+.relato-box { position: relative; }
+.relato-box textarea { width: 100%; padding: var(--space-3); padding-right: var(--space-10); border: 1px solid var(--color-border-strong); border-radius: var(--radius-md); font: inherit; resize: vertical; }
+.mic-button { position: absolute; right: var(--space-2); bottom: var(--space-2); display: grid; place-items: center; width: var(--touch-target-min); height: var(--touch-target-min); border: 0; border-radius: var(--radius-full); color: var(--color-text-inverse); background: var(--color-primary); }
+[data-testid='contador-relato'] { margin: 0; color: var(--color-text-secondary); text-align: right; }
+.privacidade-audio { margin: 0; color: var(--color-text-muted); font-size: var(--font-size-sm); }
+.audio-section:empty { display: none; }
 .dialog-backdrop { position: fixed; inset: 0; display: grid; place-items: center; padding: var(--space-4); background: rgb(0 0 0 / 0.65); z-index: 10; }
 .dialog-card { max-width: 32rem; padding: var(--space-6); border-radius: var(--radius-lg); background: var(--color-bg); }
 .dialog-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
-@media (max-width: 30rem) { .primary-action { width: 100%; } }
+
+.checklist { display: grid; gap: var(--space-2); padding: 0; border: 0; }
+.checklist legend { font-weight: 700; }
+.checklist-hint { margin: 0; color: var(--color-text-secondary); font-size: var(--font-size-sm); }
+.checklist-scroll { display: flex; gap: var(--space-3); padding-bottom: var(--space-2); overflow-x: auto; }
+.checklist-item {
+  display: grid;
+  flex: 0 0 auto;
+  gap: var(--space-2);
+  place-items: center;
+  width: 7rem;
+  padding: var(--space-4) var(--space-3);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-secondary);
+  text-align: center;
+  background: var(--color-bg);
+}
+.checklist-item app-icon { color: var(--color-primary); }
+.checklist-item--selected { border-color: var(--color-primary); color: var(--color-primary-dark); background: #fbecee; }
+
+.wizard-actions { display: grid; gap: var(--space-3); justify-items: stretch; }
+.primary-action { padding: var(--space-3) var(--space-4); border: 2px solid var(--color-primary); border-radius: var(--radius-md); color: var(--color-text-inverse); font-weight: 700; background: var(--color-primary); }
+.primary-action:disabled { border-color: var(--color-border-strong); color: var(--color-text-secondary); background: var(--color-bg-muted); }
+.secondary-action { padding: var(--space-3) var(--space-4); border: 2px solid var(--color-border-strong); border-radius: var(--radius-md); color: var(--color-text-secondary); font-weight: 700; background: var(--color-bg); }

@@ -14,6 +14,16 @@ describe('DetalhamentoStateService', () => {
     expect(service.modalidadeTrabalho()).toBe('terceirizado');
   });
 
+  it('persiste período da ocorrência e funções/setores afetados', () => {
+    const service = TestBed.inject(DetalhamentoStateService);
+
+    service.setPeriodoOcorrencia('Desde janeiro de 2026');
+    service.setFuncoesSetores('Linha de produção');
+
+    expect(service.periodoOcorrencia()).toBe('Desde janeiro de 2026');
+    expect(service.funcoesSetores()).toBe('Linha de produção');
+  });
+
   it('alterna grupos vulneráveis sem exigir nenhum selecionado', () => {
     const service = TestBed.inject(DetalhamentoStateService);
 

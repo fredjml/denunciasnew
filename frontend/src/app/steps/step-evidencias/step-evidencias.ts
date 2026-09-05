@@ -1,15 +1,27 @@
 import { Component, inject, output } from '@angular/core';
 import { EvidenciasStateService } from '../../services/evidencias-state.service';
+import { DetalhamentoStateService } from '../../services/detalhamento-state.service';
+import { Icon } from '../../shared/icon';
+
+const GRUPOS_VULNERAVEIS = [
+  { codigo: 'IDOSOS', rotulo: 'Pessoas idosas' },
+  { codigo: 'CRIANCAS', rotulo: 'Crianças e adolescentes' },
+  { codigo: 'PCD', rotulo: 'Pessoas com deficiência' },
+] as const;
 
 @Component({
   selector: 'app-step-evidencias',
   standalone: true,
+  imports: [Icon],
   templateUrl: './step-evidencias.html',
   styleUrl: './step-evidencias.css',
 })
 export class StepEvidencias {
   protected readonly state = inject(EvidenciasStateService);
+  protected readonly detalhamento = inject(DetalhamentoStateService);
+  protected readonly gruposVulneraveis = GRUPOS_VULNERAVEIS;
   readonly advance = output<void>();
+  readonly voltar = output<void>();
 
   protected onFilesSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -23,7 +35,15 @@ export class StepEvidencias {
     this.state.remover(nome);
   }
 
+  protected toggleGrupo(codigo: string): void {
+    this.detalhamento.toggleGrupoVulneravel(codigo);
+  }
+
   protected goNext(): void {
     this.advance.emit();
+  }
+
+  protected goBack(): void {
+    this.voltar.emit();
   }
 }

@@ -5,12 +5,13 @@
  */
 
 :root {
-  /* Paleta institucional (contraste WCAG AA/AAA) */
-  --color-primary: #003a5d;       /* azul MPT institucional */
-  --color-primary-dark: #002841;
-  --color-primary-light: #0064a0;
+  /* Paleta institucional MPT (vermelho da marca, contraste WCAG AA/AAA) */
+  --color-primary: #8c1d2c;       /* vermelho MPT institucional */
+  --color-primary-dark: #6b1520;
+  --color-primary-light: #a8394a;
   --color-accent: #d97706;         /* alerta/ação secundária */
   --color-success: #166534;
+  --color-success-bg: #eaf6ee;
   --color-warning: #a16207;
   --color-danger: #991b1b;
 

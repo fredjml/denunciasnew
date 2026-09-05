@@ -4,17 +4,19 @@ import {
   AcolhimentoStateService,
 } from '../../services/acolhimento-state.service';
 import { VideoInstitucional } from './video-institucional';
+import { Icon, IconName } from '../../shared/icon';
 
 interface AcolhimentoOption {
   readonly id: AcolhimentoChoice;
   readonly label: string;
   readonly description: string;
+  readonly icon: IconName;
 }
 
 @Component({
   selector: 'app-step-acolhimento',
   standalone: true,
-  imports: [VideoInstitucional],
+  imports: [VideoInstitucional, Icon],
   templateUrl: './step-acolhimento.html',
   styleUrl: './step-acolhimento.css',
 })
@@ -28,16 +30,19 @@ export class StepAcolhimento {
       id: 'CIDADAO',
       label: 'Denuncie',
       description: 'Para cidadãs e cidadãos que desejam relatar uma irregularidade trabalhista.',
+      icon: 'megaphone',
     },
     {
       id: 'AGENTE_PUBLICO',
       label: 'Faz parte de um órgão público e quer denunciar',
       description: 'Para servidoras, servidores e agentes de órgãos públicos.',
+      icon: 'building',
     },
     {
       id: 'OUVIDORIA',
       label: 'Tem dúvida? Fale com a Ouvidoria',
       description: 'Para dúvidas, manifestações e orientações antes de fazer uma denúncia.',
+      icon: 'chat',
     },
   ];
 

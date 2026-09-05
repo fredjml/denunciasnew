@@ -1,28 +1,49 @@
 <main class="page-shell" id="conteudo-principal">
   <header>
-    <p class="step-label">Evidências</p>
-    <h1>Quer anexar alguma evidência?</h1>
-    <p>Opcional. Aceita PDF, JPG ou PNG, até 10 arquivos de 20 MB cada.</p>
+    <h1>Evidências</h1>
+    <p>Este é o momento de detalhar a denúncia. Você pode anexar fotos, áudios, vídeos e documentos.</p>
   </header>
 
+  <fieldset class="checklist">
+    <legend>Há grupos vulneráveis envolvidos?</legend>
+    @for (grupo of gruposVulneraveis; track grupo.codigo) {
+      <label>
+        <input
+          type="checkbox"
+          name="grupo-vulneravel"
+          [checked]="detalhamento.gruposVulneraveis().includes(grupo.codigo)"
+          (change)="toggleGrupo(grupo.codigo)"
+        />
+        <span>{{ grupo.rotulo }}</span>
+      </label>
+    }
+  </fieldset>
+
   <div class="upload-field">
-    <label for="evidencias-input">Selecionar arquivos</label>
+    <label for="evidencias-input" class="upload-dropzone">
+      <app-icon name="upload" [size]="28" />
+      <span>Toque para anexar fotos, áudios, vídeos ou documentos</span>
+      <span class="upload-hint">PDF, JPG ou PNG — até 10 arquivos de 20 MB cada (opcional)</span>
+    </label>
     <input
       id="evidencias-input"
       data-testid="evidencias-input"
       type="file"
       multiple
       accept="application/pdf,image/jpeg,image/png"
+      class="visually-hidden"
       (change)="onFilesSelected($event)"
     />
   </div>
 
   @if (state.erros().length > 0) {
-    <ul role="alert" class="erros">
-      @for (erro of state.erros(); track erro) {
-        <li>{{ erro }}</li>
-      }
-    </ul>
+    <div role="alert">
+      <ul class="erros">
+        @for (erro of state.erros(); track erro) {
+          <li>{{ erro }}</li>
+        }
+      </ul>
+    </div>
   }
 
   @if (state.arquivos().length > 0) {
@@ -30,15 +51,19 @@
       @for (arquivo of state.arquivos(); track arquivo.nome) {
         <li>
           <span>{{ arquivo.nome }}</span>
-          <button type="button" [attr.aria-label]="'Remover ' + arquivo.nome" (click)="remover(arquivo.nome)">
-            Remover
+          <button type="button" (click)="remover(arquivo.nome)">
+            <app-icon name="trash" [size]="18" />
+            <span class="visually-hidden">Remover {{ arquivo.nome }}</span>
           </button>
         </li>
       }
     </ul>
   }
 
-  <button class="primary-action" type="button" data-testid="avancar-evidencias" (click)="goNext()">
-    Avançar
-  </button>
+  <div class="wizard-actions">
+    <button class="primary-action" type="button" data-testid="avancar-evidencias" (click)="goNext()">
+      Avançar
+    </button>
+    <button class="secondary-action" type="button" (click)="goBack()">Voltar</button>
+  </div>
 </main>

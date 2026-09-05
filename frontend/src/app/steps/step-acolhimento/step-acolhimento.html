@@ -1,35 +1,33 @@
-<a class="skip-link" href="#conteudo-principal">Ir para o conteúdo principal</a>
-
-<header class="site-header" aria-label="Canal de Denúncias do MPT">
-  <span class="brand">Ministério Público do Trabalho</span>
-  <span class="service-name">Canal de Denúncias</span>
-</header>
-
 <main id="conteudo-principal" class="page-shell">
   <section class="intro" aria-labelledby="page-title">
-    <p class="step-label">Etapa de acolhimento</p>
-    <h1 id="page-title">Como podemos ajudar?</h1>
-    <p class="lead">Escolha a opção que melhor representa o que você precisa neste momento.</p>
+    <h1 id="page-title">Denuncie ao MPT</h1>
+    <p class="lead">Conte do seu jeito a irregularidade que você viu ou que aconteceu no seu ambiente de trabalho.</p>
   </section>
 
-  <fieldset class="choice-group">
-    <legend class="visually-hidden">Escolha um caminho de atendimento</legend>
-    @for (option of options; track option.id) {
-      <button
-        type="button"
-        class="choice-card"
-        data-testid="caminho-acolhimento"
-        [class.choice-card--selected]="selected() === option.id"
-        [attr.aria-pressed]="selected() === option.id"
-        (click)="selectChoice(option.id)"
-      >
-        <span class="choice-title">{{ option.label }}</span>
-        <span class="choice-description">{{ option.description }}</span>
-      </button>
-    }
-  </fieldset>
-
   <app-video-institucional />
+
+  <section aria-labelledby="choice-title">
+    <h2 id="choice-title">Sobre o que você deseja falar?</h2>
+    <fieldset class="choice-group">
+      <legend class="visually-hidden">Escolha um caminho de atendimento</legend>
+      @for (option of options; track option.id) {
+        <button
+          type="button"
+          class="choice-card"
+          data-testid="caminho-acolhimento"
+          [class.choice-card--selected]="selected() === option.id"
+          [attr.aria-pressed]="selected() === option.id"
+          (click)="selectChoice(option.id)"
+        >
+          <app-icon [name]="option.icon" [size]="28" />
+          <span class="choice-text">
+            <span class="choice-title">{{ option.label }}</span>
+            <span class="choice-description">{{ option.description }}</span>
+          </span>
+        </button>
+      }
+    </fieldset>
+  </section>
 
   <div class="actions">
     <button

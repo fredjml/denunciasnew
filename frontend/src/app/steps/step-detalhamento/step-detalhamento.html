@@ -1,61 +1,78 @@
 <main class="page-shell" id="conteudo-principal">
   <header>
-    <p class="step-label">Detalhamento</p>
-    <h1>Mais alguns detalhes</h1>
-    <p>Essas perguntas são opcionais e ajudam a entender melhor o caso. Se não souber, pode deixar em branco.</p>
+    <h1>Detalhamento da ocorrência</h1>
+    <p>Forneça mais detalhes sobre o contexto do problema. Se não souber, pode deixar em branco.</p>
   </header>
 
-  <div class="field">
-    <label for="numero-trabalhadores">Quantas pessoas trabalhadoras foram afetadas, aproximadamente?</label>
-    <select
-      id="numero-trabalhadores"
-      data-testid="numero-trabalhadores"
-      [ngModel]="state.numeroTrabalhadores()"
-      (ngModelChange)="setNumero($event)"
-    >
-      <option value="">Prefiro não informar</option>
-      <option value="1">1</option>
-      <option value="2-5">2 a 5</option>
-      <option value="6-20">6 a 20</option>
-      <option value="21-100">21 a 100</option>
-      <option value="100+">Mais de 100</option>
-    </select>
+  <section class="field-group" aria-labelledby="relato-section-title">
+    <h2 id="relato-section-title"><app-icon name="clock" [size]="20" /> Relato</h2>
+
+    <div class="field">
+      <label for="periodo-ocorrencia">Período da ocorrência (ex.: desde jan/2026)</label>
+      <input
+        id="periodo-ocorrencia"
+        type="text"
+        data-testid="periodo-ocorrencia"
+        [ngModel]="state.periodoOcorrencia()"
+        (ngModelChange)="setPeriodo($event)"
+      />
+    </div>
+
+    <div class="field">
+      <label for="modalidade-trabalho">Modalidade de trabalho</label>
+      <select
+        id="modalidade-trabalho"
+        data-testid="modalidade-trabalho"
+        [ngModel]="state.modalidadeTrabalho()"
+        (ngModelChange)="setModalidade($event)"
+      >
+        <option value="">Prefiro não informar</option>
+        <option value="presencial">Presencial</option>
+        <option value="remoto">Remoto</option>
+        <option value="hibrido">Híbrido</option>
+        <option value="informal">Informal</option>
+        <option value="terceirizado">Terceirizado</option>
+        <option value="outra">Outra</option>
+      </select>
+    </div>
+  </section>
+
+  <section class="field-group" aria-labelledby="trabalhadores-section-title">
+    <h2 id="trabalhadores-section-title"><app-icon name="users" [size]="20" /> Trabalhadores prejudicados</h2>
+
+    <div class="field">
+      <label for="numero-trabalhadores">Número estimado (aproximado)</label>
+      <select
+        id="numero-trabalhadores"
+        data-testid="numero-trabalhadores"
+        [ngModel]="state.numeroTrabalhadores()"
+        (ngModelChange)="setNumero($event)"
+      >
+        <option value="">Prefiro não informar</option>
+        <option value="1">1</option>
+        <option value="2-5">2 a 5</option>
+        <option value="6-20">6 a 20</option>
+        <option value="21-100">21 a 100</option>
+        <option value="100+">Mais de 100</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="funcoes-setores">Funções ou setores afetados</label>
+      <input
+        id="funcoes-setores"
+        type="text"
+        data-testid="funcoes-setores"
+        [ngModel]="state.funcoesSetores()"
+        (ngModelChange)="setFuncoes($event)"
+      />
+    </div>
+  </section>
+
+  <div class="wizard-actions">
+    <button class="primary-action" type="button" data-testid="avancar-detalhamento" (click)="goNext()">
+      Avançar
+    </button>
+    <button class="secondary-action" type="button" (click)="goBack()">Voltar</button>
   </div>
-
-  <div class="field">
-    <label for="modalidade-trabalho">Como era a modalidade de trabalho?</label>
-    <select
-      id="modalidade-trabalho"
-      data-testid="modalidade-trabalho"
-      [ngModel]="state.modalidadeTrabalho()"
-      (ngModelChange)="setModalidade($event)"
-    >
-      <option value="">Prefiro não informar</option>
-      <option value="presencial">Presencial</option>
-      <option value="remoto">Remoto</option>
-      <option value="hibrido">Híbrido</option>
-      <option value="informal">Informal</option>
-      <option value="terceirizado">Terceirizado</option>
-      <option value="outra">Outra</option>
-    </select>
-  </div>
-
-  <fieldset class="checklist">
-    <legend>Algum desses grupos foi afetado? (opcional)</legend>
-    @for (grupo of gruposVulneraveis; track grupo.codigo) {
-      <label>
-        <input
-          type="checkbox"
-          name="grupo-vulneravel"
-          [checked]="state.gruposVulneraveis().includes(grupo.codigo)"
-          (change)="toggleGrupo(grupo.codigo)"
-        />
-        <span>{{ grupo.rotulo }}</span>
-      </label>
-    }
-  </fieldset>
-
-  <button class="primary-action" type="button" data-testid="avancar-detalhamento" (click)="goNext()">
-    Avançar
-  </button>
 </main>
