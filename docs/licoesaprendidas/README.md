@@ -132,6 +132,7 @@ Limite: skill/MCP configurado não prova descoberta, autenticação, saúde ou a
 | Grupo | Artefatos |
 | --- | --- |
 | origem/análise | [00](00-mapa-origens-baseline-drift.md), [01](01-analise-inicial.md), [02](02-engenharia-reversa-requisitos.md), [07](07-preflight.md), [15](15-baseline-analises-denuncias.md) |
+| pós-implementação `denunciasnew` | [16 — post-mortem CP-0..CP-5](16-postmortem-denunciasnew-cp0-cp5.md) |
 | ferramentas/IA | [03](03-ferramentas.md), [04](04-ia-rules-skills-tools-mcp-agents.md), [09](09-contexto-tokens-telemetria.md), [10](10-escalonamento.md) |
 | execução/qualidade | [05](05-processo-correcoes.md), [06](06-gates-qa-testes-seguranca.md), [08](08-evidencias-estados-rastreabilidade.md) |
 | pós-entrega | [11](11-postmortem-rca.md), [12](12-governanca-documental.md), [13](13-reutilizacao.md), [14](14-metricas-plano-acao.md) |

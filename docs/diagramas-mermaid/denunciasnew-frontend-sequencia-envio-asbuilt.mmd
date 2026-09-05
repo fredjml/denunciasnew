@@ -1,0 +1,52 @@
+sequenceDiagram
+    autonumber
+    actor Pessoa as 🧑 Denunciante
+    participant Revisao as StepRevisao
+    participant Submission as ComplaintSubmissionService
+    participant Estados as Relato/Detalhamento/Evidencias/<br/>Sigilo/Local StateServices
+    participant Backend as backend-mock<br/>POST /api/denuncias
+    participant Upload as middleware/upload.js<br/>(multer + fileFilter)
+    participant Validacao as attachment-validation.js<br/>(magic-bytes + ClamAV-mock)
+    participant Protocolo as services/protocolo.js<br/>(crypto.randomBytes)
+    Pessoa->>+Revisao: clica "Enviar Denúncia"
+    Revisao->>+Submission: enviar()
+    Submission->>Estados: lê todos os signals (irregularidades, detalhamento, sigilo, local, testemunhas)
+    Submission->>Submission: buildPayload()<br/>traduz códigos internos → enums do contract/openapi.yaml
+    Submission->>Submission: monta FormData:<br/>denuncia=JSON · arquivo_1..3 (máx. MAX_ANEXOS_ENVIO=3) · arquivo_audio
+    Submission->>+Backend: POST multipart/form-data
+    Backend->>+Upload: camposArquivo(req, res)
+    Upload->>Upload: fileFilter por fieldname<br/>(documento: pdf/jpeg/png · arquivo_audio: webm/wav/ogg)
+    alt extensão bloqueada ou MIME não permitido
+        Upload-->>Backend: erro multer
+        Backend-->>Submission: 422 EXTENSAO_BLOQUEADA / MIME_NAO_PERMITIDO
+    else upload aceito pelo filtro
+        Upload-->>-Backend: req.files preenchido
+        Backend->>+Validacao: validarAnexo(arquivo) para cada arquivo
+        alt magic-bytes não bate com o MIME declarado
+            Validacao-->>Backend: { ok: false, codigo: MAGIC_BYTES_DIVERGENTE }
+            Backend-->>Submission: 422 MAGIC_BYTES_DIVERGENTE
+        else assinatura EICAR encontrada (mock de antivírus)
+            Validacao-->>Backend: { ok: false, codigo: ARQUIVO_INFECTADO }
+            Backend-->>Submission: 422 ARQUIVO_INFECTADO
+        else conteúdo validado
+            Validacao-->>-Backend: { ok: true }
+            Backend->>Backend: JSON.parse(body.denuncia)
+            alt campo obrigatório ausente (origem/irregularidades/tipo_identificacao/uf/municipio)
+                Backend-->>Submission: 400 CAMPO_OBRIGATORIO_AUSENTE
+            else cliente tenta enviar `classificacao` (R-DN-02)
+                Backend-->>Submission: 400 CAMPO_NAO_ACEITO
+            else payload válido
+                Backend->>+Protocolo: gerarProtocolo()
+                Protocolo-->>-Backend: "SYN-XXXXXXXX"
+                Backend->>Backend: classificacao fixa server-side<br/>(BAIXA · REGRA_DETERMINISTICA · revisada_por_humano=false)
+                Backend-->>-Submission: 201 { protocolo, timestamp, classificacao }
+            end
+        end
+    end
+    Submission-->>-Revisao: DenunciaAceita | { erro }
+    alt sucesso
+        Revisao->>Pessoa: enviado.emit(protocolo) → App.onEnviado() → goTo(CONFIRMACAO)
+    else erro
+        Revisao-->>Pessoa: exibe mensagem de erro (role="alert"), permanece em REVISAO
+    end
+    deactivate Revisao

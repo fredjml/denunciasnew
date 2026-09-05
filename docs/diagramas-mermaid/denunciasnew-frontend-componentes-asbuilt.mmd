@@ -1,0 +1,82 @@
+flowchart LR
+    accTitle: Componentes do frontend denunciasnew — como construído (as-built, 2026-09-05)
+    accDescr: Componentes Angular standalone realmente implementados (commits addbd7b..c24f910), seus serviços de estado, os módulos compartilhados e a única chamada de rede real (POST /api/denuncias). Diferente de denunciasnew-c4-componentes.mmd (planejamento pré-implementação), este diagrama não contém nenhum componente especulativo — tudo aqui existe em frontend/src/app.
+    subgraph app["«container» Angular 22 standalone SPA — frontend/src/app"]
+        direction TB
+        root["«root component»<br/><b>App</b> (app.ts)<br/>goTo(step) · currentTab · progresso"]
+        subgraph steps["steps/ — 8 telas do wizard"]
+            direction TB
+            acolhimento["StepAcolhimento<br/>+ VideoInstitucional"]
+            relato["StepRelatoGuiado<br/>+ AudioRecorderComponent"]
+            detalhamento["StepDetalhamento"]
+            evidencias["StepEvidencias"]
+            sigilo["StepSigiloAnonimato"]
+            local["StepLocal"]
+            revisao["StepRevisao"]
+            confirmacao["StepConfirmacao"]
+        end
+        subgraph services["services/ — estado e integração"]
+            direction TB
+            acolhimentoState["AcolhimentoStateService"]
+            relatoState["RelatoStateService<br/>(+ áudio original, não persistido)"]
+            detalhamentoState["DetalhamentoStateService"]
+            evidenciasState["EvidenciasStateService<br/>(id único por arquivo)"]
+            sigiloState["SigiloStateService"]
+            localState["LocalStateService"]
+            municipiosClient["MunicipiosClientService<br/>fetch + fallback local"]
+            audioRecorder["AudioRecorderService<br/>MediaRecorder adapter"]
+            sttClient["SttClientService<br/>fetch /api/stt"]
+            submission["ComplaintSubmissionService<br/>buildPayload() + enviar()"]
+        end
+        subgraph shared["shared/ — módulos reutilizados"]
+            direction TB
+            persisted["persisted-signal.ts<br/>createPersistedSignal()"]
+            icon["icon.ts<br/>‹app-icon› (13 ícones SVG inline)"]
+            taxonomia["taxonomia.ts<br/>buscarIrregularidade() · Map"]
+        end
+        fallbackJson["«asset»<br/>municipios-ibge-fallback.json"]
+        root --> acolhimento & relato & detalhamento & evidencias & sigilo & local & revisao & confirmacao
+        acolhimento --> acolhimentoState
+        relato --> relatoState & audioRecorder & sttClient & taxonomia
+        detalhamento --> detalhamentoState
+        evidencias --> evidenciasState & detalhamentoState
+        sigilo --> sigiloState
+        local --> localState & municipiosClient
+        revisao --> relatoState & detalhamentoState & evidenciasState & sigiloState & localState & submission & taxonomia
+        confirmacao --> root
+        submission --> relatoState & detalhamentoState & evidenciasState & sigiloState & localState & taxonomia
+        municipiosClient -.->|"fetch falhou"| fallbackJson
+        acolhimentoState -.-> persisted
+        relatoState -.-> persisted
+        detalhamentoState -.-> persisted
+        evidenciasState -.-> persisted
+        sigiloState -.-> persisted
+        localState -.-> persisted
+        root -.-> persisted
+        acolhimento -.->|"ícones nos 3 caminhos"| icon
+        relato -.->|"ícones do checklist"| icon
+        confirmacao -.->|"ícones do infográfico"| icon
+    end
+    subgraph mock["«container» backend-mock (Express) — porta 3001"]
+        direction TB
+        denunciasRoute["POST /api/denuncias<br/>upload.fields() + attachment-validation"]
+        municipiosRoute["GET /api/municipios"]
+        sttRoute["POST /api/stt"]
+    end
+    submission -->|"«requires» multipart/form-data"| denunciasRoute
+    municipiosClient -->|"«requires» JSON"| municipiosRoute
+    sttClient -->|"«requires» JSON"| sttRoute
+    legenda["«legend»<br/>Linha sólida: dependência de dados/renderização<br/>Linha tracejada: fallback/uso transversal<br/>Azul: shell raiz<br/>Cinza: serviço de estado/integração<br/>Roxo: módulo compartilhado<br/>Laranja: backend-mock (não é o backend de produção)"]
+    classDef rootClass fill:#dbe4ee,stroke:#17324d,color:#17212b
+    classDef stepClass fill:#f7f8fa,stroke:#65717d,color:#17212b
+    classDef serviceClass fill:#eef2f5,stroke:#4a6274,color:#17212b
+    classDef sharedClass fill:#f3ecf9,stroke:#6c3fa3,color:#3a1a5c
+    classDef backendClass fill:#fdece0,stroke:#c1591a,color:#5c2a0c
+    classDef assetClass fill:#ffffff,stroke:#8e44ad,color:#4a235a
+    class root rootClass
+    class acolhimento,relato,detalhamento,evidencias,sigilo,local,revisao,confirmacao stepClass
+    class acolhimentoState,relatoState,detalhamentoState,evidenciasState,sigiloState,localState,municipiosClient,audioRecorder,sttClient,submission serviceClass
+    class persisted,icon,taxonomia sharedClass
+    class denunciasRoute,municipiosRoute,sttRoute backendClass
+    class fallbackJson assetClass
+    class legenda serviceClass

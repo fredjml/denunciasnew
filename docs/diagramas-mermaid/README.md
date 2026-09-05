@@ -25,6 +25,25 @@ Estes diagramas foram derivados do código em `cidadania-canal-denuncias`, sem a
 | `09-implantacao-seguranca.mmd` | Topologia e fronteiras de segurança | Infraestrutura e segurança |
 | `10-fluxo-dados.mmd` | Transformação dos dados | Arquitetura, segurança e integração |
 
+## Diagramas do `denunciasnew` — como construído (as-built, 2026-09-05)
+
+Os 5 diagramas `denunciasnew-*.mmd` acima (contexto, C4 containers, C4 componentes, classes,
+casos de uso) foram desenhados **antes** da implementação (fase de planejamento F3) — contêm
+componentes especulativos («NOVO», «PART») que nunca chegaram a existir (ex.: `SttProxy`,
+`ClassifierProxy`, `BotIngress`, `ComplaintApiClient`) porque o MVP standalone entregue é mais
+enxuto que a proposta original do PDF. Os 3 diagramas abaixo foram gerados **depois** da
+implementação, direto do código real (commits `addbd7b`..`c24f910`), sem nenhum componente
+especulativo:
+
+| Arquivo | Visão | Público principal |
+| --- | --- | --- |
+| `denunciasnew-frontend-componentes-asbuilt.mmd` | Componentes Angular reais (8 telas, 10 serviços, 3 módulos compartilhados) + a única chamada de rede real ao `backend-mock` | Desenvolvimento |
+| `denunciasnew-frontend-estados-wizard-asbuilt.mmd` | Máquina de estados real do wizard (8 estados, transições `advance`/`voltar`/`editar*`) | Frontend e QA |
+| `denunciasnew-frontend-sequencia-envio-asbuilt.mmd` | Sequência técnica real do envio: `ComplaintSubmissionService` → `multer`/`fileFilter` → `attachment-validation.js` → protocolo | Desenvolvimento e segurança |
+
+Não fazem parte de `validate-diagrams.js` (que valida só os 10 arquivos originais numerados) —
+mesma situação dos 5 diagramas de planejamento do `denunciasnew` acima.
+
 ## Premissas e limites
 
 - O BFF é representado como uma única unidade implantável; suas camadas são módulos internos, não serviços independentes.

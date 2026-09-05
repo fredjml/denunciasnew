@@ -1,0 +1,41 @@
+stateDiagram-v2
+    direction TB
+    [*] --> ACOLHIMENTO
+    ACOLHIMENTO --> RELATO: startReport(choice)<br/>[choice != OUVIDORIA]
+    ACOLHIMENTO --> ACOLHIMENTO: startReport('OUVIDORIA')<br/>(permanece — sem link externo definido)
+    state "Grupo RELATO (aba \"Relato\", barra de progresso 1-4)" as grupoRelato {
+        direction LR
+        RELATO --> DETALHAMENTO: advance
+        DETALHAMENTO --> EVIDENCIAS: advance
+        EVIDENCIAS --> SIGILO: advance
+        DETALHAMENTO --> RELATO: voltar
+        EVIDENCIAS --> DETALHAMENTO: voltar
+        SIGILO --> EVIDENCIAS: voltar
+    }
+    grupoRelato --> LOCAL: advance (a partir de SIGILO)
+    LOCAL --> grupoRelato: voltar (para SIGILO)
+    LOCAL --> REVISAO: advance ("Revisar denúncia")
+    REVISAO --> LOCAL: voltar
+    REVISAO --> RELATO: editarRelato
+    REVISAO --> DETALHAMENTO: editarDetalhamento
+    REVISAO --> EVIDENCIAS: editarEvidencias
+    REVISAO --> SIGILO: editarSigilo
+    REVISAO --> LOCAL: editarLocal
+    REVISAO --> CONFIRMACAO: enviado (POST 201 + protocolo)
+    REVISAO --> REVISAO: enviado (POST falhou — erro exibido, usuário pode tentar de novo)
+    CONFIRMACAO --> ACOLHIMENTO: reiniciar (sessionStorage.clear() + reload)
+    note right of grupoRelato
+        currentTab() = 'RELATO' para os 4 estados deste grupo
+        barra de progresso: 4 segmentos (RELATO/DETALHAMENTO/EVIDENCIAS/SIGILO)
+    end note
+    note right of LOCAL
+        currentTab() = 'EMPRESA'
+    end note
+    note right of REVISAO
+        currentTab() = 'REVISAO'
+        único estado com fan-out de 5 transições "editar*"
+    end note
+    note left of ACOLHIMENTO
+        Todo estado (exceto o Blob de áudio e a lista de arquivos)
+        sobrevive a reload via createPersistedSignal (sessionStorage)
+    end note
