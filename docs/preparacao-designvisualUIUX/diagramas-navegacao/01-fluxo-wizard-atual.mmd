@@ -1,0 +1,35 @@
+%% Fluxo de navegação vigente do wizard denunciasnew — baseline para comparar propostas futuras.
+%% Fonte: frontend/src/app/app.ts (signal currentStep) + app.html (@switch). 2026-09-05.
+flowchart TD
+    A[Acolhimento] -->|escolha CIDADAO ou AGENTE_PUBLICO + Avançar| R[Relato Guiado]
+    A -->|escolha OUVIDORIA + Avançar| EXT["Abre URL da Ouvidoria<br/>em nova aba (não navega)"]
+
+    R -->|pelo menos 1 irregularidade + Avançar| D[Detalhamento]
+    R -->|Voltar| A
+
+    D -->|Avançar - todos campos opcionais| EV[Evidências]
+    D -->|Voltar| R
+
+    EV -->|Avançar - anexos/testemunhas opcionais| S[Sigilo e Anonimato]
+    EV -->|Voltar| D
+
+    S -->|identificação escolhida + aviso confirmado + Avançar| L[Local]
+    S -->|Voltar| EV
+
+    L -->|UF + Município preenchidos + Revisar denúncia| RV[Revisão]
+    L -->|Voltar| S
+
+    RV -->|Editar em qualquer cartão| R
+    RV -->|Editar| D
+    RV -->|Editar| EV
+    RV -->|Editar| S
+    RV -->|Editar| L
+    RV -->|Enviar Denúncia - sucesso| C[Confirmação]
+    RV -->|Voltar| L
+
+    C -->|Início| A
+
+    classDef stepClass fill:#fff,stroke:#8c1d2c,stroke-width:1px;
+    classDef extClass fill:#f8fafc,stroke:#5b6472,stroke-dasharray: 4 3;
+    class A,R,D,EV,S,L,RV,C stepClass;
+    class EXT extClass;

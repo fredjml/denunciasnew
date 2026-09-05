@@ -103,3 +103,4 @@ O **owner humano do ciclo** é sempre a autoridade final.
 | Decisões DEC-DN-* | [docs/preparacao-implementacao/12-DECISIONS.delta-denunciasnew.md](docs/preparacao-implementacao/12-DECISIONS.delta-denunciasnew.md) |
 | Playbook operacional | [docs/preparacao-implementacao/prompts/PROXIMAS-ACOES-DENUNCIASNEW.md](docs/preparacao-implementacao/prompts/PROXIMAS-ACOES-DENUNCIASNEW.md) |
 | Diagramas | [docs/diagramas-mermaid/denunciasnew-*.mmd](docs/diagramas-mermaid/) |
+| Preparação visual/UI/UX (antes de implementar tela nova) | [docs/preparacao-designvisualUIUX/](docs/preparacao-designvisualUIUX/) |
