@@ -1,0 +1,11 @@
+:host { display: block; min-height: 100dvh; background: var(--color-bg-subtle); }
+.page-shell { display: grid; gap: var(--space-6); width: min(100% - 2rem, var(--max-width-form)); margin: auto; padding: var(--space-8) 0; }
+.step-label { color: var(--color-primary); font-weight: 700; text-transform: uppercase; }
+.field { display: grid; gap: var(--space-2); }
+.field label { font-weight: 700; }
+select { padding: var(--space-3); border: 1px solid var(--color-border-strong); border-radius: var(--radius-md); font: inherit; }
+.checklist { display: grid; gap: var(--space-3); padding: 0; border: 0; }
+.checklist legend { margin-bottom: var(--space-3); font-weight: 700; }
+.checklist label { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg); }
+.primary-action { justify-self: end; padding: var(--space-2) var(--space-4); border: 2px solid var(--color-primary); border-radius: var(--radius-md); color: var(--color-text-inverse); background: var(--color-primary); font-weight: 700; }
+@media (max-width: 30rem) { .primary-action { width: 100%; } }

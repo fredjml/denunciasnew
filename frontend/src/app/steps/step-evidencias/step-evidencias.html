@@ -1,0 +1,44 @@
+<main class="page-shell" id="conteudo-principal">
+  <header>
+    <p class="step-label">Evidências</p>
+    <h1>Quer anexar alguma evidência?</h1>
+    <p>Opcional. Aceita PDF, JPG ou PNG, até 10 arquivos de 20 MB cada.</p>
+  </header>
+
+  <div class="upload-field">
+    <label for="evidencias-input">Selecionar arquivos</label>
+    <input
+      id="evidencias-input"
+      data-testid="evidencias-input"
+      type="file"
+      multiple
+      accept="application/pdf,image/jpeg,image/png"
+      (change)="onFilesSelected($event)"
+    />
+  </div>
+
+  @if (state.erros().length > 0) {
+    <ul role="alert" class="erros">
+      @for (erro of state.erros(); track erro) {
+        <li>{{ erro }}</li>
+      }
+    </ul>
+  }
+
+  @if (state.arquivos().length > 0) {
+    <ul class="lista-arquivos" aria-label="Arquivos anexados">
+      @for (arquivo of state.arquivos(); track arquivo.nome) {
+        <li>
+          <span>{{ arquivo.nome }}</span>
+          <button type="button" [attr.aria-label]="'Remover ' + arquivo.nome" (click)="remover(arquivo.nome)">
+            Remover
+          </button>
+        </li>
+      }
+    </ul>
+  }
+
+  <button class="primary-action" type="button" data-testid="avancar-evidencias" (click)="goNext()">
+    Avançar
+  </button>
+</main>

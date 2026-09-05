@@ -7,6 +7,7 @@ const correlation = require('./middleware/correlation');
 const denunciasRouter = require('./routes/denuncias');
 const municipiosRouter = require('./routes/municipios');
 const sttRouter = require('./routes/stt');
+const evidenciasRouter = require('./routes/evidencias');
 const healthRouter = require('./routes/health');
 
 function createApp() {
@@ -26,6 +27,7 @@ function createApp() {
   app.use('/api/denuncias', denunciasRouter);
   app.use('/api/municipios', municipiosRouter);
   app.use('/api/stt', sttRouter);
+  app.use('/api/evidencias', evidenciasRouter);
 
   // 404 sem originalUrl em log (R-SEC-01)
   app.use((req, res) => {
@@ -51,6 +53,7 @@ if (require.main === module) {
     console.log('  GET  /health');
     console.log('  POST /api/denuncias');
     console.log('  GET  /api/municipios?uf=SP');
-    console.log('  POST /api/stt\n');
+    console.log('  POST /api/stt');
+    console.log('  POST /api/evidencias\n');
   });
 }

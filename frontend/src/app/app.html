@@ -1,5 +1,14 @@
-@if (currentStep() === 'ACOLHIMENTO') {
-  <app-step-acolhimento (advance)="startReport($event)" />
-} @else {
-  <app-step-relato-guiado />
+@switch (currentStep()) {
+  @case ('ACOLHIMENTO') {
+    <app-step-acolhimento (advance)="startReport($event)" />
+  }
+  @case ('RELATO') {
+    <app-step-relato-guiado (advance)="goToDetalhamento()" />
+  }
+  @case ('DETALHAMENTO') {
+    <app-step-detalhamento (advance)="goToEvidencias()" />
+  }
+  @default {
+    <app-step-evidencias />
+  }
 }

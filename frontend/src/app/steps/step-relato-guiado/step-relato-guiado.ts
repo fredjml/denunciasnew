@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import taxonomia from '../../../assets/taxonomia-mock.json';
 import { RelatoStateService } from '../../services/relato-state.service';
@@ -19,8 +19,10 @@ export class StepRelatoGuiado {
   protected readonly consentDialog = signal(false);
   protected readonly audioEnabled = signal(false);
   protected readonly microphoneUnavailable = signal(false);
+  readonly advance = output<void>();
 
   protected toggle(code: string): void { this.state.toggleIrregularidade(code); }
+  protected goNext(): void { this.advance.emit(); }
   protected setRelato(value: string): void { this.state.setRelato(value); }
   protected requestAudio(): void { this.consentDialog.set(true); }
   protected declineAudio(): void { this.consentDialog.set(false); this.audioEnabled.set(false); }

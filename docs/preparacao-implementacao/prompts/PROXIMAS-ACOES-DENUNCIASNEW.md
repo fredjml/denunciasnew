@@ -237,12 +237,12 @@ Cada task = 1 fatia `FATIA-DN-*` de [11-IMPLEMENTATION-PLAN.delta-denunciasnew.m
 
 ### Ciclo 3 — CP-3 (Detalhamento + Evidências)
 
-- [ ] **T-CP3-01** `FATIA-DN-CP3-01` — `StepDetalhamento` (nº + modalidade + grupos).
-- [ ] **T-CP3-02** `FATIA-DN-CP3-02` — Contrato de payload atualizado.
-- [ ] **T-CP3-03** `FATIA-DN-CP3-03` — `EvidenceUploader`.
-- [ ] **T-CP3-04** `FATIA-DN-CP3-04` — Validação MIME + magic bytes.
-- [ ] **T-CP3-05** `FATIA-DN-CP3-05` — Rejeitar `.exe` e `.bat`.
-- [ ] **T-CP3-06** `FATIA-DN-CP3-06` — ClamAV mock (INSTREAM).
+- [x] **T-CP3-01** `FATIA-DN-CP3-01` — `StepDetalhamento` (nº + modalidade + grupos). Implementada; unit aprovado.
+- [ ] **T-CP3-02** `FATIA-DN-CP3-02` — Contrato de payload atualizado. *(não executada — toca `contract/openapi.yaml`, imutável sem PR coordenado com a equipe do backend real)*.
+- [x] **T-CP3-03** `FATIA-DN-CP3-03` — `EvidenceUploader`. Implementada; unit + e2e aprovados.
+- [x] **T-CP3-04** `FATIA-DN-CP3-04` — Validação MIME + magic bytes. Implementada em `backend-mock` (endpoint de teste `/api/evidencias`, fora do contrato); integ-sim aprovado.
+- [x] **T-CP3-05** `FATIA-DN-CP3-05` — Rejeitar `.exe` e `.bat`. Implementada.
+- [x] **T-CP3-06** `FATIA-DN-CP3-06` — ClamAV mock. Implementada via assinatura EICAR (sem TCP/INSTREAM real).
 - [ ] **T-CP3-07** `FATIA-DN-CP3-07` — Subformulário testemunhas *(bloqueada — DEC-DN-16)*.
 
 ### Ciclo 4 — CP-4 (Sigilo + Local) + CP-5 (Revisão + Confirmação)

@@ -84,5 +84,6 @@
     type="button"
     data-testid="avancar-relato"
     [disabled]="state.irregularidades().length === 0"
+    (click)="goNext()"
   >Avançar</button>
 </main>
