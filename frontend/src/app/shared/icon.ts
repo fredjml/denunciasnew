@@ -17,7 +17,8 @@ export type IconName =
   | 'inbox'
   | 'search'
   | 'scale'
-  | 'check-circle';
+  | 'check-circle'
+  | 'smile';
 
 @Component({
   selector: 'app-icon',
@@ -109,6 +110,11 @@ export type IconName =
         @case ('check-circle') {
           <circle cx="12" cy="12" r="9" />
           <path d="M8 12.5l2.5 2.5L16 9" />
+        }
+        @case ('smile') {
+          <circle cx="12" cy="12" r="9" />
+          <path d="M8.5 10h.01M15.5 10h.01" />
+          <path d="M8 14.5c1.1 1.2 2.5 1.8 4 1.8s2.9-.6 4-1.8" />
         }
       }
     </svg>

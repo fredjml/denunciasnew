@@ -28,7 +28,7 @@ export class StepAcolhimento {
   protected readonly options: readonly AcolhimentoOption[] = [
     {
       id: 'CIDADAO',
-      label: 'Denuncie',
+      label: 'Denunciar',
       description: 'Para cidadãs e cidadãos que desejam relatar uma irregularidade trabalhista.',
       icon: 'megaphone',
     },

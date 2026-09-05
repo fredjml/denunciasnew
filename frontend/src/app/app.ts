@@ -10,6 +10,7 @@ import { StepRevisao } from './steps/step-revisao/step-revisao';
 import { StepConfirmacao } from './steps/step-confirmacao/step-confirmacao';
 import { DenunciaAceita } from './services/complaint-submission.service';
 import { AcolhimentoChoice } from './services/acolhimento-state.service';
+import { Icon } from './shared/icon';
 
 type WizardStep =
   | 'ACOLHIMENTO'
@@ -30,6 +31,7 @@ const URL_OUVIDORIA = 'https://www.proteste.org.br/';
 
 @Component({
   imports: [
+    Icon,
     StepAcolhimento,
     StepRelatoGuiado,
     StepDetalhamento,

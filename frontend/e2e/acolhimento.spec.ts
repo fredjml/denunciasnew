@@ -10,7 +10,7 @@ test('apresenta os três caminhos e bloqueia o avanço sem escolha', async ({ pa
   const choices = page.getByTestId('caminho-acolhimento');
 
   await expect(choices).toHaveCount(3);
-  await expect(choices.nth(0)).toContainText('Denuncie');
+  await expect(choices.nth(0)).toContainText('Denunciar');
   await expect(choices.nth(1)).toContainText('Faz parte de um órgão público e quer denunciar');
   await expect(choices.nth(2)).toContainText('Tem dúvida? Fale com a Ouvidoria');
   await expect(page.getByTestId('avancar')).toBeDisabled();

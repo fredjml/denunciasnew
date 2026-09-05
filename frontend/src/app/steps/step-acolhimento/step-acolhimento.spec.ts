@@ -15,7 +15,7 @@ describe('StepAcolhimento', () => {
     ) as HTMLButtonElement[];
 
     expect(buttons.map((button) => button.querySelector('.choice-title')?.textContent?.trim())).toEqual([
-      'Denuncie',
+      'Denunciar',
       'Faz parte de um órgão público e quer denunciar',
       'Tem dúvida? Fale com a Ouvidoria',
     ]);
