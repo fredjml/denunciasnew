@@ -50,6 +50,30 @@ pelo caminho real.
 | Indexar `municipios-ibge-fallback.json` com um `Map` para busca O(1) | O agente assumiu ~5.570 municípios; o arquivo real criado nesta sessão tem 6 entradas. Otimização sem efeito prático no tamanho de dado atual — não aplicada para não adicionar complexidade sem ganho mensurável. |
 | Middleware de erro dedicado para multer em `index.js` | Baixo risco (ambiente mock/dev, não produção); registrado aqui para retomar se o backend-mock evoluir para expor stack traces por engano. |
 
+## 3.1 Confirmação formal do `/security-review` (pós-correção)
+
+A execução original do `/security-review` foi interrompida antes de concluir o pipeline de 3
+fases (o pedido de refatoração chegou no meio do caminho). Depois de aplicar todas as correções
+acima, rodei o pipeline completo de novo, desta vez até o fim, mirando especificamente confirmar
+que a correção do item HIGH (§1) fecha o problema nas duas rotas e nos dois grupos de MIME
+(documento e áudio), e procurando qualquer coisa nova.
+
+**Resultado: nenhum achado de alta confiança.** Verificado explicitamente:
+
+- `middleware/upload.js` + `services/attachment-validation.js` são agora o único caminho de
+  política/validação para `/api/denuncias` e `/api/evidencias` — as duas rotas rejeitam por
+  extensão bloqueada, MIME não permitido, magic-bytes divergente ou assinatura EICAR antes de
+  processar o corpo.
+- Confusão de nome de campo (ex.: mandar um PDF no campo `arquivo_audio`) não é explorável — a
+  checagem de magic-bytes é independente do `fieldname`, compara o conteúdo real contra o MIME
+  declarado de qualquer forma.
+- Nenhum `fs.writeFile`/`diskStorage`/`sendFile` no backend-mock — uploads ficam só em memória
+  durante a requisição, não há superfície de path-traversal ou XSS armazenado via arquivo servido
+  de volta.
+- `classificacao`/`prioridade` seguem sempre server-side (R-DN-02), nunca lidos do cliente.
+- CORS restrito a origens de dev locais, `uf` validado por regex estrita, protocolo gerado com
+  `crypto.randomBytes` (não `Math.random`), PII redigida no logger via `pino-noir`.
+
 ## 4. Evidência final
 
 | Comando | Resultado |

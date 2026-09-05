@@ -88,4 +88,13 @@ Comando: `/security-review` (sem argumentos — sempre revisa o diff do branch a
 
 | Data | Alvo | Achados HIGH | Achados MEDIUM/LOW aplicados | Registro |
 | --- | --- | --- | --- | --- |
-| 2026-09-05 | `origin/main` (9 commits, CP-0..CP-5 completos) | 1 (upload sem validação em `/api/denuncias`) | 10 | [`VERIFICACAO-REVIEW-QA-TESTE-SEGURANCA-2026-09-05.md`](VERIFICACAO-REVIEW-QA-TESTE-SEGURANCA-2026-09-05.md) |
+| 2026-09-05 (rodada 1 — `/code-review`) | `origin/main` (9 commits, CP-0..CP-5 completos) | 1 (upload sem validação em `/api/denuncias`) | 10 | [`VERIFICACAO-REVIEW-QA-TESTE-SEGURANCA-2026-09-05.md`](VERIFICACAO-REVIEW-QA-TESTE-SEGURANCA-2026-09-05.md) §1-3 |
+| 2026-09-05 (rodada 2 — `/security-review` completo, pós-correção) | `origin/main` (10 commits, após aplicar a rodada 1) | 0 — confirma que a correção fechou o problema nas duas rotas/dois grupos de MIME, sem novo achado | — | idem, §3.1 |
+
+**Nota de processo:** na rodada 1, o `/security-review` foi disparado mas interrompido antes de
+concluir o pipeline de 3 fases (uma instrução nova do owner chegou no meio). O achado HIGH da
+rodada 1 veio, na prática, dos ângulos de `/code-review` ("comportamento removido/enfraquecido" e
+"diff linha a linha"), não do `/security-review`. A rodada 2 rodou o `/security-review` até o
+fim para fechar essa lacuna de processo — daqui para frente, **não considere um
+`/security-review` "feito" só porque foi disparado; confirme que a notificação final do pipeline
+chegou** antes de registrar o resultado.
