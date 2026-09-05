@@ -1,26 +1,39 @@
 'use strict';
 
 const express = require('express');
+const multer = require('multer');
 const { gerarProtocolo } = require('../services/protocolo');
 const logger = require('../logger');
 
 const router = express.Router();
 
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 20 * 1024 * 1024 } });
+const camposArquivo = upload.fields([
+  { name: 'arquivo_1', maxCount: 1 },
+  { name: 'arquivo_2', maxCount: 1 },
+  { name: 'arquivo_3', maxCount: 1 },
+  { name: 'arquivo_audio', maxCount: 1 },
+]);
+
 /**
  * POST /api/denuncias
  *
- * MVP mock: aceita application/json (multipart adicionado em CP-3).
- * Retorna 201 + protocolo SYN-*.
+ * Envelope multipart/form-data conforme contract/openapi.yaml: campo `denuncia` com o JSON do
+ * objeto Complaint + até 3 anexos (`arquivo_1..3`) e um áudio opcional (`arquivo_audio`).
+ * Retorna 201 + protocolo SYN-* (mock).
  *
  * Regras aplicadas:
  * - R-DN-01: envelope de saída não vaza PII em log.
- * - R-DN-02: prioridade só é setada server-side (nunca aceita do cliente).
- * - Classificação mock determinística: sempre BAIXA + REGRA_DETERMINISTICA.
+ * - R-DN-02: prioridade/classificação só são setadas server-side (nunca aceitas do cliente).
  */
-router.post('/', express.json({ limit: '1mb' }), (req, res) => {
-  const body = req.body || {};
+router.post('/', camposArquivo, (req, res) => {
+  let body;
+  try {
+    body = JSON.parse(req.body.denuncia || '{}');
+  } catch {
+    return res.status(400).json({ codigo: 'DENUNCIA_INVALIDA', mensagem: 'Campo denuncia não é um JSON válido' });
+  }
 
-  // Validação mínima (schema completo virá em CP-3 via zod)
   const camposObrigatorios = ['origem', 'irregularidades', 'tipo_identificacao', 'uf', 'municipio'];
   const faltando = camposObrigatorios.filter((c) => !(c in body));
   if (faltando.length > 0) {
@@ -51,6 +64,8 @@ router.post('/', express.json({ limit: '1mb' }), (req, res) => {
     revisada_por_humano: false,
   };
 
+  const arquivosRecebidos = Object.keys(req.files || {});
+
   logger.info(
     {
       requestId: req.requestId,
@@ -59,6 +74,7 @@ router.post('/', express.json({ limit: '1mb' }), (req, res) => {
       irregularidades_count: Array.isArray(body.irregularidades) ? body.irregularidades.length : 0,
       tipo_identificacao: body.tipo_identificacao,
       uf: body.uf,
+      anexos: arquivosRecebidos,
     },
     'denuncia_aceita'
   );

@@ -11,8 +11,8 @@
 <nav class="app-tabs" aria-label="Etapas da denúncia">
   <span class="app-tabs__tab" [class.is-active]="currentTab() === 'ACOLHIMENTO'">Acolhimento</span>
   <span class="app-tabs__tab" [class.is-active]="currentTab() === 'RELATO'">Relato</span>
-  <span class="app-tabs__tab app-tabs__tab--pending">Empresa</span>
-  <span class="app-tabs__tab app-tabs__tab--pending">Revisão</span>
+  <span class="app-tabs__tab" [class.is-active]="currentTab() === 'EMPRESA'">Empresa</span>
+  <span class="app-tabs__tab" [class.is-active]="currentTab() === 'REVISAO'">Revisão</span>
 </nav>
 
 @if (currentTab() === 'RELATO') {
@@ -24,7 +24,7 @@
     aria-valuemin="1"
     [attr.aria-valuemax]="totalRelatoSteps"
   >
-    @for (segmento of [0, 1, 2]; track segmento) {
+    @for (segmento of [0, 1, 2, 3]; track segmento) {
       <span class="app-progress__segment" [class.is-filled]="segmento <= relatoStepIndex()"></span>
     }
   </div>
@@ -40,7 +40,26 @@
   @case ('DETALHAMENTO') {
     <app-step-detalhamento (advance)="goToEvidencias()" (voltar)="goToRelato()" />
   }
+  @case ('EVIDENCIAS') {
+    <app-step-evidencias (advance)="goToSigilo()" (voltar)="goToDetalhamento()" />
+  }
+  @case ('SIGILO') {
+    <app-step-sigilo-anonimato (advance)="goToLocal()" (voltar)="goToEvidencias()" />
+  }
+  @case ('LOCAL') {
+    <app-step-local (advance)="goToRevisao()" (voltar)="goToSigilo()" />
+  }
+  @case ('REVISAO') {
+    <app-step-revisao
+      (editarRelato)="goToRelato()"
+      (editarDetalhamento)="goToDetalhamento()"
+      (editarEvidencias)="goToEvidencias()"
+      (editarSigilo)="goToSigilo()"
+      (editarLocal)="goToLocal()"
+      (enviado)="onEnviado($event)"
+    />
+  }
   @default {
-    <app-step-evidencias (voltar)="goToDetalhamento()" />
+    <app-step-confirmacao [protocolo]="protocolo()" (inicio)="reiniciar()" />
   }
 }

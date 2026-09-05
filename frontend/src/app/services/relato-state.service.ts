@@ -1,18 +1,29 @@
 import { Injectable, signal } from '@angular/core';
+import { createPersistedSignal } from '../shared/persisted-signal';
 
 export type TranscricaoStatus = 'NAO_INICIADA' | 'CONCLUIDA' | 'FALHA' | 'TIMEOUT' | 'EDITADA_MANUALMENTE';
 
 @Injectable({ providedIn: 'root' })
 export class RelatoStateService {
-  private readonly irregularidadesState = signal<readonly string[]>([]);
-  private readonly relatoState = signal('');
-  private readonly transcricaoState = signal('');
-  private readonly transcricaoStatusState = signal<TranscricaoStatus>('NAO_INICIADA');
+  private readonly irregularidadesState = createPersistedSignal<readonly string[]>('relato_irregularidades', []);
+  private readonly relatoState = createPersistedSignal('relato_texto', '');
+  private readonly transcricaoState = createPersistedSignal('relato_transcricao', '');
+  private readonly transcricaoStatusState = createPersistedSignal<TranscricaoStatus>(
+    'relato_transcricao_status',
+    'NAO_INICIADA',
+  );
+  // Blob de áudio não é persistido em sessionStorage (não serializável); some ao recarregar a página.
+  private readonly audioOriginalState = signal<Blob | null>(null);
 
-  readonly irregularidades = this.irregularidadesState.asReadonly();
-  readonly relato = this.relatoState.asReadonly();
-  readonly transcricao = this.transcricaoState.asReadonly();
-  readonly transcricaoStatus = this.transcricaoStatusState.asReadonly();
+  readonly irregularidades = this.irregularidadesState.value;
+  readonly relato = this.relatoState.value;
+  readonly transcricao = this.transcricaoState.value;
+  readonly transcricaoStatus = this.transcricaoStatusState.value;
+  readonly audioOriginal = this.audioOriginalState.asReadonly();
+
+  setAudioOriginal(audio: Blob): void {
+    this.audioOriginalState.set(audio);
+  }
 
   toggleIrregularidade(code: string): void {
     this.irregularidadesState.update((current) =>

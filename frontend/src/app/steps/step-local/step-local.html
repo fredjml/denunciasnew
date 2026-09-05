@@ -1,0 +1,79 @@
+<main class="page-shell" id="conteudo-principal">
+  <header>
+    <h1>Onde o fato ocorreu?</h1>
+    <p>Se não souber todos os dados da empresa, deixe em branco. Preencha apenas o que souber.</p>
+  </header>
+
+  <section class="field-group" aria-labelledby="local-title">
+    <h2 id="local-title">Dados do local (obrigatório)</h2>
+
+    @if (erroValidacao()) {
+      <p role="alert" class="erro">Informe a UF e o município para continuar.</p>
+    }
+
+    <div class="field">
+      <label for="uf">Estado (UF)</label>
+      <select
+        id="uf"
+        data-testid="uf"
+        [attr.aria-invalid]="erroValidacao() && !state.uf() ? 'true' : null"
+        [ngModel]="state.uf()"
+        (ngModelChange)="onUfChange($event)"
+      >
+        <option value="">Selecione o estado</option>
+        @for (uf of ufs; track uf) {
+          <option [value]="uf">{{ uf }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="municipio">Município</label>
+      <select
+        id="municipio"
+        data-testid="municipio"
+        [attr.aria-invalid]="erroValidacao() && !state.municipio() ? 'true' : null"
+        [disabled]="!state.uf()"
+        [ngModel]="state.municipioIbge()"
+        (ngModelChange)="onMunicipioChange($event)"
+      >
+        <option value="">Selecione o município</option>
+        @for (municipio of municipios(); track municipio.codigo_ibge) {
+          <option [value]="municipio.codigo_ibge">{{ municipio.nome }}</option>
+        }
+      </select>
+    </div>
+  </section>
+
+  <section class="field-group" aria-labelledby="empresa-title">
+    <h2 id="empresa-title">Identificação da empresa (opcional)</h2>
+    <p class="hint">Não sabe? Pode deixar em branco.</p>
+
+    <div class="field">
+      <label for="nome-empresa">Nome da empresa</label>
+      <input
+        id="nome-empresa"
+        type="text"
+        [ngModel]="state.nomeEmpresa()"
+        (ngModelChange)="state.setNomeEmpresa($event)"
+      />
+    </div>
+
+    <div class="field">
+      <label for="endereco-empresa">Endereço ou ponto de referência</label>
+      <input
+        id="endereco-empresa"
+        type="text"
+        [ngModel]="state.enderecoEmpresa()"
+        (ngModelChange)="state.setEnderecoEmpresa($event)"
+      />
+    </div>
+  </section>
+
+  <div class="wizard-actions">
+    <button class="primary-action" type="button" data-testid="avancar-local" (click)="goNext()">
+      Revisar denúncia
+    </button>
+    <button class="secondary-action" type="button" (click)="goBack()">Voltar</button>
+  </div>
+</main>

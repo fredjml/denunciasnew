@@ -1,0 +1,25 @@
+:host { display: block; }
+.page-shell { display: grid; gap: var(--space-6); width: min(100% - 2rem, var(--max-width-form)); margin: auto; padding: var(--space-6) 0 var(--space-12); }
+.aviso-critico {
+  padding: var(--space-4);
+  border: 2px solid var(--color-critical-border);
+  border-radius: var(--radius-lg);
+  color: var(--color-critical-text);
+  background: var(--color-critical-bg);
+}
+.aviso-critico p { margin: 0; font-weight: 600; }
+.opcoes { display: grid; gap: var(--space-3); padding: 0; border: 0; }
+.opcoes legend { margin-bottom: var(--space-2); font-weight: 700; }
+.opcao { display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-4); border: 2px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-bg); }
+.opcao span { display: grid; gap: var(--space-1); }
+.opcao small { color: var(--color-text-secondary); }
+.opcao--selecionada { border-color: var(--color-primary); background: #fbecee; }
+.field-group { display: grid; gap: var(--space-3); padding: var(--space-4); border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-bg); }
+.field { display: grid; gap: var(--space-2); }
+.field label { font-weight: 700; }
+input[type='text'], input[type='email'], input[type='tel'] { padding: var(--space-3); border: 1px solid var(--color-border-strong); border-radius: var(--radius-md); font: inherit; }
+.confirmacao { display: flex; align-items: center; gap: var(--space-3); font-weight: 700; }
+.wizard-actions { display: grid; gap: var(--space-3); }
+.primary-action { padding: var(--space-3) var(--space-4); border: 2px solid var(--color-primary); border-radius: var(--radius-md); color: var(--color-text-inverse); font-weight: 700; background: var(--color-primary); }
+.primary-action:disabled { border-color: var(--color-border-strong); color: var(--color-text-secondary); background: var(--color-bg-muted); }
+.secondary-action { padding: var(--space-3) var(--space-4); border: 2px solid var(--color-border-strong); border-radius: var(--radius-md); color: var(--color-text-secondary); font-weight: 700; background: var(--color-bg); }

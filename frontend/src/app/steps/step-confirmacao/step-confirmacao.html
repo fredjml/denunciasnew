@@ -1,0 +1,39 @@
+<main class="page-shell" id="conteudo-principal">
+  <div class="sucesso" role="status">
+    <app-icon name="check-circle" [size]="56" />
+    <h1>Denúncia enviada com sucesso!</h1>
+    <p>O MPT analisará as informações. Guarde o protocolo para acompanhamento.</p>
+  </div>
+
+  <div class="protocolo" data-testid="protocolo">{{ protocolo() }}</div>
+
+  <section class="proximos-passos" aria-labelledby="proximos-passos-title">
+    <h2 id="proximos-passos-title">O que acontece agora?</h2>
+    <p>
+      Sua denúncia passa por uma triagem para verificar se há interesse público e se há dados
+      suficientes para o início de uma investigação. Havendo interesse público, o MPT poderá
+      pedir novas informações, fazer audiências, firmar acordo, entrar com uma ação coletiva ou
+      arquivar o procedimento por ausência de provas. Não havendo interesse público, o MPT também
+      poderá arquivar.
+    </p>
+
+    <ol class="fluxo">
+      <li>
+        <app-icon name="inbox" [size]="28" aria-hidden="true" />
+        <span>Recebimento</span>
+      </li>
+      <li>
+        <app-icon name="search" [size]="28" aria-hidden="true" />
+        <span>Triagem</span>
+      </li>
+      <li>
+        <app-icon name="scale" [size]="28" aria-hidden="true" />
+        <span>Investigação</span>
+      </li>
+    </ol>
+  </section>
+
+  <button class="primary-action" type="button" data-testid="voltar-inicio" (click)="voltarAoInicio()">
+    Início
+  </button>
+</main>

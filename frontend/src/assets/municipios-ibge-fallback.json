@@ -1,0 +1,8 @@
+[
+  { "codigo_ibge": "3550308", "nome": "São Paulo", "uf": "SP" },
+  { "codigo_ibge": "3304557", "nome": "Rio de Janeiro", "uf": "RJ" },
+  { "codigo_ibge": "5300108", "nome": "Brasília", "uf": "DF" },
+  { "codigo_ibge": "2611606", "nome": "Recife", "uf": "PE" },
+  { "codigo_ibge": "1302603", "nome": "Manaus", "uf": "AM" },
+  { "codigo_ibge": "4106902", "nome": "Curitiba", "uf": "PR" }
+]

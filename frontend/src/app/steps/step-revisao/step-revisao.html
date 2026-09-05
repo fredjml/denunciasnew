@@ -1,0 +1,83 @@
+<main class="page-shell" id="conteudo-principal">
+  <header>
+    <h1>Revise suas informações</h1>
+    <p>Confira os dados antes de enviar. Você pode editar qualquer etapa.</p>
+  </header>
+
+  <ul class="resumo">
+    <li>
+      <div>
+        <h2>Irregularidades</h2>
+        <p>
+          @if (relato.irregularidades().length === 0) {
+            Nenhuma selecionada
+          } @else {
+            {{ relato.irregularidades().length }} selecionada(s):
+            @for (codigo of relato.irregularidades(); track codigo) {
+              {{ rotuloIrregularidade(codigo) }}@if (!$last) {, }
+            }
+          }
+        </p>
+      </div>
+      <button type="button" (click)="editarRelato.emit()">Editar</button>
+    </li>
+
+    <li>
+      <div>
+        <h2>Detalhamento</h2>
+        <p>
+          {{ detalhamento.numeroTrabalhadores() || 'Não informado' }} trabalhador(es) ·
+          {{ detalhamento.modalidadeTrabalho() || 'modalidade não informada' }}
+        </p>
+      </div>
+      <button type="button" (click)="editarDetalhamento.emit()">Editar</button>
+    </li>
+
+    <li>
+      <div>
+        <h2>Evidências</h2>
+        <p>{{ evidencias.arquivos().length }} arquivo(s) anexado(s)</p>
+      </div>
+      <button type="button" (click)="editarEvidencias.emit()">Editar</button>
+    </li>
+
+    <li>
+      <div>
+        <h2>Sigilo</h2>
+        <p>
+          @if (sigilo.tipoIdentificacao() === 'ANONIMO') {
+            Denúncia anônima — o MPT não poderá entrar em contato com você.
+          } @else {
+            Identificado(a) — {{ sigilo.nomeCompleto() || 'nome não informado' }}
+          }
+        </p>
+      </div>
+      <button type="button" (click)="editarSigilo.emit()">Editar</button>
+    </li>
+
+    <li>
+      <div>
+        <h2>Local</h2>
+        <p>{{ local.municipio() || 'Não informado' }} - {{ local.uf() || '--' }}</p>
+      </div>
+      <button type="button" (click)="editarLocal.emit()">Editar</button>
+    </li>
+  </ul>
+
+  @if (erroEnvio()) {
+    <p role="alert" class="erro">{{ erroEnvio() }}</p>
+  }
+
+  <div class="wizard-actions">
+    <button
+      class="primary-action"
+      type="button"
+      data-testid="enviar-denuncia"
+      [disabled]="enviando()"
+      (click)="enviar()"
+    >
+      {{ enviando() ? 'Enviando...' : 'Enviar Denúncia' }}
+    </button>
+    <button class="secondary-action" type="button" (click)="editarLocal.emit()">Voltar</button>
+  </div>
+</main>

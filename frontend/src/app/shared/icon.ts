@@ -13,7 +13,11 @@ export type IconName =
   | 'shield-lock'
   | 'play'
   | 'clock'
-  | 'users';
+  | 'users'
+  | 'inbox'
+  | 'search'
+  | 'scale'
+  | 'check-circle';
 
 @Component({
   selector: 'app-icon',
@@ -87,6 +91,24 @@ export type IconName =
           <path d="M2 20c0-3.3 3.1-6 7-6s7 2.7 7 6" />
           <circle cx="17" cy="9" r="2.5" />
           <path d="M22 20c0-2.6-2-4.8-4.8-5.6" />
+        }
+        @case ('inbox') {
+          <path d="M4 4h16l3 8v6a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-6Z" />
+          <path d="M1 12h6l2 3h6l2-3h6" />
+        }
+        @case ('search') {
+          <circle cx="10.5" cy="10.5" r="6.5" />
+          <path d="M20 20l-4.5-4.5" />
+        }
+        @case ('scale') {
+          <path d="M12 3v18M7 21h10" />
+          <path d="M4 7h6M14 7h6" />
+          <path d="M4 7l-2.5 5A2.5 2.5 0 0 0 4 15a2.5 2.5 0 0 0 2.5-2.5L4 7Z" />
+          <path d="M20 7l-2.5 5A2.5 2.5 0 0 0 20 15a2.5 2.5 0 0 0 2.5-2.5L20 7Z" />
+        }
+        @case ('check-circle') {
+          <circle cx="12" cy="12" r="9" />
+          <path d="M8 12.5l2.5 2.5L16 9" />
         }
       }
     </svg>

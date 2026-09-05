@@ -37,6 +37,7 @@ export class StepRelatoGuiado {
   protected markMicrophoneUnavailable(): void { this.microphoneUnavailable.set(true); }
 
   protected async transcribe(audio: Blob): Promise<void> {
+    this.state.setAudioOriginal(audio);
     const result = await this.stt.transcribe(audio);
     this.state.setTranscricao(result.texto, result.status);
   }

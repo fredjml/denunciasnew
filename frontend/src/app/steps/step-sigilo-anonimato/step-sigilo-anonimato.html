@@ -1,0 +1,91 @@
+<main class="page-shell" id="conteudo-principal">
+  <header>
+    <h1>Sigilo e Anonimato</h1>
+  </header>
+
+  <div class="aviso-critico" role="note">
+    <p>
+      O Ministério Público do Trabalho mantém em sigilo os dados pessoais do denunciante. Em
+      situações específicas, o acesso às informações do denunciante poderá ser concedido por
+      ordem judicial ou durante o devido processo legal.
+    </p>
+  </div>
+
+  <fieldset class="opcoes">
+    <legend>Como deseja seguir?</legend>
+    <label class="opcao" [class.opcao--selecionada]="state.tipoIdentificacao() === 'ANONIMO'">
+      <input
+        type="radio"
+        name="tipo-identificacao"
+        data-testid="opcao-anonimo"
+        [checked]="state.tipoIdentificacao() === 'ANONIMO'"
+        (change)="setTipo('ANONIMO')"
+      />
+      <span>
+        <strong>Não quero me identificar e prefiro o anonimato.</strong>
+        <small>O MPT não poderá entrar em contato com você para obter detalhes da denúncia.</small>
+      </span>
+    </label>
+    <label class="opcao" [class.opcao--selecionada]="state.tipoIdentificacao() === 'IDENTIFICADO'">
+      <input
+        type="radio"
+        name="tipo-identificacao"
+        data-testid="opcao-identificado"
+        [checked]="state.tipoIdentificacao() === 'IDENTIFICADO'"
+        (change)="setTipo('IDENTIFICADO')"
+      />
+      <span><strong>Quero me identificar.</strong></span>
+    </label>
+  </fieldset>
+
+  @if (state.tipoIdentificacao() === 'IDENTIFICADO') {
+    <div class="field-group">
+      <h2>Seus dados de contato (sigiloso)</h2>
+      <div class="field">
+        <label for="nome-completo">Nome completo</label>
+        <input
+          id="nome-completo"
+          type="text"
+          [ngModel]="state.nomeCompleto()"
+          (ngModelChange)="state.setNomeCompleto($event)"
+        />
+      </div>
+      <div class="field">
+        <label for="email">E-mail</label>
+        <input id="email" type="email" [ngModel]="state.email()" (ngModelChange)="state.setEmail($event)" />
+      </div>
+      <div class="field">
+        <label for="telefone">Telefone ou WhatsApp</label>
+        <input
+          id="telefone"
+          type="tel"
+          [ngModel]="state.telefone()"
+          (ngModelChange)="state.setTelefone($event)"
+        />
+      </div>
+    </div>
+  }
+
+  <label class="confirmacao">
+    <input
+      type="checkbox"
+      data-testid="confirmar-aviso"
+      [ngModel]="state.avisoConfirmado()"
+      (ngModelChange)="onConfirmarAvisoChange($event)"
+    />
+    <span>Li e entendi o aviso de sigilo acima.</span>
+  </label>
+
+  <div class="wizard-actions">
+    <button
+      class="primary-action"
+      type="button"
+      data-testid="avancar-sigilo"
+      [disabled]="!state.avisoConfirmado() || state.tipoIdentificacao() === ''"
+      (click)="goNext()"
+    >
+      Avançar
+    </button>
+    <button class="secondary-action" type="button" (click)="goBack()">Voltar</button>
+  </div>
+</main>

@@ -248,22 +248,22 @@ Cada task = 1 fatia `FATIA-DN-*` de [11-IMPLEMENTATION-PLAN.delta-denunciasnew.m
 ### Ciclo 4 — CP-4 (Sigilo + Local) + CP-5 (Revisão + Confirmação)
 
 **CP-4:**
-- [ ] **T-CP4-01** `FATIA-DN-CP4-01` — Aviso destacado AAA.
-- [ ] **T-CP4-02** `FATIA-DN-CP4-02` — Confirmação explícita do aviso.
-- [ ] **T-CP4-03** `FATIA-DN-CP4-03` — Toggle "anônima".
-- [ ] **T-CP4-04** `FATIA-DN-CP4-04` — Frontend zera PII quando anônimo.
-- [ ] **T-CP4-05** `FATIA-DN-CP4-05` — `applyAnonimizationRules()` *(bloqueada — código)*.
-- [ ] **T-CP4-06** `FATIA-DN-CP4-06` — `StepLocal` UF/município obrigatório.
-- [ ] **T-CP4-07** `FATIA-DN-CP4-07` — Fallback `municipios-ibge.json`.
-- [ ] **T-CP4-08** `FATIA-DN-CP4-08` — Empresa opcional com hint.
+- [x] **T-CP4-01** `FATIA-DN-CP4-01` — Aviso destacado AAA. Implementada; unit+e2e aprovados.
+- [x] **T-CP4-02** `FATIA-DN-CP4-02` — Confirmação explícita do aviso. Implementada.
+- [x] **T-CP4-03** `FATIA-DN-CP4-03` — Toggle "anônima". Implementada.
+- [x] **T-CP4-04** `FATIA-DN-CP4-04` — Frontend zera PII quando anônimo. Implementada.
+- [ ] **T-CP4-05** `FATIA-DN-CP4-05` — `applyAnonimizationRules()` *(não executada — lógica do backend real da outra equipe, fora do `backend-mock`)*.
+- [x] **T-CP4-06** `FATIA-DN-CP4-06` — `StepLocal` UF/município obrigatório. Implementada; usa `/api/municipios` já existente.
+- [x] **T-CP4-07** `FATIA-DN-CP4-07` — Fallback `municipios-ibge-fallback.json`. Implementada.
+- [x] **T-CP4-08** `FATIA-DN-CP4-08` — Empresa opcional com hint. Implementada (sem campo CNPJ — não está no contrato).
 
 **CP-5:**
-- [ ] **T-CP5-01** `FATIA-DN-CP5-01` — `StepRevisao` com sumário editável.
-- [ ] **T-CP5-02** `FATIA-DN-CP5-02` — Confirmação explícita para envio.
-- [ ] **T-CP5-03** `FATIA-DN-CP5-03` — Auto-save `sessionStorage`.
-- [ ] **T-CP5-04** `FATIA-DN-CP5-04` — Gerador protocolo `SYN-XXXXXXXX` *(bloqueada — código)*.
-- [ ] **T-CP5-05** `FATIA-DN-CP5-05` — `StepConfirmacao`.
-- [ ] **T-CP5-06** `FATIA-DN-CP5-06` — `InfograficoFluxo` SVG acessível.
+- [x] **T-CP5-01** `FATIA-DN-CP5-01` — `StepRevisao` com sumário editável. Implementada.
+- [x] **T-CP5-02** `FATIA-DN-CP5-02` — Confirmação explícita para envio. Implementada.
+- [x] **T-CP5-03** `FATIA-DN-CP5-03` — Auto-save `sessionStorage`. Implementada via `createPersistedSignal`.
+- [x] **T-CP5-04** `FATIA-DN-CP5-04` — Gerador protocolo `SYN-XXXXXXXX`. Já existia desde CP-1; agora exercitado de ponta a ponta.
+- [x] **T-CP5-05** `FATIA-DN-CP5-05` — `StepConfirmacao`. Implementada; protocolo real exibido.
+- [x] **T-CP5-06** `FATIA-DN-CP5-06` — Infográfico acessível (texto + ícones). Implementada.
 - [ ] **T-CP5-07** `FATIA-DN-CP5-07` — Copy do infográfico com SLA *(bloqueada — DEC-DN-20)*.
 
 ### Ciclo 5 — CP-a11y-piso + CP-mobile-perf

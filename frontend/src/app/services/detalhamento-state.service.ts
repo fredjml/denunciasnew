@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { createPersistedSignal } from '../shared/persisted-signal';
 
 export type NumeroTrabalhadores = '1' | '2-5' | '6-20' | '21-100' | '100+' | '';
 export type ModalidadeTrabalho =
@@ -12,17 +13,26 @@ export type ModalidadeTrabalho =
 
 @Injectable({ providedIn: 'root' })
 export class DetalhamentoStateService {
-  private readonly periodoOcorrenciaState = signal('');
-  private readonly numeroTrabalhadoresState = signal<NumeroTrabalhadores>('');
-  private readonly modalidadeTrabalhoState = signal<ModalidadeTrabalho>('');
-  private readonly funcoesSetoresState = signal('');
-  private readonly gruposVulneraveisState = signal<readonly string[]>([]);
+  private readonly periodoOcorrenciaState = createPersistedSignal('detalhamento_periodo', '');
+  private readonly numeroTrabalhadoresState = createPersistedSignal<NumeroTrabalhadores>(
+    'detalhamento_numero_trabalhadores',
+    '',
+  );
+  private readonly modalidadeTrabalhoState = createPersistedSignal<ModalidadeTrabalho>(
+    'detalhamento_modalidade',
+    '',
+  );
+  private readonly funcoesSetoresState = createPersistedSignal('detalhamento_funcoes_setores', '');
+  private readonly gruposVulneraveisState = createPersistedSignal<readonly string[]>(
+    'detalhamento_grupos_vulneraveis',
+    [],
+  );
 
-  readonly periodoOcorrencia = this.periodoOcorrenciaState.asReadonly();
-  readonly numeroTrabalhadores = this.numeroTrabalhadoresState.asReadonly();
-  readonly modalidadeTrabalho = this.modalidadeTrabalhoState.asReadonly();
-  readonly funcoesSetores = this.funcoesSetoresState.asReadonly();
-  readonly gruposVulneraveis = this.gruposVulneraveisState.asReadonly();
+  readonly periodoOcorrencia = this.periodoOcorrenciaState.value;
+  readonly numeroTrabalhadores = this.numeroTrabalhadoresState.value;
+  readonly modalidadeTrabalho = this.modalidadeTrabalhoState.value;
+  readonly funcoesSetores = this.funcoesSetoresState.value;
+  readonly gruposVulneraveis = this.gruposVulneraveisState.value;
 
   setPeriodoOcorrencia(value: string): void {
     this.periodoOcorrenciaState.set(value);

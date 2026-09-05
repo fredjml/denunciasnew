@@ -17,7 +17,7 @@ test('página inicial não contém violações WCAG 2.1 AA serious ou critical',
   await semViolacoesBloqueantes(page);
 });
 
-test('wizard completo (relato, detalhamento, evidências) não contém violações WCAG 2.1 AA serious ou critical', async ({
+test('wizard completo (todas as etapas) não contém violações WCAG 2.1 AA serious ou critical', async ({
   page,
 }) => {
   await page.goto('/');
@@ -30,5 +30,24 @@ test('wizard completo (relato, detalhamento, evidências) não contém violaçõ
   await semViolacoesBloqueantes(page);
 
   await page.getByTestId('avancar-detalhamento').click();
+  await semViolacoesBloqueantes(page);
+
+  await page.getByTestId('avancar-evidencias').click();
+  await semViolacoesBloqueantes(page);
+
+  await page.getByTestId('opcao-anonimo').click();
+  await page.getByTestId('confirmar-aviso').click();
+  await semViolacoesBloqueantes(page);
+
+  await page.getByTestId('avancar-sigilo').click();
+  await semViolacoesBloqueantes(page);
+
+  await page.selectOption('#uf', 'SP');
+  await page.selectOption('#municipio', { index: 1 });
+  await page.getByTestId('avancar-local').click();
+  await semViolacoesBloqueantes(page);
+
+  await page.getByTestId('enviar-denuncia').click();
+  await expect(page.getByTestId('protocolo')).toBeVisible();
   await semViolacoesBloqueantes(page);
 });
